@@ -18,6 +18,7 @@ const FEATURES = [
     screenshot: {
       id: 'modeboard-profile-editor',
       alt: 'Modeboard profile editor showing wallpaper, Dock, and appearance settings grouped under one profile.',
+      aspectRatio: '2184 / 1648',
     },
   },
   {
@@ -26,6 +27,7 @@ const FEATURES = [
     screenshot: {
       id: 'modeboard-wallpaper',
       alt: 'Modeboard wallpaper picker showing still and animated wallpaper options for a profile.',
+      aspectRatio: '2184 / 1648',
     },
   },
   {
@@ -34,12 +36,17 @@ const FEATURES = [
     screenshot: {
       id: 'modeboard-dock',
       alt: 'Modeboard Dock settings showing a custom app arrangement saved to a profile.',
+      aspectRatio: '2184 / 1648',
     },
   },
   {
     title: 'A cleaner Desktop',
     text: 'Choose which Desktop items are visible for each context, so the space in front of you stays relevant.',
-    screenshot: null,
+    screenshot: {
+      id: 'modeboard-desktop',
+      alt: 'Modeboard Desktop settings showing which Desktop items are visible for a profile.',
+      aspectRatio: '2184 / 1648',
+    },
   },
   {
     title: 'Switch from the menu bar',
@@ -47,6 +54,7 @@ const FEATURES = [
     screenshot: {
       id: 'modeboard-menu-bar',
       alt: 'Modeboard menu bar icon open, showing a dropdown for switching profiles without opening the app.',
+      aspectRatio: '552 / 876',
     },
   },
   {
@@ -55,6 +63,7 @@ const FEATURES = [
     screenshot: {
       id: 'modeboard-backup-restore',
       alt: 'Modeboard backup and restore screen showing a snapshot of settings saved before a profile was applied.',
+      aspectRatio: '2184 / 1648',
     },
   },
 ] as const
@@ -106,7 +115,7 @@ export function Modeboard() {
           </h1>
           <p className="lede">{featuredProduct.description}</p>
           <div className="product-hero-meta">
-            <StatusBadge status={featuredProduct.status} />
+            {featuredProduct.status !== 'coming-soon' ? <StatusBadge status={featuredProduct.status} /> : null}
             {featuredProduct.version ? <span className="meta-chip">Version {featuredProduct.version}</span> : null}
             {featuredProduct.platforms.map((platform) => (
               <PlatformBadge key={platform} platform={platform} />
@@ -141,11 +150,11 @@ export function Modeboard() {
                 <h2>{feature.title}</h2>
                 <p>{feature.text}</p>
               </div>
-              {feature.screenshot ? (
-                <ProductScreenshot src={feature.screenshot.id} alt={feature.screenshot.alt} />
-              ) : (
-                <div className="feature-copy-visual" aria-hidden="true" />
-              )}
+              <ProductScreenshot
+                src={feature.screenshot.id}
+                alt={feature.screenshot.alt}
+                aspectRatio={feature.screenshot.aspectRatio}
+              />
             </div>
           </section>
         ))}

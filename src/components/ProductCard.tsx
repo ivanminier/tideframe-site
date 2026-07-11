@@ -22,7 +22,7 @@ export function ProductCard({ product }: { product: Product }) {
           <h3>
             <Link to={product.route}>{product.name}</Link>
           </h3>
-          <StatusBadge status={product.status} />
+          {product.status !== 'coming-soon' ? <StatusBadge status={product.status} /> : null}
         </div>
         <p className="product-card-tagline">{product.tagline}</p>
         <p>{product.description}</p>

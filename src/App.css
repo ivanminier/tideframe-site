@@ -259,7 +259,6 @@ p { color: var(--muted); line-height: 1.72; }
 .product-hero-meta { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 10px; margin: 26px 0 6px; }
 .meta-chip { padding: 5px 13px; border-radius: 999px; border: 1px solid var(--line); font-size: .74rem; color: var(--muted); }
 .product-hero .button { margin-top: 22px; }
-.feature-copy-visual { min-height: 260px; border-radius: 16px; background: linear-gradient(150deg, #e4eeec, #d7e6e3); }
 .faq-list { display: flex; flex-direction: column; gap: 28px; margin-top: 8px; }
 .faq-item dt { color: var(--tide); font-weight: 640; font-size: 1.08rem; }
 .faq-item dd { margin: 8px 0 0; color: var(--muted); }

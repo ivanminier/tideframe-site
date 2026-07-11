@@ -92,6 +92,7 @@ export function Home() {
           <ProductScreenshot
             src="modeboard-overview"
             alt="Modeboard overview window listing saved profiles for work, rest, and study."
+            aspectRatio="2184 / 1648"
             priority
           />
         </div>
