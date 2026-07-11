@@ -1,0 +1,24 @@
+:root {
+  --tide: #102a43; --pacific: #327da8; --glass: #65b7a6; --foam: #f7faf9;
+  --sand: #e8ddcd; --charcoal: #172026; --muted: #52616b; --line: #d9e3e3;
+  /* Placeholder — resample from the glossy Tideframe icon once it's supplied, see CONTENT_CHECKLIST.md */
+  --coral: #e8794f; --coral-glow: rgba(232, 121, 79, .28);
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", sans-serif;
+  color: var(--charcoal); background: var(--foam); font-synthesis: none;
+  text-rendering: optimizeLegibility; -webkit-font-smoothing: antialiased;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { margin: 0; min-width: 320px; overflow-x: hidden; }
+button, a { font: inherit; }
+a { color: inherit; }
+img { display: block; max-width: 100%; }
+::selection { background: #bfe2da; color: var(--tide); }
+:focus-visible { outline: 3px solid var(--pacific); outline-offset: 4px; border-radius: 3px; }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+  .reveal { opacity: 1 !important; transform: none !important; }
+  .parallax { transform: none !important; }
+}
+

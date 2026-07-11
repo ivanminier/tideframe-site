@@ -1,0 +1,25 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run *)",
+      "Bash(npx oxlint *)",
+      "Bash(echo \"EXIT: $?\")",
+      "Bash(echo \"LINT EXIT: $?\")",
+      "Bash(curl -s http://localhost:4321/)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" http://localhost:4321/screenshots/modeboard-overview.png)",
+      "Bash(kill %1)",
+      "Bash(pkill -f \"vite preview\")",
+      "Skill(run)",
+      "Skill(run:*)",
+      "Bash(npx --no-install chromium-cli --version)",
+      "Bash(npx --yes playwright --version)",
+      "Bash(mkdir -p \"/private/tmp/claude-501/-Users-ivanminier-Developer-tideframe-site/2963a425-1d67-4596-8ed9-9bda4151a98e/scratchpad/pw-check\")",
+      "Bash(npx --yes playwright install chromium)",
+      "Bash(mkdir -p screenshots)",
+      "Bash(npm init *)",
+      "Bash(npm install *)",
+      "Bash(node check.mjs)",
+      "Bash(node scroll-check.mjs)"
+    ]
+  }
+}
