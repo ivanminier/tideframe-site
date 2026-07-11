@@ -47,7 +47,7 @@ export const products: Product[] = [
       'Modeboard turns your wallpaper, Dock, appearance, menu bar, and Desktop into profiles you can switch together.',
     platforms: ['macOS'],
     status: 'coming-soon',
-    icon: '/modeboard-icon.jpeg',
+    icon: '/modeboard-icon.png',
     route: '/modeboard',
     downloadUrl: null,
     version: null,
