@@ -10,15 +10,7 @@
   "/modeboard": {
     "title": "Modeboard by Tideframe Labs",
     "description": "Modeboard turns your wallpaper, Dock, appearance, menu bar, and Desktop into profiles you can switch together.",
-    "structuredData": {
-      "@context": "https://schema.org",
-      "@type": "SoftwareApplication",
-      "name": "Modeboard",
-      "description": "Modeboard turns your wallpaper, Dock, appearance, menu bar, and Desktop into profiles you can switch together.",
-      "applicationCategory": "UtilitiesApplication",
-      "operatingSystem": "macOS 15 or later",
-      "url": "https://tideframelabs.com/modeboard"
-    }
+    "ogImage": "/modeboard-social-preview.png"
   },
   "/privacy": {
     "h1": "Privacy Policy",

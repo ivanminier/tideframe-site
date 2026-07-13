@@ -13,6 +13,8 @@
 import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'node:fs'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
+import { validateReleaseData } from '../src/data/releaseValidation.mjs'
+import { getVerifiedCheckoutUrlData } from '../src/data/commerceValidation.mjs'
 
 const here = dirname(fileURLToPath(import.meta.url))
 const root = join(here, '..')
@@ -37,7 +39,39 @@ const organizationSchema = {
 
 function readRouteMeta() {
   const raw = readFileSync(join(root, 'src/data/route-meta.json'), 'utf8')
-  return JSON.parse(raw)
+  const routeMeta = JSON.parse(raw)
+  const product = JSON.parse(readFileSync(join(root, 'src/data/modeboard-product.json'), 'utf8'))
+  const commerce = JSON.parse(readFileSync(join(root, 'src/data/commerce-config.json'), 'utf8'))
+  routeMeta['/modeboard'].structuredData = buildSoftwareApplicationSchema(product, commerce)
+  return routeMeta
+}
+
+function buildSoftwareApplicationSchema(product, commerce) {
+  const release = product.release
+  const releaseComplete = validateReleaseData(product).isReady
+  const checkoutUrl = getVerifiedCheckoutUrlData(commerce)
+
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'SoftwareApplication',
+    name: product.name,
+    description: product.description,
+    applicationCategory: 'UtilitiesApplication',
+    operatingSystem: `macOS ${release.minimumMacOSVersion} or later`,
+    url: `${SITE_URL}${product.route}`,
+    ...(releaseComplete ? { softwareVersion: release.version } : {}),
+    ...(releaseComplete && checkoutUrl && product.status === 'available' && product.commercial
+      ? {
+          offers: {
+            '@type': 'Offer',
+            price: product.commercial.priceUSD,
+            priceCurrency: 'USD',
+            url: checkoutUrl,
+            availability: 'https://schema.org/InStock',
+          },
+        }
+      : {}),
+  }
 }
 
 function replaceTag(html, pattern, replacement) {
@@ -55,6 +89,7 @@ function buildRouteHtml(template, routePath, entry) {
   const url = `${SITE_URL}${routePath === '/' ? '' : routePath}`
   const title = escapeHtmlAttr(entry.title)
   const description = escapeHtmlAttr(entry.description)
+  const image = entry.ogImage ? `${SITE_URL}${entry.ogImage}` : DEFAULT_OG_IMAGE
 
   let html = template
   html = replaceTag(html, /<title>.*?<\/title>/, `<title>${title}</title>`)
@@ -62,8 +97,10 @@ function buildRouteHtml(template, routePath, entry) {
   html = replaceTag(html, /<meta property="og:title" content=".*?" \/>/, `<meta property="og:title" content="${title}" />`)
   html = replaceTag(html, /<meta property="og:description" content=".*?" \/>/, `<meta property="og:description" content="${description}" />`)
   html = replaceTag(html, /<meta property="og:url" content=".*?" \/>/, `<meta property="og:url" content="${url}" />`)
+  html = replaceTag(html, /<meta property="og:image" content=".*?" \/>/, `<meta property="og:image" content="${image}" />`)
   html = replaceTag(html, /<meta name="twitter:title" content=".*?" \/>/, `<meta name="twitter:title" content="${title}" />`)
   html = replaceTag(html, /<meta name="twitter:description" content=".*?" \/>/, `<meta name="twitter:description" content="${description}" />`)
+  html = replaceTag(html, /<meta name="twitter:image" content=".*?" \/>/, `<meta name="twitter:image" content="${image}" />`)
   html = replaceTag(html, /<link rel="canonical" href=".*?" \/>/, `<link rel="canonical" href="${url}" />`)
 
   // IDs must match src/components/Layout.tsx ("org-jsonld") and Meta.tsx ("page-jsonld") exactly —
@@ -91,10 +128,12 @@ function main() {
   const routeMeta = readRouteMeta()
   const results = []
 
+  const rootHtml = buildRouteHtml(template, '/', routeMeta['/'])
+  writeFileSync(templatePath, rootHtml, 'utf8')
+  results.push({ routePath: '/', outFile: templatePath, bytes: Buffer.byteLength(rootHtml) })
+
   for (const [routePath, entry] of Object.entries(routeMeta)) {
     if (routePath === '/') {
-      // The root route is dist/index.html itself — no separate file needed.
-      // (It still gets the site-wide Organization JSON-LD injected via Layout.tsx client-side.)
       continue
     }
     const html = buildRouteHtml(template, routePath, entry)

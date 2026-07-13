@@ -27,6 +27,7 @@ lerna-debug.log*
 .vscode/*
 !.vscode/extensions.json
 .idea
+.claude/
 *.suo
 *.ntvs*
 *.njsproj
@@ -36,3 +37,17 @@ lerna-debug.log*
 # OS files
 .DS_Store
 Thumbs.db
+
+# Test and tool output
+playwright-report
+test-results
+coverage
+.cache
+tmp
+
+# Local archives and nested release artifacts
+*.zip
+*.tar
+*.tar.gz
+*.tgz
+*.7z

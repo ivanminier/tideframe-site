@@ -11,21 +11,27 @@ import './App.css'
 export default function App() {
   return (
     <BrowserRouter>
-      <Routes>
-        <Route element={<Layout />}>
-          <Route index element={<Home />} />
-          <Route path="products" element={<Products />} />
-          <Route path="modeboard" element={<Modeboard />} />
-          <Route path="support" element={<Support />} />
-          <Route path="privacy" element={<Privacy />} />
-          <Route path="terms" element={<Terms />} />
-          <Route path="changelog" element={<Changelog />} />
-          <Route path="about" element={<About />} />
-          <Route path="brand" element={<Brand />} />
-          <Route path="acknowledgments" element={<Acknowledgments />} />
-          <Route path="*" element={<NotFound />} />
-        </Route>
-      </Routes>
+      <AppRoutes />
     </BrowserRouter>
+  )
+}
+
+export function AppRoutes() {
+  return (
+    <Routes>
+      <Route element={<Layout />}>
+        <Route index element={<Home />} />
+        <Route path="products" element={<Products />} />
+        <Route path="modeboard" element={<Modeboard />} />
+        <Route path="support" element={<Support />} />
+        <Route path="privacy" element={<Privacy />} />
+        <Route path="terms" element={<Terms />} />
+        <Route path="changelog" element={<Changelog />} />
+        <Route path="about" element={<About />} />
+        <Route path="brand" element={<Brand />} />
+        <Route path="acknowledgments" element={<Acknowledgments />} />
+        <Route path="*" element={<NotFound />} />
+      </Route>
+    </Routes>
   )
 }

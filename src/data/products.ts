@@ -1,3 +1,6 @@
+import modeboardProduct from './modeboard-product.json'
+import { validateReleaseData } from './releaseValidation.mjs'
+
 export type ProductStatus = 'coming-soon' | 'beta' | 'available'
 
 export type Platform =
@@ -18,9 +21,8 @@ export interface ProductAccent {
 /**
  * The intended commercial model for a paid product. Populating this describes what
  * Tideframe Labs plans to ship — it does NOT by itself make a product purchasable.
- * `status`/`downloadUrl` below are the only fields that control whether a download is
- * actually offered, and structured-data Offer markup (see src/data/structuredData.ts)
- * only appears once status is 'available' and downloadUrl is set to a real link.
+ * Populating commercial terms does not activate checkout or a download. The release
+ * validator and the separate commerce configuration both fail closed.
  */
 export interface ProductCommercial {
   /** e.g. 14.99 */
@@ -41,6 +43,26 @@ export interface ProductCommercial {
   refundPolicy: string
 }
 
+export type ArchitectureSupport = 'supported' | 'unsupported' | 'not-yet-verified'
+
+export interface ProductRelease {
+  downloadUrl: string | null
+  version: string | null
+  buildNumber: string | null
+  fileSizeBytes: number | null
+  sha256: string | null
+  minimumMacOSVersion: string
+  testedMacOSVersions: string[]
+  releaseDate: string | null
+  architectures: {
+    appleSilicon: ArchitectureSupport
+    intel: ArchitectureSupport
+  }
+  requiredPermissions: string[]
+  undocumentedBehavior: string
+  animatedWallpaperLimitations: string
+}
+
 export interface Product {
   slug: string
   name: string
@@ -52,23 +74,8 @@ export interface Product {
   icon: string
   /** Internal route to the product's page. */
   route: string
-  /**
-   * Direct download link. Leave null to keep the download button disabled
-   * ("Coming Soon") — this is the only place a download URL needs to change.
-   * Only set this to a real HTTPS link to a signed, notarized build.
-   */
-  downloadUrl: string | null
-  /** Public version number shown to visitors. Leave null until a version actually ships. */
-  version: string | null
-  /**
-   * SHA-256 checksum of the exact file at downloadUrl, for visitors who want to verify
-   * their download. Only set this once it corresponds to the exact live ZIP — an
-   * out-of-date checksum is worse than none. Only ever displayed when downloadUrl is
-   * also set (see the Modeboard page), so it can never appear next to a "Coming Soon"
-   * button.
-   */
-  sha256: string | null
-  minimumOS: string | null
+  /** A download is exposed only when every field passes validateReleaseConfiguration. */
+  release: ProductRelease
   /** Featured products are highlighted on the homepage. */
   featured: boolean
   accent: ProductAccent
@@ -76,39 +83,28 @@ export interface Product {
   commercial: ProductCommercial | null
 }
 
-export const products: Product[] = [
-  {
-    slug: 'modeboard',
-    name: 'Modeboard',
-    tagline: 'A workspace for every part of your day.',
-    description:
-      'Modeboard turns your wallpaper, Dock, appearance, menu bar, and Desktop into profiles you can switch together.',
-    platforms: ['macOS'],
-    status: 'coming-soon',
-    icon: '/modeboard-icon.png',
-    route: '/modeboard',
-    downloadUrl: null,
-    version: null,
-    sha256: null,
-    minimumOS: 'macOS 15 or later',
-    featured: true,
-    accent: { primary: 'var(--pacific)', secondary: 'var(--glass)' },
-    commercial: {
-      priceUSD: 14.99,
-      introductoryPrice: true,
-      licenseScope: 'One person, on up to three personally controlled Macs',
-      updatesIncluded: 'All Modeboard 1.x updates',
-      trialDays: 14,
-      activation: 'Offline signed access code — no account or internet connection required to verify your license',
-      updateMechanism: 'Sparkle, with user-controlled automatic checks plus a manual Check for Updates command',
-      refundPolicy:
-        'Tideframe Labs offers a refund within 14 days of purchase. Before requesting a refund for a technical issue, customers may be asked to provide basic system information or try reasonable troubleshooting steps. This policy does not limit rights provided by applicable consumer law.',
-    },
-  },
-]
+export const products: Product[] = [modeboardProduct as Product]
 
 export const featuredProduct = products.find((product) => product.featured) ?? products[0]
 
 export function getProductBySlug(slug: string): Product | undefined {
   return products.find((product) => product.slug === slug)
+}
+
+export interface ReleaseValidation {
+  isReady: boolean
+  errors: string[]
+}
+
+export function validateReleaseConfiguration(product: Product, now = new Date()): ReleaseValidation {
+  return validateReleaseData(product, now)
+}
+
+export function getPublicRelease(product: Product): ProductRelease | null {
+  return validateReleaseConfiguration(product).isReady ? product.release : null
+}
+
+export function formatFileSize(bytes: number): string {
+  const megabytes = bytes / 1_000_000
+  return `${megabytes >= 10 ? megabytes.toFixed(1) : megabytes.toFixed(2)} MB`
 }

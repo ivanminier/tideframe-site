@@ -1,4 +1,4 @@
-import type { ProductStatus } from '../data/products'
+import { getPublicRelease, type Product, type ProductStatus } from '../data/products'
 
 const DEFAULT_LABEL: Record<ProductStatus, (productName: string) => string> = {
   'coming-soon': () => 'Coming Soon',
@@ -11,21 +11,18 @@ const DEFAULT_LABEL: Record<ProductStatus, (productName: string) => string> = {
  * always renders a disabled <button>, never an <a href="">.
  */
 export function DownloadButton({
-  downloadUrl,
-  status,
-  productName,
+  product,
   label,
   className = 'button',
 }: {
-  downloadUrl: string | null
-  status: ProductStatus
-  productName: string
+  product: Product
   label?: string
   className?: string
 }) {
-  const text = label ?? DEFAULT_LABEL[status](productName)
+  const release = getPublicRelease(product)
+  const text = label ?? DEFAULT_LABEL[product.status](product.name)
 
-  if (!downloadUrl) {
+  if (!release) {
     return (
       <button type="button" className={`${className} button-disabled`} disabled>
         {text}
@@ -34,7 +31,7 @@ export function DownloadButton({
   }
 
   return (
-    <a className={className} href={downloadUrl}>
+    <a className={className} href={release.downloadUrl ?? undefined}>
       {text}
     </a>
   )

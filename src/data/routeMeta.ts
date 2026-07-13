@@ -6,6 +6,8 @@ export interface RouteMetaEntry {
   /** Full <title> / og:title / twitter:title text. */
   title: string
   description: string
+  /** Route-specific social image. Defaults to the site-wide card. */
+  ogImage?: string
   /** Static JSON-LD payload for this route, if any (currently only /modeboard). */
   structuredData?: Record<string, unknown>
 }

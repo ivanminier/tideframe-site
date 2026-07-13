@@ -7,9 +7,9 @@ The static website for [tideframelabs.com](https://tideframelabs.com), built wit
 You need a current version of [Node.js](https://nodejs.org/) installed.
 
 1. Open Terminal and move into this project folder.
-2. Install the project once:
+2. Install exactly what the lockfile specifies:
    ```sh
-   npm install
+   npm ci
    ```
 3. Start the local site:
    ```sh
@@ -38,6 +38,8 @@ Quality checks are also available separately:
 ```sh
 npm run lint
 npm run type-check
+npm test
+npm run test:e2e
 ```
 
 ## Make common changes
@@ -55,30 +57,34 @@ npm run type-check
 
 ### Add a new product
 
-All product data lives in one file: `src/data/products.ts`. To add a new product:
+Modeboard's product and release data lives in `src/data/modeboard-product.json`; shared types and validation live in `src/data/products.ts`. To add a new product:
 
-1. Add a new object to the `products` array with a unique `slug`, its own `route` (e.g. `/newproduct`), and the rest of the fields described by the `Product` type at the top of the file.
+1. Add a new product data file and import it into the `products` array with a unique `slug`, its own `route` (e.g. `/newproduct`), and the fields described by the `Product` type.
 2. Add a matching `<Route path="newproduct" element={<NewProduct />} />` in `src/App.tsx` and create the page component under `src/pages/`.
 3. Add the new route to `public/sitemap.xml`.
 4. Add a link to it in `src/data/nav.ts` if it should appear in navigation.
 
 The `/products` page renders automatically from this array. Add a homepage feature separately only when the product should be featured there.
 
-### Change a download URL
+### Configure a public release
 
-Open `src/data/products.ts` and set the `downloadUrl` field for the product:
+Open `src/data/modeboard-product.json` and complete the `release` object. The download stays disabled unless the central validator accepts every required field: HTTPS artifact URL, version, build number, byte size, SHA-256, minimum macOS version, tested macOS versions, release date, architecture status, permissions, and limitations.
 
-- `null` → the download button is disabled and reads "Coming Soon."
-- a real URL, with `status: 'beta'` → the button reads "Download Beta."
-- a real URL, with `status: 'available'` → the button reads "Download Modeboard."
+- incomplete fields or `status: 'coming-soon'` → the button is disabled and reads "Coming Soon."
+- a complete valid release with `status: 'beta'` → the button reads "Download Beta."
+- a complete valid release with `status: 'available'` → the button reads "Download Modeboard."
 
 This is the only file that needs to change — the Modeboard and products pages both read from it. **Only ever set `downloadUrl` to a real HTTPS link to a signed, notarized build.** Setting `status: 'available'` with a real `downloadUrl` also automatically adds `offers` structured data (price, currency) to the page — see "Update pricing, license, and trial details" below for where that price comes from.
 
-Once a real download exists, you can also set `version` (shown next to the download button) and, once you're certain it matches the exact live file, `sha256` (shown as a checksum visitors can verify their download against). Both are `null` by default and stay hidden until `downloadUrl` is set.
+Never add the artifact itself to this repository. Verify its exact byte size and checksum from the hosted, signed, notarized file before changing status.
+
+### Configure purchasing
+
+The public, non-secret frontend configuration is in `src/data/commerce-config.json` and is disabled; shared validation lives in `src/data/commerce.ts`. Do not enable it until a merchant of record and private fulfillment service are operational. The complete webhook, idempotency, signing, recovery, refund, and key-handling contract is in `docs/PURCHASE_AND_LICENSE_ARCHITECTURE.md`.
 
 ### Update pricing, license, and trial details
 
-Modeboard's planned commercial model — price, trial length, license scope, included updates, activation, and refund policy — lives in the `commercial` object in `src/data/products.ts`. It drives product-page details and structured data. Review the Terms page separately whenever these business terms change so the legal wording stays accurate.
+Modeboard's planned commercial model — price, trial length, license scope, included updates, activation, and refund policy — lives in the `commercial` object in `src/data/modeboard-product.json`. It drives product-page details and structured data. Review the Terms page separately whenever these business terms change so the legal wording stays accurate.
 
 The refund policy field (`commercial.refundPolicy`) holds exact, reviewed business wording — don't paraphrase it when editing; change the whole string deliberately if the policy itself changes.
 
@@ -122,9 +128,11 @@ To change a title or description used by search engines and social shares, edit 
 2. In Cloudflare, open **Workers & Pages**, choose **Create**, then connect the repository.
 3. Set **Build command** to `npm run build`.
 4. Set **Build output directory** to `dist`.
-5. Deploy. No environment variables are required.
+5. Deploy. The static frontend requires no environment variables. Never add backend or signing secrets as `VITE_*` values.
 6. Add `tideframelabs.com` under the Pages project's custom domains.
+
+For an intentional manual Pages upload after the project exists, run `npm ci`, `npm run check`, `npm run test:e2e`, then `npx wrangler pages deploy dist --project-name tideframe-site`. Do not use `wrangler deploy`; this repository is configured for Pages, not a standalone Worker.
 
 For React Router routes such as `/products` to work when opened directly, configure Cloudflare Pages to fall back to `index.html`. The included `public/_redirects` file handles this automatically. Five routes (`/`, `/modeboard`, `/privacy`, `/terms`, `/support`) don't actually need that fallback — they get their own real, pre-rendered `index.html` file at build time (see "Search engine and social-preview metadata" above), which Cloudflare Pages serves directly since a real file always takes precedence over a `_redirects` rule.
 
-For the full first-time setup — including moving the domain's nameservers to Cloudflare and setting up email — see `DEPLOYMENT_CHECKLIST.md`. For everything still needed before this site can go live (a real signed download, legal review, unresolved business facts), see `CONTENT_CHECKLIST.md`.
+For the full first-time setup — including moving the domain's nameservers to Cloudflare and setting up email — see `DEPLOYMENT_CHECKLIST.md`. Review `docs/DEPLOYMENT_SECURITY.md`, `docs/PURCHASE_AND_LICENSE_ARCHITECTURE.md`, and `CONTENT_CHECKLIST.md` before launch.

@@ -22,7 +22,7 @@ A beginner-friendly, step-by-step path from this codebase to a live site at `tid
 2. In the Cloudflare dashboard, open **Workers & Pages** → **Create** → **Pages** → **Connect to Git**.
 3. Choose the GitHub repository from step 1.
 4. Set:
-   - **Build command:** `npm run build`
+   - **Build command:** `npm ci && npm run build`
    - **Build output directory:** `dist`
 5. Click **Save and Deploy**. Cloudflare gives you a working `*.pages.dev` URL immediately — check that it loads before moving on.
 
@@ -47,6 +47,8 @@ This step points `tideframelabs.com` at Cloudflare so Cloudflare can serve the s
 ## 5. Confirm HTTPS
 
 Cloudflare provisions a free SSL certificate automatically once the domain is active on Cloudflare's nameservers — this usually takes a few minutes to a few hours after step 3 completes. In **SSL/TLS**, confirm the encryption mode is set to **Full** (not "Flexible"). Visit `https://tideframelabs.com` and confirm the browser shows a valid, secure connection with no warnings.
+
+After every intended subdomain is HTTPS-only, follow `docs/DEPLOYMENT_SECURITY.md` to configure HSTS at the Cloudflare zone and verify the deployed CSP and other response headers. Do not enable HSTS preload during an initial deployment.
 
 ## 6. Set up email routing
 
@@ -80,6 +82,7 @@ Once the domain is live, check the following by visiting the real URLs in a brow
 - [ ] Pasting `https://tideframelabs.com/` and `https://tideframelabs.com/modeboard` into a social link-preview debugger (e.g. Facebook's [Sharing Debugger](https://developers.facebook.com/tools/debug/) or Twitter/X's card validator) shows the expected title, description, and current social-preview image.
 - [ ] A test email to `support@tideframelabs.com` and `hello@tideframelabs.com` both arrive.
 - [ ] The header stays visible while scrolling (sticky), and the mobile menu opens and closes correctly on a phone-sized screen.
+- [ ] Response headers match `public/_headers`; there are no CSP violations during navigation, images, mail links, downloads, or the merchant sandbox redirect.
 
 **Before setting a real `downloadUrl` in `src/data/products.ts`:**
 

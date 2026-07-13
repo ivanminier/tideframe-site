@@ -3,10 +3,10 @@ import { Meta } from '../components/Meta'
 import { siteConfig } from '../config'
 import { getRouteMeta } from '../data/routeMeta'
 
-function Page({ eyebrow, title, intro, children }: { eyebrow: string; title: string; intro: string; children: React.ReactNode }) {
+function Page({ eyebrow, title, intro, children, noindex = false, canonicalPath }: { eyebrow: string; title: string; intro: string; children: React.ReactNode; noindex?: boolean; canonicalPath?: string }) {
   return (
     <>
-      <Meta title={`${title} — Tideframe Labs`} description={intro} />
+      <Meta title={`${title} — Tideframe Labs`} description={intro} noindex={noindex} path={canonicalPath} />
       <section className="page-hero">
         <div className="container narrow">
           <p className="eyebrow">{eyebrow}</p>
@@ -125,6 +125,13 @@ export function Privacy() {
         provider and ours process the message in the usual way.
       </p>
 
+      <h2>Purchases and order records</h2>
+      <p>
+        Modeboard is not currently sold on this website. Before commerce is enabled, this policy will identify the
+        merchant of record and explain the order, payment-status, refund, license-delivery, and support data that the
+        merchant and Tideframe Labs process. Tideframe Labs will not receive or store raw card details.
+      </p>
+
       <h2>Changes and questions</h2>
       <p>
         This policy will be updated before any material change to Modeboard's data practices takes effect. Questions
@@ -170,6 +177,11 @@ export function Terms() {
         not be used outside the license scope above.
       </p>
 
+      <p>
+        Paid access codes are designed to keep working offline. Refunds and chargebacks can be recorded in the order
+        system for support and future recovery decisions, but the public website does not perform background license checks.
+      </p>
+
       <h2>Updates included</h2>
       <p>
         A Modeboard license includes all 1.x updates. A later major version may be offered separately, but no
@@ -195,6 +207,13 @@ export function Terms() {
         If Modeboard becomes available for purchase, Tideframe Labs intends to accept refund requests made within
         14 days of purchase. You may be asked for purchase details and basic information needed to understand a
         technical problem. This does not limit rights provided by applicable consumer law.
+      </p>
+
+      <h2>Payment provider</h2>
+      <p>
+        A future purchase will be completed on a merchant-of-record checkout, not by entering card details into this
+        website. The merchant's purchase terms and privacy notice will apply to its checkout. The selected merchant
+        will be named here before checkout is activated.
       </p>
 
       <h2>Support</h2>
@@ -284,7 +303,7 @@ export function About() {
 
 export function NotFound() {
   return (
-    <Page eyebrow="404" title="We couldn't find that page." intro="The address may have changed, or the page may no longer exist.">
+    <Page eyebrow="404" title="We couldn't find that page." intro="The address may have changed, or the page may no longer exist." noindex canonicalPath="/">
       <Link className="button" to="/">Return home</Link>
     </Page>
   )
