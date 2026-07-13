@@ -9,7 +9,11 @@ import { StatusBadge } from '../components/StatusBadge'
 import { siteConfig } from '../config'
 import { modeboardScreenshots } from '../data/modeboard-screenshots'
 import { featuredProduct } from '../data/products'
+import { getRouteMeta } from '../data/routeMeta'
 import { buildSoftwareApplicationSchema } from '../data/structuredData'
+
+const meta = getRouteMeta('/modeboard')
+const commercial = featuredProduct.commercial
 
 const FEATURES = [
   {
@@ -18,7 +22,10 @@ const FEATURES = [
     screenshot: {
       id: 'modeboard-profile-editor',
       alt: 'Modeboard profile editor showing wallpaper, Dock, and appearance settings grouped under one profile.',
-      aspectRatio: '2184 / 1648',
+      aspectRatio: '1400 / 1056',
+      width: 1400,
+      height: 1056,
+      hasThumbnail: true,
     },
   },
   {
@@ -27,7 +34,10 @@ const FEATURES = [
     screenshot: {
       id: 'modeboard-wallpaper',
       alt: 'Modeboard wallpaper picker showing still and animated wallpaper options for a profile.',
-      aspectRatio: '2184 / 1648',
+      aspectRatio: '1400 / 1056',
+      width: 1400,
+      height: 1056,
+      hasThumbnail: true,
     },
   },
   {
@@ -36,7 +46,10 @@ const FEATURES = [
     screenshot: {
       id: 'modeboard-dock',
       alt: 'Modeboard Dock settings showing a custom app arrangement saved to a profile.',
-      aspectRatio: '2184 / 1648',
+      aspectRatio: '1400 / 1056',
+      width: 1400,
+      height: 1056,
+      hasThumbnail: true,
     },
   },
   {
@@ -45,7 +58,10 @@ const FEATURES = [
     screenshot: {
       id: 'modeboard-desktop',
       alt: 'Modeboard Desktop settings showing which Desktop items are visible for a profile.',
-      aspectRatio: '2184 / 1648',
+      aspectRatio: '1400 / 1056',
+      width: 1400,
+      height: 1056,
+      hasThumbnail: true,
     },
   },
   {
@@ -53,8 +69,11 @@ const FEATURES = [
     text: 'Switch profiles from a menu bar dropdown without opening the app, or automate switching through Shortcuts.',
     screenshot: {
       id: 'modeboard-menu-bar',
-      alt: 'Modeboard menu bar icon open, showing a dropdown for switching profiles without opening the app.',
-      aspectRatio: '552 / 876',
+      alt: 'Modeboard menu bar dropdown showing Switch Profile, Settings, and Emergency Restore.',
+      aspectRatio: '524 / 444',
+      width: 524,
+      height: 444,
+      hasThumbnail: false,
     },
   },
   {
@@ -63,7 +82,10 @@ const FEATURES = [
     screenshot: {
       id: 'modeboard-backup-restore',
       alt: 'Modeboard backup and restore screen showing a snapshot of settings saved before a profile was applied.',
-      aspectRatio: '2184 / 1648',
+      aspectRatio: '1400 / 1056',
+      width: 1400,
+      height: 1056,
+      hasThumbnail: true,
     },
   },
 ] as const
@@ -71,15 +93,23 @@ const FEATURES = [
 const FAQS = [
   {
     q: 'Is Modeboard available yet?',
-    a: 'Not yet. Modeboard is in active development for macOS. This page will be updated with a real download link when it is ready.',
+    a: 'Not yet. Modeboard is in active development for macOS — there is no signed, downloadable build yet. This page will be updated with a real download link when one exists.',
   },
   {
-    q: 'Will Modeboard cost anything?',
-    a: "Pricing hasn't been decided or announced. It will be published here before release, not after.",
+    q: 'How much will Modeboard cost?',
+    a: "The planned price is $14.99 as a one-time purchase (introductory — it may change later), with a 14-day full-feature trial. There's no subscription. Nothing is chargeable yet since Modeboard isn't available to buy.",
   },
   {
-    q: 'Does Modeboard need an account?',
-    a: 'No. Modeboard is designed to work without an account, analytics, or a remote service.',
+    q: 'How many Macs can I use one license on?',
+    a: 'One person, on up to three personally controlled Macs.',
+  },
+  {
+    q: 'Do I need an account to activate Modeboard?',
+    a: "No. Modeboard activates with an offline signed access code — verifying your license doesn't need an account or an internet connection. Checking for app updates does need an internet connection, separately from license activation.",
+  },
+  {
+    q: "What's included in the price after I buy?",
+    a: 'All Modeboard 1.x updates are included at no extra cost. A future major version (2.0 or later) may be offered as a separate purchase.',
   },
   {
     q: 'Is it safe to let Modeboard change my system settings?',
@@ -99,7 +129,7 @@ export function Modeboard() {
   return (
     <>
       <Meta
-        title="Modeboard by Tideframe Labs"
+        title={meta.title}
         description={featuredProduct.description}
         structuredData={buildSoftwareApplicationSchema(featuredProduct)}
       />
@@ -117,6 +147,11 @@ export function Modeboard() {
           <div className="product-hero-meta">
             {featuredProduct.status !== 'coming-soon' ? <StatusBadge status={featuredProduct.status} /> : null}
             {featuredProduct.version ? <span className="meta-chip">Version {featuredProduct.version}</span> : null}
+            {commercial ? (
+              <span className="meta-chip">
+                ${commercial.priceUSD} {commercial.introductoryPrice ? 'introductory ' : ''}· one-time · {commercial.trialDays}-day trial
+              </span>
+            ) : null}
             {featuredProduct.platforms.map((platform) => (
               <PlatformBadge key={platform} platform={platform} />
             ))}
@@ -126,6 +161,11 @@ export function Modeboard() {
             status={featuredProduct.status}
             productName={featuredProduct.name}
           />
+          {!featuredProduct.downloadUrl ? (
+            <a className="text-link" href={`mailto:${siteConfig.supportEmail}?subject=Modeboard%20beta%20interest`}>
+              Ask about beta access <span>→</span>
+            </a>
+          ) : null}
           {featuredProduct.minimumOS ? (
             <p className="compat-brief">In development for {featuredProduct.minimumOS}</p>
           ) : null}
@@ -154,11 +194,48 @@ export function Modeboard() {
                 src={feature.screenshot.id}
                 alt={feature.screenshot.alt}
                 aspectRatio={feature.screenshot.aspectRatio}
+                width={feature.screenshot.width}
+                height={feature.screenshot.height}
+                hasThumbnail={feature.screenshot.hasThumbnail}
               />
             </div>
           </section>
         ))}
       </div>
+
+      {commercial ? (
+        <section className="section section-alt">
+          <div className="container narrow">
+            <p className="eyebrow">Pricing</p>
+            <h2>One license. No subscription.</h2>
+            <p className="lede">
+              Try every feature free for {commercial.trialDays} days, then buy once to keep it. Modeboard is a{' '}
+              {commercial.introductoryPrice ? 'one-time purchase — no monthly fee, ever.' : 'one-time purchase.'}
+            </p>
+            <ul>
+              <li>
+                <strong>{commercial.trialDays}-day free trial</strong> — every feature unlocked, no credit card
+                required to start.
+              </li>
+              <li>
+                <strong>
+                  ${commercial.priceUSD} {commercial.introductoryPrice ? 'introductory price' : 'price'}
+                </strong>{' '}
+                — a one-time purchase, not a subscription.
+                {commercial.introductoryPrice ? ' This introductory price may change later.' : ''}
+              </li>
+              <li>
+                <strong>{commercial.licenseScope}.</strong> Activate the same license on each Mac you personally
+                use.
+              </li>
+              <li>
+                <strong>{commercial.updatesIncluded} are included</strong> at no extra cost. A future major version
+                (2.0 or later) may be offered as a separate purchase.
+              </li>
+            </ul>
+          </div>
+        </section>
+      ) : null}
 
       <section className="section">
         <div className="container narrow">
@@ -174,6 +251,26 @@ export function Modeboard() {
         </div>
       </section>
 
+      {commercial ? (
+        <section className="section">
+          <div className="container narrow">
+            <p className="eyebrow">Activation &amp; updates</p>
+            <h2>Verified on your Mac. Updated on your terms.</h2>
+            <p>
+              Modeboard activates with <strong>{commercial.activation.toLowerCase()}</strong> — checking your
+              license doesn't need an internet connection or an account.
+            </p>
+            {commercial.updateMechanism ? (
+              <p>
+                Updates use <strong>{commercial.updateMechanism}</strong>. Checking for updates — manually or
+                automatically — does need an internet connection, since it has to ask Tideframe Labs' update
+                feed whether a newer version exists; your license itself is never involved in that check.
+              </p>
+            ) : null}
+          </div>
+        </section>
+      ) : null}
+
       <section className="privacy-band section">
         <div className="container split">
           <div>
@@ -181,8 +278,10 @@ export function Modeboard() {
             <h2>Your profiles stay on your Mac.</h2>
           </div>
           <p>
-            Modeboard is designed to work without an account, analytics, or a remote service. Your profile
-            information and backups are stored locally on your device.
+            Modeboard works without an account, analytics, or advertising. Your profile information, backups,
+            and license are stored and verified locally on your device. The only network requests Modeboard
+            makes are update checks — manual or automatic — which ask Tideframe Labs' update feed whether a
+            newer version exists.
           </p>
         </div>
       </section>
@@ -215,7 +314,8 @@ export function Modeboard() {
             <li>Focus Filter automation is experimental and depends on Apple APIs that may change between macOS versions.</li>
             <li>Some system-preference and Finder behavior Modeboard relies on are implementation details Apple could change, which may affect how a profile applies.</li>
             <li>Modeboard backs up your settings before changing them, but restoring every change perfectly in every situation isn't guaranteed.</li>
-            <li>Modeboard is pre-release — behavior, defaults, and feature names may still change before 1.0.</li>
+            <li>Checking for updates needs an internet connection; verifying your license does not.</li>
+            <li>Modeboard is pre-release — behavior, defaults, and feature names may still change before release.</li>
           </ul>
         </div>
       </section>
@@ -245,7 +345,20 @@ export function Modeboard() {
             status={featuredProduct.status}
             productName={featuredProduct.name}
           />
+          {featuredProduct.downloadUrl && featuredProduct.version ? (
+            <p className="fine-print">Version {featuredProduct.version}</p>
+          ) : null}
+          {featuredProduct.downloadUrl && featuredProduct.sha256 ? (
+            <p className="fine-print">
+              SHA-256: <code>{featuredProduct.sha256}</code>
+            </p>
+          ) : null}
           <div className="actions cta-links">
+            {!featuredProduct.downloadUrl ? (
+              <a className="text-link" href={`mailto:${siteConfig.supportEmail}?subject=Modeboard%20beta%20interest`}>
+                Ask about beta access <span>→</span>
+              </a>
+            ) : null}
             <Link className="text-link" to="/support">
               Support <span>→</span>
             </Link>

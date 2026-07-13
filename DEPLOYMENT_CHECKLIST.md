@@ -72,12 +72,20 @@ Once the domain is live, check the following by visiting the real URLs in a brow
 - [ ] `https://tideframelabs.com/changelog` loads
 - [ ] `https://tideframelabs.com/about` loads
 - [ ] `https://tideframelabs.com/brand` loads
-- [ ] A route opened directly (not by clicking a link), like `https://tideframelabs.com/modeboard`, loads correctly instead of showing a 404 — this confirms `public/_redirects` is working.
+- [ ] `https://tideframelabs.com/acknowledgments` loads and shows the Sparkle MIT License notice
+- [ ] A route opened directly (not by clicking a link), like `https://tideframelabs.com/products` (which relies on the `_redirects` SPA fallback), loads correctly instead of showing a 404.
 - [ ] A made-up address like `https://tideframelabs.com/does-not-exist` shows the site's own "That page drifted away" page.
-- [ ] `https://tideframelabs.com/sitemap.xml` loads and lists all 9 pages.
+- [ ] View source (not just the rendered page — your browser's actual "View Page Source", which shows the HTML before JavaScript runs) on `https://tideframelabs.com/modeboard` and confirm the `<title>` already says "Modeboard by Tideframe Labs" and there's a `<script type="application/ld+json">` block, without needing to wait for the page to finish loading. Repeat for `/privacy`, `/terms`, and `/support` — each should show its own title in raw HTML, not the homepage's.
+- [ ] `https://tideframelabs.com/sitemap.xml` loads and lists all 10 pages.
 - [ ] `https://tideframelabs.com/robots.txt` loads.
-- [ ] Pasting `https://tideframelabs.com/` into a social link-preview debugger (e.g. Facebook's [Sharing Debugger](https://developers.facebook.com/tools/debug/) or Twitter/X's card validator) shows the expected title, description, and image.
+- [ ] Pasting `https://tideframelabs.com/` and `https://tideframelabs.com/modeboard` into a social link-preview debugger (e.g. Facebook's [Sharing Debugger](https://developers.facebook.com/tools/debug/) or Twitter/X's card validator) shows the expected title, description, and the new social-preview image (not a broken image or the old placeholder).
 - [ ] A test email to `support@tideframelabs.com` and `hello@tideframelabs.com` both arrive.
 - [ ] The header stays visible while scrolling (sticky), and the mobile menu opens and closes correctly on a phone-sized screen.
+
+**Before setting a real `downloadUrl` in `src/data/products.ts`:**
+
+- [ ] The linked file is served over `https://`, is the exact signed/notarized build, and (if you've set a `sha256` checksum on the site) the checksum actually matches that exact file — run `shasum -a 256 <file>` locally and compare.
+- [ ] If Sparkle is wired up by then, confirm the appcast/feed URL it points to also uses `https://`.
+- [ ] Re-run a fact-check of the Modeboard app repo (permissions, network behavior, license verification) before flipping `status` to `'available'` — the site's current claims describe the *plan*, not a verified shipped build (see `CONTENT_CHECKLIST.md`).
 
 Before doing this, also confirm everything in `CONTENT_CHECKLIST.md` is either resolved or acceptable to launch with — this checklist gets the site live, but it doesn't check whether the content on it is finished.

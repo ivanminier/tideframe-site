@@ -4,6 +4,7 @@ import { Home } from './pages/Home'
 import { Modeboard } from './pages/Modeboard'
 import { Products } from './pages/Products'
 import { Brand } from './pages/Brand'
+import { Acknowledgments } from './pages/Acknowledgments'
 import { About, Changelog, NotFound, Privacy, Support, Terms } from './pages/InfoPages'
 import './App.css'
 
@@ -21,6 +22,7 @@ export default function App() {
           <Route path="changelog" element={<Changelog />} />
           <Route path="about" element={<About />} />
           <Route path="brand" element={<Brand />} />
+          <Route path="acknowledgments" element={<Acknowledgments />} />
           <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>

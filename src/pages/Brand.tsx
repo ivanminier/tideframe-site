@@ -5,7 +5,7 @@ import { useImageFallback } from '../hooks/useImageFallback'
 
 const COLORS = [
   { name: 'Deep Tide', variable: '--tide', hex: '#102A43' },
-  { name: 'Pacific Blue', variable: '--pacific', hex: '#327DA8' },
+  { name: 'Pacific Blue', variable: '--pacific', hex: '#2B6D93' },
   { name: 'Sea Glass', variable: '--glass', hex: '#65B7A6' },
   { name: 'Foam', variable: '--foam', hex: '#F7FAF9' },
   { name: 'Coastal Sand', variable: '--sand', hex: '#E8DDCD' },

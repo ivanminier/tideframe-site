@@ -1,0 +1,141 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 1200px; height: 630px; overflow: hidden; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", sans-serif;
+    background: radial-gradient(1100px 700px at -5% -10%, #1a3a5c 0%, transparent 55%),
+                radial-gradient(900px 600px at 110% 115%, #1f4a3f 0%, transparent 50%),
+                linear-gradient(135deg, #0c1f36 0%, #0a1830 60%, #081426 100%);
+    position: relative;
+  }
+  .glow {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(70px);
+  }
+  .glow--pacific { width: 480px; height: 480px; top: -160px; left: -120px; background: rgba(50, 125, 168, 0.55); }
+  .glow--coral { width: 420px; height: 420px; bottom: -180px; right: -80px; background: rgba(232, 121, 79, 0.32); }
+
+  .frame {
+    position: relative;
+    width: 1200px;
+    height: 630px;
+    padding: 64px 72px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .brand-row { display: flex; align-items: center; gap: 14px; }
+  .brand-mark { width: 40px; height: 40px; }
+  .brand-name {
+    color: #eef4f2;
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+  }
+
+  .main {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 56px;
+  }
+
+  .copy { max-width: 620px; }
+  .eyebrow {
+    color: #8fd0c4;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    margin-bottom: 18px;
+  }
+  h1 {
+    color: #ffffff;
+    font-size: 54px;
+    font-weight: 680;
+    line-height: 1.08;
+    letter-spacing: -0.02em;
+    margin-bottom: 22px;
+  }
+  .sub {
+    color: #b9c8d4;
+    font-size: 23px;
+    line-height: 1.45;
+    font-weight: 440;
+  }
+  .sub strong { color: #f3f6f5; font-weight: 620; }
+
+  .product-panel {
+    flex: 0 0 auto;
+    width: 300px;
+    height: 300px;
+    border-radius: 40px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+    backdrop-filter: blur(6px);
+  }
+  .product-panel img { width: 168px; height: 168px; border-radius: 38px; box-shadow: 0 24px 50px rgba(0,0,0,0.45); }
+  .product-name { color: #ffffff; font-size: 22px; font-weight: 650; }
+  .product-tag { color: #9fb3c0; font-size: 15px; }
+
+  .footer-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .domain { color: #7d92a1; font-size: 16px; font-weight: 560; letter-spacing: 0.01em; }
+  .status-chip {
+    display: inline-flex;
+    align-items: center;
+    padding: 7px 16px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.14);
+    color: #d8e2e6;
+    font-size: 14px;
+    font-weight: 600;
+  }
+</style>
+</head>
+<body>
+  <span class="glow glow--pacific"></span>
+  <span class="glow glow--coral"></span>
+  <div class="frame">
+    <div class="brand-row">
+      <svg class="brand-mark" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+        <path fill="#f5f5f5" transform="scale(1.973)" d="M380.561 293.724C398.5 292.954 421.299 293.56 439.637 293.526L556.615 293.48L614.428 293.471C645.965 293.366 668.287 291.376 694.377 313.528C712.341 328.551 723.49 350.182 725.301 373.53C726.475 389.836 725.677 416.933 725.669 433.869L725.531 545.972L725.568 611.975C725.605 626.13 726.357 646.066 723.937 659.586C721.076 675.332 713.939 689.987 703.306 701.947C687.568 719.896 667.157 728.841 643.625 730.373C624.81 731.173 600.928 730.609 581.836 730.594L470.378 730.523L410.357 730.557C398.534 730.587 379.638 731.202 368.539 729.183C353.884 726.414 340.252 719.728 329.09 709.835C311.124 694.011 300.307 671.604 299.092 647.693C298.264 632.204 299.083 609.868 299.059 593.684L299.022 478.448L299 408.68C298.992 396.351 298.396 375.002 300.438 363.487C303.276 348.089 310.312 333.774 320.768 322.12C336.204 305.18 357.678 294.982 380.561 293.724ZM323.573 497.282C335.138 476.661 348.087 461.451 369.466 450.378C438.631 414.557 519.055 448.233 587.622 466.383C611.71 472.903 659.855 479.819 681.922 467.076C691.004 461.831 697.307 453.162 699.861 443.028C702.295 433.371 701.556 378.397 699.706 368.333C698.312 360.943 695.58 353.87 691.645 347.462C670.823 313.374 637.308 317.979 603.047 317.978L525.236 317.981L432.933 318.035C417.603 318.033 397.524 317.446 382.45 318.207C343.467 321.459 321.946 351.008 323.302 388.687C324.589 424.438 322.162 461.485 323.573 497.282ZM701.032 604.187C701.026 603.663 701.187 600.608 700.775 600.291C700.455 600.378 700.138 601.165 700.031 601.354C689.017 630.884 661.287 633.081 633.077 631.63C611.43 630.516 589.933 626.254 568.876 621.233C515.205 606.452 465.647 582.227 408.278 589.671C374.937 593.1 340.65 607.45 327.877 640.916C323.653 651.983 324.34 658.615 329.205 669.621C337.928 689.355 358.326 704.148 380.012 705.401C395.978 706.324 412.748 705.851 428.796 705.85L515.621 705.81L599.639 705.813C613.86 705.815 627.886 706.022 642.353 705.65C671.079 704.911 697.271 680.762 700.349 652.199C701.945 637.388 701.014 619.416 701.032 604.187ZM700.958 478.241C700.977 477.558 701.234 473.989 700.747 473.615L700.652 473.67C700.413 474.134 700.408 474.301 700.268 474.842C691.985 501.247 668.634 505.984 644.018 506.173C567.169 506.765 500.009 459.861 422.245 467.436C369.869 472.539 328.436 499.073 322.879 554.949C347.051 501.911 413.486 490.474 465.575 497.749C507.562 503.614 544.537 518.576 584.958 529.216C607.661 535.193 656.698 540.668 678.39 531.291C686.757 527.688 693.533 521.174 697.462 512.955C702.635 501.91 701.54 490.12 700.958 478.241ZM323.236 612.126C366.81 534.366 470.409 555.305 539.569 579.114C551.805 583.326 572.445 589.756 585.073 591.876C616.221 598.478 691.707 612.563 700.153 568.131C701.921 558.828 700.349 546.331 700.881 536.616C690.367 563.043 671.314 569.055 644.091 569.677C585.62 571.014 532.278 543.545 476.108 531.843C459.481 528.388 442.49 527.004 425.523 527.721C372.807 529.935 328.527 555.636 323.236 612.126Z"/>
+      </svg>
+      <span class="brand-name">Tideframe Labs</span>
+    </div>
+
+    <div class="main">
+      <div class="copy">
+        <p class="eyebrow">Independent software studio</p>
+        <h1>Thoughtful software for personal technology.</h1>
+        <p class="sub">Native, focused software with no accounts and no tracking — currently building <strong>Modeboard</strong> for the Mac.</p>
+      </div>
+      <div class="product-panel">
+        <img src="modeboard-icon.png" alt="">
+        <div class="product-name">Modeboard</div>
+        <div class="product-tag">for macOS</div>
+      </div>
+    </div>
+
+    <div class="footer-row">
+      <span class="domain">tideframelabs.com</span>
+      <span class="status-chip">In development</span>
+    </div>
+  </div>
+</body>
+</html>

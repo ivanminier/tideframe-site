@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
 import { siteConfig } from '../config'
 
-const DEFAULT_OG_IMAGE = '/social-preview.svg'
+const DEFAULT_OG_IMAGE = '/social-preview.png'
 
 function ensureMetaTag(selector: string, create: () => Element) {
   let tag = document.querySelector(selector)

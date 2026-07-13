@@ -7,8 +7,11 @@ import { ProductScreenshot } from '../components/ProductScreenshot'
 import { SectionHeading } from '../components/SectionHeading'
 import { siteConfig } from '../config'
 import { featuredProduct, products } from '../data/products'
+import { getRouteMeta } from '../data/routeMeta'
 import { useImageFallback } from '../hooks/useImageFallback'
 import { useReveal } from '../hooks/useReveal'
+
+const meta = getRouteMeta('/')
 
 const FUTURE_PLATFORMS = ['iPhone', 'iPad', 'Apple Watch', 'Apple TV', 'iMessage', 'Android', 'Web'] as const
 
@@ -37,10 +40,7 @@ export function Home() {
 
   return (
     <>
-      <Meta
-        title="Tideframe Labs — Thoughtful software for a more personal Mac"
-        description={siteConfig.descriptor}
-      />
+      <Meta title={meta.title} description={meta.description} />
 
       <section className="hero-section home-hero">
         <span className="glow glow--pacific glow--top-right" aria-hidden="true" />
@@ -92,7 +92,10 @@ export function Home() {
           <ProductScreenshot
             src="modeboard-overview"
             alt="Modeboard overview window listing saved profiles for work, rest, and study."
-            aspectRatio="2184 / 1648"
+            aspectRatio="1400 / 1056"
+            width={1400}
+            height={1056}
+            hasThumbnail
             priority
           />
         </div>

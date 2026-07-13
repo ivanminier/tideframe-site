@@ -7,7 +7,6 @@ export const siteConfig = {
   productUrl: 'https://tideframelabs.com/modeboard',
   supportEmail: 'support@tideframelabs.com',
   generalEmail: 'hello@tideframelabs.com',
-  versionStatus: '1.0 — In development',
   founder: 'Ivan Minier',
   copyright: '© 2026 Ivan Minier. All rights reserved.',
 } as const

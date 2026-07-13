@@ -90,9 +90,12 @@ p { color: var(--muted); line-height: 1.72; }
 .prose p, .prose li { font-size: 1.04rem; }
 .prose a:not(.button) { color: #276f98; text-underline-offset: 3px; }
 .prose .button { margin-top: 20px; color: white; }
-.updated, .fine-print { font-size: .84rem !important; color: #6d787d; }
-.legal-alert { padding: 26px; border: 1px solid #cab99f; background: #f4ede4; }
-.legal-alert strong { color: var(--tide); }.legal-alert p { margin: 8px 0 0; }
+.updated, .fine-print { font-size: .84rem !important; color: var(--muted); }
+.license-block {
+  margin: 18px 0; padding: 20px 24px; border-radius: 12px; background: var(--foam); border: 1px solid var(--line);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: .82rem; line-height: 1.6;
+  color: var(--charcoal); white-space: pre-wrap; overflow-x: auto;
+}
 .release { border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); padding: 34px 0; display: grid; grid-template-columns: 180px 1fr; gap: 40px; }
 .release h2 { margin: 0 0 6px; }.release span { color: var(--pacific); font-weight: 650; font-size: .88rem; }
 .site-footer { padding: 76px 0 32px; background: #0c2235; color: white; }
@@ -259,6 +262,7 @@ p { color: var(--muted); line-height: 1.72; }
 .product-hero-meta { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 10px; margin: 26px 0 6px; }
 .meta-chip { padding: 5px 13px; border-radius: 999px; border: 1px solid var(--line); font-size: .74rem; color: var(--muted); }
 .product-hero .button { margin-top: 22px; }
+.product-hero .text-link { margin-top: 16px; }
 .faq-list { display: flex; flex-direction: column; gap: 28px; margin-top: 8px; }
 .faq-item dt { color: var(--tide); font-weight: 640; font-size: 1.08rem; }
 .faq-item dd { margin: 8px 0 0; color: var(--muted); }

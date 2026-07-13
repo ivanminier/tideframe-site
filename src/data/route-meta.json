@@ -1,0 +1,34 @@
+{
+  "/": {
+    "title": "Tideframe Labs — Thoughtful software for a more personal Mac",
+    "description": "Independent software studio creating thoughtful software for personal technology."
+  },
+  "/modeboard": {
+    "title": "Modeboard by Tideframe Labs",
+    "description": "Modeboard turns your wallpaper, Dock, appearance, menu bar, and Desktop into profiles you can switch together.",
+    "structuredData": {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "Modeboard",
+      "description": "Modeboard turns your wallpaper, Dock, appearance, menu bar, and Desktop into profiles you can switch together.",
+      "applicationCategory": "UtilitiesApplication",
+      "operatingSystem": "macOS 15 or later",
+      "url": "https://tideframelabs.com/modeboard"
+    }
+  },
+  "/privacy": {
+    "h1": "Privacy Policy",
+    "title": "Privacy Policy — Tideframe Labs",
+    "description": "Modeboard keeps its data on your Mac — no account, no analytics, no network access."
+  },
+  "/terms": {
+    "h1": "Software Terms",
+    "title": "Software Terms — Tideframe Labs",
+    "description": "Plain-language terms for using Modeboard, written by Tideframe Labs."
+  },
+  "/support": {
+    "h1": "How can we help?",
+    "title": "How can we help? — Tideframe Labs",
+    "description": "Modeboard is still in development. This page describes what to expect once it's available, and how to reach support in the meantime."
+  }
+}
