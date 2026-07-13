@@ -1,6 +1,6 @@
 export const siteConfig = {
   company: 'Tideframe Labs',
-  descriptor: 'Independent software studio creating thoughtful software for personal technology.',
+  descriptor: 'Independent Mac software built in Vermont.',
   domain: 'tideframelabs.com',
   siteUrl: 'https://tideframelabs.com',
   productName: 'Modeboard',
@@ -13,4 +13,3 @@ export const siteConfig = {
 
 export const appleNotice =
   'Apple, macOS, and related marks are trademarks of Apple Inc. Tideframe Labs and Modeboard are independent software and are not affiliated with Apple Inc.'
-

@@ -17,13 +17,12 @@ export function Acknowledgments() {
       <div className="prose container narrow">
         <h2>Sparkle</h2>
         <p>
-          Modeboard is planned to use{' '}
+          Modeboard uses{' '}
           <a href="https://sparkle-project.org/" target="_blank" rel="noopener noreferrer">
             Sparkle
           </a>{' '}
-          to check for and install app updates. Sparkle is an independent open-source project — Tideframe Labs
-          did not create it and does not own it, and use of Sparkle doesn't imply any endorsement by its
-          maintainers.
+          to check for and install app updates. Sparkle is an independent open-source project distributed under
+          the MIT License.
         </p>
         <p>Sparkle is distributed under the MIT License:</p>
         <pre className="license-block">
@@ -47,8 +46,7 @@ CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFT
 OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.`}
         </pre>
         <p className="fine-print">
-          This is the standard MIT License text. For the complete, authoritative license — including the full
-          list of copyright holders — see{' '}
+          For the complete license and contributor information, see{' '}
           <a href="https://github.com/sparkle-project/Sparkle/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">
             Sparkle's LICENSE file on GitHub
           </a>

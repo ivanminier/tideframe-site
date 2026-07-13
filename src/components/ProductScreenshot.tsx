@@ -10,7 +10,7 @@ export function ProductScreenshot({
   hasThumbnail = false,
   priority = false,
 }: {
-  /** Basename (no extension) under public/screenshots/, e.g. "modeboard-overview". */
+  /** Basename (no extension) under public/screenshots/, e.g. "modeboard-profile-editor". */
   src: string
   alt: string
   caption?: string
@@ -24,37 +24,24 @@ export function ProductScreenshot({
 }) {
   const { state, onLoad, onError } = useImageFallback()
 
+  if (state === 'error') return null
+
   return (
     <figure className="product-screenshot">
       <div className="product-screenshot-frame" style={{ aspectRatio }}>
-        <div className="product-screenshot-chrome" aria-hidden="true">
-          <i />
-          <i />
-          <i />
-        </div>
         <div className="product-screenshot-image">
-          {state !== 'error' ? (
-            // A single <img> (no <picture><source webp>): this site's SPA fallback (public/_redirects)
-            // returns 200 + HTML for any missing file rather than a 404, so a candidate that probes
-            // for a nonexistent file never falls through gracefully — it just fails to decode. srcset
-            // below only ever references `-700` files confirmed to exist (hasThumbnail), for the same reason.
-            <img
-              src={`/screenshots/${src}.png`}
-              srcSet={hasThumbnail ? `/screenshots/${src}-700.png 700w, /screenshots/${src}.png ${width}w` : undefined}
-              sizes={hasThumbnail ? '(max-width: 800px) 84vw, 560px' : undefined}
-              width={width}
-              height={height}
-              alt={alt}
-              loading={priority ? 'eager' : 'lazy'}
-              decoding="async"
-              onLoad={onLoad}
-              onError={onError}
-            />
-          ) : (
-            <div className="product-screenshot-placeholder">
-              <span>Screenshot coming soon</span>
-            </div>
-          )}
+          <img
+            src={`/screenshots/${src}.png`}
+            srcSet={hasThumbnail ? `/screenshots/${src}-700.png 700w, /screenshots/${src}.png ${width}w` : undefined}
+            sizes={hasThumbnail ? '(max-width: 800px) 92vw, 560px' : undefined}
+            width={width}
+            height={height}
+            alt={alt}
+            loading={priority ? 'eager' : 'lazy'}
+            decoding="async"
+            onLoad={onLoad}
+            onError={onError}
+          />
         </div>
       </div>
       {caption ? <figcaption>{caption}</figcaption> : null}

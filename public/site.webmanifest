@@ -1,0 +1,16 @@
+{
+  "name": "Tideframe Labs",
+  "short_name": "Tideframe",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#F7FAF9",
+  "theme_color": "#102A43",
+  "icons": [
+    {
+      "src": "/tideframe-mark.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

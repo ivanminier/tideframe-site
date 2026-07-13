@@ -11,6 +11,9 @@
                 radial-gradient(900px 600px at 110% 115%, #1f4a3f 0%, transparent 50%),
                 linear-gradient(135deg, #0c1f36 0%, #0a1830 60%, #081426 100%);
     position: relative;
+    /* Quick Look renders HTML thumbnails in a square canvas; this offset keeps the 1200×630 card centered for export. */
+    transform: translateY(228px) scale(.8);
+    transform-origin: top left;
   }
   .glow {
     position: absolute;
@@ -121,12 +124,12 @@
 
     <div class="main">
       <div class="copy">
-        <p class="eyebrow">Independent software studio</p>
-        <h1>Thoughtful software for personal technology.</h1>
-        <p class="sub">Native, focused software with no accounts and no tracking — currently building <strong>Modeboard</strong> for the Mac.</p>
+        <p class="eyebrow">Independent Mac software</p>
+        <h1>Make your Mac work more like you do.</h1>
+        <p class="sub">Focused Mac apps built in Vermont, starting with <strong>Modeboard</strong>.</p>
       </div>
       <div class="product-panel">
-        <img src="modeboard-icon.png" alt="">
+        <img src="../../public/modeboard-icon.png" alt="">
         <div class="product-name">Modeboard</div>
         <div class="product-tag">for macOS</div>
       </div>

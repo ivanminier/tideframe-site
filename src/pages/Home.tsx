@@ -1,26 +1,19 @@
 import { Link } from 'react-router-dom'
-import { GlassPanel } from '../components/GlassPanel'
 import { Meta } from '../components/Meta'
-import { PlatformBadge } from '../components/PlatformBadge'
-import { ProductCard } from '../components/ProductCard'
 import { ProductScreenshot } from '../components/ProductScreenshot'
-import { SectionHeading } from '../components/SectionHeading'
 import { siteConfig } from '../config'
-import { featuredProduct, products } from '../data/products'
 import { getRouteMeta } from '../data/routeMeta'
 import { useImageFallback } from '../hooks/useImageFallback'
 import { useReveal } from '../hooks/useReveal'
 
 const meta = getRouteMeta('/')
 
-const FUTURE_PLATFORMS = ['iPhone', 'iPad', 'Apple Watch', 'Apple TV', 'iMessage', 'Android', 'Web'] as const
-
 function HeroIcon() {
   const { state, onLoad, onError } = useImageFallback()
   return (
     <div className="hero-icon" aria-hidden="true">
       {state !== 'error' ? (
-        <img src="/tideframe-icon-glossy.png" alt="" width="128" height="128" onLoad={onLoad} onError={onError} />
+        <img src="/tideframe-mark.svg" alt="" width="128" height="128" onLoad={onLoad} onError={onError} />
       ) : (
         <div className="tide-art"><div className="sun" /><span /><span /><span /><span /></div>
       )}
@@ -31,11 +24,8 @@ function HeroIcon() {
 export function Home() {
   const intro = useReveal<HTMLElement>()
   const featured = useReveal<HTMLElement>()
-  const philosophy = useReveal<HTMLElement>()
-  const grid = useReveal<HTMLElement>()
-  const future = useReveal<HTMLElement>()
+  const principles = useReveal<HTMLElement>()
   const privacy = useReveal<HTMLElement>()
-  const about = useReveal<HTMLElement>()
   const contact = useReveal<HTMLElement>()
 
   return (
@@ -47,19 +37,14 @@ export function Home() {
         <span className="glow glow--coral glow--bottom-left" aria-hidden="true" />
         <div className="container hero-grid">
           <div className="hero-copy">
-            <p className="eyebrow">Tideframe Labs</p>
-            <h1>Thoughtful software for a more personal Mac.</h1>
+            <p className="eyebrow">Independent Mac software</p>
+            <h1>Make your Mac work more like you do.</h1>
             <p className="lede">
-              Tideframe Labs is an independent software studio designing focused, native software for personal
-              technology — starting with the Mac.
+              Tideframe Labs builds focused Mac apps that make everyday workflows easier to shape, switch, and manage.
             </p>
             <div className="actions">
-              <Link className="button" to="/modeboard">
-                Explore Modeboard <span>→</span>
-              </Link>
-              <Link className="text-link" to="/about">
-                About Tideframe Labs <span>→</span>
-              </Link>
+              <Link className="button" to="/modeboard">Explore Modeboard <span>→</span></Link>
+              <Link className="text-link" to="/about">About the studio <span>→</span></Link>
             </div>
           </div>
           <HeroIcon />
@@ -68,12 +53,11 @@ export function Home() {
 
       <section className="section studio-intro" ref={intro.ref}>
         <div className={`container narrow${intro.visible ? ' reveal is-visible' : ' reveal'}`}>
-          <p className="eyebrow">Independent, by design</p>
-          <h2>One person, one focus at a time.</h2>
+          <p className="eyebrow">Built independently in Vermont</p>
+          <h2>Useful software, made with a clear point of view.</h2>
           <p className="lede">
-            Tideframe Labs is run by Ivan Minier. There's no product-management team or growth target to hit —
-            just software built carefully, released when it's ready, and supported directly by the person who
-            made it.
+            Tideframe Labs is an independent software studio created by Ivan Minier. Its first release,
+            Modeboard, started with a simple idea: changing Focus modes should be able to change more than notifications.
           </p>
         </div>
       </section>
@@ -81,17 +65,16 @@ export function Home() {
       <section className="product-intro section" ref={featured.ref}>
         <div className={`container split${featured.visible ? ' reveal is-visible' : ' reveal'}`}>
           <div>
-            <p className="eyebrow">Our first application</p>
-            <h2>Modeboard</h2>
-            <p className="display-copy">{featuredProduct.tagline}</p>
-            <p>{featuredProduct.description}</p>
-            <Link className="text-link" to="/modeboard">
-              Meet Modeboard <span>→</span>
-            </Link>
+            <p className="eyebrow">Meet Modeboard</p>
+            <h2>A workspace for every part of your day.</h2>
+            <p>
+              Modeboard saves your wallpaper, Dock, appearance, menu bar, and Desktop setup as profiles you can switch together.
+            </p>
+            <Link className="text-link" to="/modeboard">See how Modeboard works <span>→</span></Link>
           </div>
           <ProductScreenshot
-            src="modeboard-overview"
-            alt="Modeboard overview window listing saved profiles for work, rest, and study."
+            src="modeboard-profile-editor"
+            alt="Modeboard profile editor showing a Do Not Disturb profile with wallpaper and automation settings."
             aspectRatio="1400 / 1056"
             width={1400}
             height={1056}
@@ -101,90 +84,22 @@ export function Home() {
         </div>
       </section>
 
-      <section className="principles section" ref={philosophy.ref}>
-        <div className={`container${philosophy.visible ? ' reveal is-visible' : ' reveal'}`}>
-          <p className="eyebrow">Made with intention</p>
-          <h2>Software should feel at home on your Mac.</h2>
+      <section className="principles section" ref={principles.ref}>
+        <div className={`container${principles.visible ? ' reveal is-visible' : ' reveal'}`}>
+          <p className="eyebrow">What matters here</p>
+          <h2>Focused, familiar, and easy to trust.</h2>
           <div className="three-up">
-            <article>
-              <span>01</span>
-              <h3>Focused</h3>
-              <p>Tools built around a clear purpose, without unnecessary complexity.</p>
-            </article>
-            <article>
-              <span>02</span>
-              <h3>Native</h3>
-              <p>Designed for the platform, with familiar interactions and thoughtful details.</p>
-            </article>
-            <article>
-              <span>03</span>
-              <h3>Personal</h3>
-              <p>Software that adapts to how you work while keeping you in control.</p>
-            </article>
+            <article><span>01</span><h3>Clear purpose</h3><p>Each product starts with one useful job and stays focused on doing it well.</p></article>
+            <article><span>02</span><h3>Made for the Mac</h3><p>Native controls and familiar interactions help the software feel at home from the first launch.</p></article>
+            <article><span>03</span><h3>Respect for your data</h3><p>Modeboard works without an account, analytics, advertising, or cloud storage for your profiles.</p></article>
           </div>
-        </div>
-      </section>
-
-      <section className="section section-alt" ref={grid.ref}>
-        <div className={`container${grid.visible ? ' reveal is-visible' : ' reveal'}`}>
-          <SectionHeading eyebrow="Products" title="What Tideframe Labs makes" description="One product so far. See it grow at the products page." />
-          <div className="products-grid">
-            {products.map((product) => (
-              <ProductCard key={product.slug} product={product} />
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="section" ref={future.ref}>
-        <div className={`container narrow${future.visible ? ' reveal is-visible' : ' reveal'}`}>
-          <p className="eyebrow">Where this is headed</p>
-          <h2>Built for the Mac first. Designed with more in mind.</h2>
-          <p className="lede">
-            Tideframe Labs is starting with the Mac because that's where the studio's first idea belongs. Personal
-            technology extends well beyond it, and future products may too.
-          </p>
-          <div className="future-platforms" aria-label="Platforms Tideframe Labs may build for in the future">
-            {FUTURE_PLATFORMS.map((platform) => (
-              <PlatformBadge key={platform} platform={platform} />
-            ))}
-          </div>
-          <p className="fine-print">
-            None of these are available today. This list describes a direction, not a current product — Tideframe
-            Labs will only claim a platform once something real ships for it.
-          </p>
         </div>
       </section>
 
       <section className="privacy-band section" ref={privacy.ref}>
         <div className={`container split${privacy.visible ? ' reveal is-visible' : ' reveal'}`}>
-          <div>
-            <p className="eyebrow">Private, native, and yours</p>
-            <h2>No accounts. No analytics. No compromise on feel.</h2>
-          </div>
-          <p>
-            This website and every Tideframe Labs product are built without analytics, tracking, or accounts.
-            Software here is written natively for its platform rather than wrapped from a cross-platform
-            framework, so it should feel like it belongs on your Mac — not like a website pretending to be an
-            app.
-          </p>
-        </div>
-      </section>
-
-      <section className="section section-alt" ref={about.ref}>
-        <div className={`container narrow${about.visible ? ' reveal is-visible' : ' reveal'}`}>
-          <GlassPanel>
-            <p className="eyebrow">About</p>
-            <h2>A small studio for thoughtful Mac software.</h2>
-            <p>
-              Ivan Minier is the independent developer and designer behind Tideframe Labs. Modeboard is the
-              studio's first product, built from a personal itch to make Focus modes feel like they change more
-              than a wallpaper.
-            </p>
-            <Link className="text-link" to="/about">
-              More about Tideframe Labs <span>→</span>
-            </Link>
-          </GlassPanel>
+          <div><p className="eyebrow">Mac first</p><h2>Built for the platform where it belongs.</h2></div>
+          <p>Modeboard is built for the Mac. Future Tideframe Labs products will be announced when they are ready.</p>
         </div>
       </section>
 
@@ -192,10 +107,7 @@ export function Home() {
         <div className={`container centered${contact.visible ? ' reveal is-visible' : ' reveal'}`}>
           <p className="eyebrow">Get in touch</p>
           <h2>Questions, feedback, or press?</h2>
-          <p>
-            Email <a href={`mailto:${siteConfig.generalEmail}`}>{siteConfig.generalEmail}</a>, or visit{' '}
-            <Link to="/support">Support</Link> for Modeboard help.
-          </p>
+          <p>Email <a href={`mailto:${siteConfig.generalEmail}`}>{siteConfig.generalEmail}</a>, or visit <Link to="/support">Support</Link> for Modeboard help.</p>
         </div>
       </section>
     </>

@@ -1,7 +1,11 @@
 {
   "/": {
-    "title": "Tideframe Labs — Thoughtful software for a more personal Mac",
-    "description": "Independent software studio creating thoughtful software for personal technology."
+    "title": "Tideframe Labs — Independent Mac software",
+    "description": "Tideframe Labs builds focused Mac apps that make everyday workflows easier to shape, switch, and manage."
+  },
+  "/products": {
+    "title": "Products — Tideframe Labs",
+    "description": "Mac software from Tideframe Labs, an independent studio based in Vermont."
   },
   "/modeboard": {
     "title": "Modeboard by Tideframe Labs",
@@ -19,16 +23,32 @@
   "/privacy": {
     "h1": "Privacy Policy",
     "title": "Privacy Policy — Tideframe Labs",
-    "description": "Modeboard keeps its data on your Mac — no account, no analytics, no network access."
+    "description": "Modeboard keeps profiles and backups on your Mac, with no account, analytics, advertising, or tracking."
   },
   "/terms": {
     "h1": "Software Terms",
     "title": "Software Terms — Tideframe Labs",
-    "description": "Plain-language terms for using Modeboard, written by Tideframe Labs."
+    "description": "Terms for the Modeboard trial, license, updates, support, and use."
   },
   "/support": {
     "h1": "How can we help?",
     "title": "How can we help? — Tideframe Labs",
-    "description": "Modeboard is still in development. This page describes what to expect once it's available, and how to reach support in the meantime."
+    "description": "Modeboard support for installation, permissions, backups, diagnostics, updates, and contact."
+  },
+  "/about": {
+    "title": "Independent Mac software, built in Vermont. — Tideframe Labs",
+    "description": "Tideframe Labs is a software studio founded by Ivan Minier."
+  },
+  "/brand": {
+    "title": "Brand — Tideframe Labs",
+    "description": "Tideframe Labs brand assets: logo marks, colors, and naming guidelines."
+  },
+  "/acknowledgments": {
+    "title": "Acknowledgments — Tideframe Labs",
+    "description": "Third-party open-source software used by Modeboard."
+  },
+  "/changelog": {
+    "title": "Changelog — Tideframe Labs",
+    "description": "Release notes and important changes to Modeboard."
   }
 }

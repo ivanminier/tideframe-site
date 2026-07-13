@@ -30,7 +30,7 @@ const organizationSchema = {
   '@type': 'Organization',
   name: 'Tideframe Labs',
   url: SITE_URL,
-  description: 'Independent software studio creating thoughtful software for personal technology.',
+  description: 'Independent Mac software built in Vermont.',
   email: 'hello@tideframelabs.com',
   founder: { '@type': 'Person', name: 'Ivan Minier' },
 }

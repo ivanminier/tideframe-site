@@ -1,7 +1,6 @@
 :root {
   --tide: #102a43; --pacific: #2b6d93; --glass: #65b7a6; --foam: #f7faf9;
   --sand: #e8ddcd; --charcoal: #172026; --muted: #52616b; --line: #d9e3e3;
-  /* Placeholder — resample from the glossy Tideframe icon once it's supplied, see CONTENT_CHECKLIST.md */
   --coral: #e8794f; --coral-glow: rgba(232, 121, 79, .28);
   font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", sans-serif;
   color: var(--charcoal); background: var(--foam); font-synthesis: none;
@@ -21,4 +20,3 @@ img { display: block; max-width: 100%; }
   .reveal { opacity: 1 !important; transform: none !important; }
   .parallax { transform: none !important; }
 }
-

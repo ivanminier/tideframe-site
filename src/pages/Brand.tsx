@@ -25,14 +25,12 @@ function BrandAsset({
   dark?: boolean
 }) {
   const { state, onLoad, onError } = useImageFallback()
+  if (state === 'error') return null
+
   return (
     <div className="brand-asset">
       <div className={`brand-asset-preview${dark ? ' brand-asset-preview--dark' : ''}`}>
-        {state !== 'error' ? (
-          <img src={src} alt={alt} onLoad={onLoad} onError={onError} />
-        ) : (
-          <span className="brand-asset-missing">Not yet uploaded</span>
-        )}
+        <img src={src} alt={alt} onLoad={onLoad} onError={onError} />
       </div>
       {state === 'loaded' ? (
         <a className="text-link" href={src} download>
@@ -60,12 +58,12 @@ export function Brand() {
         </div>
       </section>
 
-      <section className="section">
+      <section className="section brand-marks-section">
         <div className="container">
           <SectionHeading
             eyebrow="Marks"
             title="Logo marks"
-            description="Use the mark as provided. Don't recolor, distort, rotate, or add effects to it."
+            description="Download the approved files for press, reviews, and partner materials."
           />
           <div className="brand-assets-grid">
             <BrandAsset src="/tideframe-mark.svg" alt="Tideframe Labs mark" downloadName="mark (SVG)" />
@@ -99,13 +97,12 @@ export function Brand() {
           <SectionHeading eyebrow="Naming" title="Approved naming" />
           <ul>
             <li>
-              Refer to the studio as <strong>Tideframe Labs</strong> — not "Tideframe," "Tideframe Inc.," or
-              "Tideframe LLC." Tideframe Labs is not incorporated under any of those forms.
+              Refer to the studio as <strong>Tideframe Labs</strong>, not simply "Tideframe."
             </li>
             <li>
               Refer to the product as <strong>Modeboard</strong>, not "Mode Board" or "ModeBoard."
             </li>
-            <li>Don't use the ® symbol — no Tideframe Labs mark is a registered trademark.</li>
+            <li>Do not add a registration symbol to the Tideframe Labs or Modeboard names.</li>
             <li>Don't describe Modeboard as an Apple product, or as endorsed, certified, or reviewed by Apple.</li>
           </ul>
         </div>

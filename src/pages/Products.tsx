@@ -9,24 +9,23 @@ export function Products() {
     <>
       <Meta
         title="Products — Tideframe Labs"
-        description="Software from Tideframe Labs, an independent studio building thoughtful software for personal technology."
+        description="Mac software from Tideframe Labs, an independent studio based in Vermont."
       />
       <section className="page-hero">
         <div className="container narrow">
           <p className="eyebrow">Tideframe Labs</p>
           <h1>Products</h1>
           <p className="lede">
-            Everything Tideframe Labs currently makes, in one place. There is one product so far — more will
-            appear here as they're ready, not before.
+            Tideframe Labs builds focused software for the Mac, starting with Modeboard.
           </p>
         </div>
       </section>
       <section className="section">
         <div className="container">
           <SectionHeading
-            eyebrow="Available now"
+            eyebrow="Coming soon"
             title="Modeboard"
-            description="The studio's first application, currently in development for the Mac."
+            description="The studio's first app is currently in development for macOS 15 and later."
           />
           <div className="products-grid">
             {products.map((product) => (
@@ -35,15 +34,12 @@ export function Products() {
           </div>
         </div>
       </section>
-      <section className="section">
+      <section className="section compact-section">
         <div className="container narrow centered">
           <GlassPanel className="products-more-panel">
-            <p className="eyebrow">More in development</p>
-            <h2>Additional products aren't ready to announce yet.</h2>
-            <p>
-              Tideframe Labs is a small, independent studio. When a new product is ready to share — for iPhone,
-              iPad, or elsewhere — it will appear on this page and in the changelog, not before.
-            </p>
+            <p className="eyebrow">What comes next</p>
+            <h2>New products will be announced when they are ready.</h2>
+            <p>For now, the studio is focused on making Modeboard a strong first release.</p>
           </GlassPanel>
         </div>
       </section>

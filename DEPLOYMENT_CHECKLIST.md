@@ -69,16 +69,15 @@ Once the domain is live, check the following by visiting the real URLs in a brow
 - [ ] `https://tideframelabs.com/support` loads
 - [ ] `https://tideframelabs.com/privacy` loads
 - [ ] `https://tideframelabs.com/terms` loads
-- [ ] `https://tideframelabs.com/changelog` loads
 - [ ] `https://tideframelabs.com/about` loads
 - [ ] `https://tideframelabs.com/brand` loads
 - [ ] `https://tideframelabs.com/acknowledgments` loads and shows the Sparkle MIT License notice
 - [ ] A route opened directly (not by clicking a link), like `https://tideframelabs.com/products` (which relies on the `_redirects` SPA fallback), loads correctly instead of showing a 404.
-- [ ] A made-up address like `https://tideframelabs.com/does-not-exist` shows the site's own "That page drifted away" page.
+- [ ] A made-up address like `https://tideframelabs.com/does-not-exist` shows the site's own 404 page.
 - [ ] View source (not just the rendered page — your browser's actual "View Page Source", which shows the HTML before JavaScript runs) on `https://tideframelabs.com/modeboard` and confirm the `<title>` already says "Modeboard by Tideframe Labs" and there's a `<script type="application/ld+json">` block, without needing to wait for the page to finish loading. Repeat for `/privacy`, `/terms`, and `/support` — each should show its own title in raw HTML, not the homepage's.
-- [ ] `https://tideframelabs.com/sitemap.xml` loads and lists all 10 pages.
+- [ ] `https://tideframelabs.com/sitemap.xml` loads and lists all public pages.
 - [ ] `https://tideframelabs.com/robots.txt` loads.
-- [ ] Pasting `https://tideframelabs.com/` and `https://tideframelabs.com/modeboard` into a social link-preview debugger (e.g. Facebook's [Sharing Debugger](https://developers.facebook.com/tools/debug/) or Twitter/X's card validator) shows the expected title, description, and the new social-preview image (not a broken image or the old placeholder).
+- [ ] Pasting `https://tideframelabs.com/` and `https://tideframelabs.com/modeboard` into a social link-preview debugger (e.g. Facebook's [Sharing Debugger](https://developers.facebook.com/tools/debug/) or Twitter/X's card validator) shows the expected title, description, and current social-preview image.
 - [ ] A test email to `support@tideframelabs.com` and `hello@tideframelabs.com` both arrive.
 - [ ] The header stays visible while scrolling (sticky), and the mobile menu opens and closes correctly on a phone-sized screen.
 

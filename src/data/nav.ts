@@ -37,7 +37,6 @@ export const footerNav: FooterNavGroup[] = [
       { to: '/support', label: 'Support' },
       { to: '/privacy', label: 'Privacy' },
       { to: '/terms', label: 'Terms' },
-      { to: '/changelog', label: 'Changelog' },
       { to: '/acknowledgments', label: 'Acknowledgments' },
     ],
   },

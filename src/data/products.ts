@@ -80,7 +80,7 @@ export const products: Product[] = [
   {
     slug: 'modeboard',
     name: 'Modeboard',
-    tagline: 'Every Focus deserves its own Mac.',
+    tagline: 'A workspace for every part of your day.',
     description:
       'Modeboard turns your wallpaper, Dock, appearance, menu bar, and Desktop into profiles you can switch together.',
     platforms: ['macOS'],
