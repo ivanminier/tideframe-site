@@ -3,20 +3,19 @@ import { Meta } from '../components/Meta'
 import { ProductScreenshot } from '../components/ProductScreenshot'
 import { siteConfig } from '../config'
 import { getRouteMeta } from '../data/routeMeta'
-import { useImageFallback } from '../hooks/useImageFallback'
 import { useReveal } from '../hooks/useReveal'
 
 const meta = getRouteMeta('/')
 
 function HeroIcon() {
-  const { state, onLoad, onError } = useImageFallback()
   return (
     <div className="hero-icon" aria-hidden="true">
-      {state !== 'error' ? (
-        <img src="/tideframe-mark.svg" alt="" width="128" height="128" onLoad={onLoad} onError={onError} />
-      ) : (
-        <div className="tide-art"><div className="sun" /><span /><span /><span /><span /></div>
-      )}
+      <img
+        src="/tideframe-icon-glossy.png"
+        alt=""
+        width="512"
+        height="512"
+      />
     </div>
   )
 }
