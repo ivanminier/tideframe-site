@@ -2,10 +2,13 @@ import { Link } from 'react-router-dom'
 import { DownloadButton } from '../components/DownloadButton'
 import { Meta } from '../components/Meta'
 import { PlatformBadge } from '../components/PlatformBadge'
+import { PurchaseButton } from '../components/PurchaseButton'
+import { ReleaseDetails } from '../components/ReleaseDetails'
 import { ProductScreenshot } from '../components/ProductScreenshot'
 import { StatusBadge } from '../components/StatusBadge'
 import { siteConfig } from '../config'
 import { featuredProduct } from '../data/products'
+import { getPublicRelease } from '../data/products'
 import { getRouteMeta } from '../data/routeMeta'
 import { buildSoftwareApplicationSchema } from '../data/structuredData'
 
@@ -123,11 +126,14 @@ const FAQS = [
 ] as const
 
 export function Modeboard() {
+  const release = getPublicRelease(featuredProduct)
+
   return (
     <>
       <Meta
         title={meta.title}
         description={featuredProduct.description}
+        ogImage="/modeboard-social-preview.png"
         structuredData={buildSoftwareApplicationSchema(featuredProduct)}
       />
 
@@ -139,7 +145,7 @@ export function Modeboard() {
           <p className="lede">{featuredProduct.description}</p>
           <div className="product-hero-meta">
             {featuredProduct.status !== 'coming-soon' ? <StatusBadge status={featuredProduct.status} /> : null}
-            {featuredProduct.version ? <span className="meta-chip">Version {featuredProduct.version}</span> : null}
+            {release ? <span className="meta-chip">Version {release.version} ({release.buildNumber})</span> : null}
             {commercial ? (
               <span className="meta-chip">
                 ${commercial.priceUSD} {commercial.introductoryPrice ? 'introductory ' : ''}· one-time · {commercial.trialDays}-day trial
@@ -150,18 +156,14 @@ export function Modeboard() {
             ))}
           </div>
           <DownloadButton
-            downloadUrl={featuredProduct.downloadUrl}
-            status={featuredProduct.status}
-            productName={featuredProduct.name}
+            product={featuredProduct}
           />
-          {!featuredProduct.downloadUrl ? (
+          {!release ? (
             <a className="text-link" href={`mailto:${siteConfig.supportEmail}?subject=Modeboard%20beta%20interest`}>
-              Ask about beta access <span>→</span>
+              Ask about beta or launch access <span>→</span>
             </a>
           ) : null}
-          {featuredProduct.minimumOS ? (
-            <p className="compat-brief">In development for {featuredProduct.minimumOS}</p>
-          ) : null}
+          <p className="compat-brief">Minimum target: macOS {featuredProduct.release.minimumMacOSVersion} or later</p>
         </div>
       </section>
 
@@ -216,6 +218,8 @@ export function Modeboard() {
                 (2.0 or later) may be offered as a separate purchase.
               </li>
             </ul>
+            <PurchaseButton />
+            <p className="fine-print">Checkout will be hosted by a merchant of record. Tideframe Labs will not collect raw card details.</p>
           </div>
         </section>
       ) : null}
@@ -269,11 +273,21 @@ export function Modeboard() {
       <section className="compatibility section">
         <div className="container narrow">
           <p className="eyebrow">Compatibility</p>
-          <h2>Built for current versions of macOS.</h2>
+          <h2>Supported means tested.</h2>
           <p>
-            Modeboard is being developed for {featuredProduct.minimumOS ?? 'a recent version of macOS'}. Final
-            compatibility details will be published after release-candidate testing.
+            The minimum target is macOS {featuredProduct.release.minimumMacOSVersion}. Public release-candidate testing
+            is not complete, so no specific macOS release, Apple silicon Mac, or Intel Mac is being claimed as verified yet.
           </p>
+          <dl className="compatibility-grid">
+            <div><dt>Minimum supported</dt><dd>macOS {featuredProduct.release.minimumMacOSVersion} or later</dd></div>
+            <div><dt>Versions tested</dt><dd>{featuredProduct.release.testedMacOSVersions.length ? featuredProduct.release.testedMacOSVersions.join(', ') : 'Release-candidate testing pending'}</dd></div>
+            <div><dt>Apple silicon</dt><dd>Release-candidate verification pending</dd></div>
+            <div><dt>Intel</dt><dd>Release-candidate verification pending</dd></div>
+          </dl>
+          <aside>
+            <strong>macOS-dependent behavior</strong>
+            <p>{featuredProduct.release.undocumentedBehavior} Support for future macOS releases is evaluated and announced after testing, not guaranteed in advance.</p>
+          </aside>
         </div>
       </section>
 
@@ -282,8 +296,9 @@ export function Modeboard() {
           <p className="eyebrow">Good to know</p>
           <h2>A few details before you get started.</h2>
           <ul className="compact-list">
-            <li>Animated wallpapers play while Modeboard is running.</li>
+            <li>{featuredProduct.release.animatedWallpaperLimitations}</li>
             <li>Focus Filter automation is experimental and may change with macOS updates.</li>
+            <li>{featuredProduct.release.requiredPermissions.join('. ')}.</li>
             <li>Modeboard backs up supported settings before applying a profile, with Emergency Restore available if something does not look right.</li>
           </ul>
         </div>
@@ -310,22 +325,13 @@ export function Modeboard() {
           <h2>Make your Mac match the moment.</h2>
           <p>Modeboard is still in development. Release details will be posted here when Modeboard is ready.</p>
           <DownloadButton
-            downloadUrl={featuredProduct.downloadUrl}
-            status={featuredProduct.status}
-            productName={featuredProduct.name}
+            product={featuredProduct}
           />
-          {featuredProduct.downloadUrl && featuredProduct.version ? (
-            <p className="fine-print">Version {featuredProduct.version}</p>
-          ) : null}
-          {featuredProduct.downloadUrl && featuredProduct.sha256 ? (
-            <p className="fine-print">
-              SHA-256: <code>{featuredProduct.sha256}</code>
-            </p>
-          ) : null}
+          {release ? <ReleaseDetails release={release} /> : null}
           <div className="actions cta-links">
-            {!featuredProduct.downloadUrl ? (
+            {!release ? (
               <a className="text-link" href={`mailto:${siteConfig.supportEmail}?subject=Modeboard%20beta%20interest`}>
-                Ask about beta access <span>→</span>
+                Ask about beta or launch access <span>→</span>
               </a>
             ) : null}
             <Link className="text-link" to="/support">

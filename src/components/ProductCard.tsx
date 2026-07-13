@@ -36,9 +36,7 @@ export function ProductCard({ product }: { product: Product }) {
             Learn more <span>→</span>
           </Link>
           <DownloadButton
-            downloadUrl={product.downloadUrl}
-            status={product.status}
-            productName={product.name}
+            product={product}
             className="button button-small"
           />
         </div>

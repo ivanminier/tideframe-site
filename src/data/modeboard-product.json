@@ -1,0 +1,44 @@
+{
+  "slug": "modeboard",
+  "name": "Modeboard",
+  "tagline": "A workspace for every part of your day.",
+  "description": "Modeboard turns your wallpaper, Dock, appearance, menu bar, and Desktop into profiles you can switch together.",
+  "platforms": ["macOS"],
+  "status": "coming-soon",
+  "icon": "/modeboard-icon.png",
+  "route": "/modeboard",
+  "release": {
+    "downloadUrl": null,
+    "version": null,
+    "buildNumber": null,
+    "fileSizeBytes": null,
+    "sha256": null,
+    "minimumMacOSVersion": "15.0",
+    "testedMacOSVersions": [],
+    "releaseDate": null,
+    "architectures": {
+      "appleSilicon": "not-yet-verified",
+      "intel": "not-yet-verified"
+    },
+    "requiredPermissions": [
+      "Automation access to System Events and Finder for supported setting changes"
+    ],
+    "undocumentedBehavior": "Some appearance, Dock, menu bar, and Desktop changes depend on macOS behavior that Apple does not document as a stable third-party API.",
+    "animatedWallpaperLimitations": "Animated wallpapers play only while Modeboard is running. After Modeboard quits or the Mac restarts, macOS shows a still frame until Modeboard runs again."
+  },
+  "featured": true,
+  "accent": {
+    "primary": "var(--pacific)",
+    "secondary": "var(--glass)"
+  },
+  "commercial": {
+    "priceUSD": 14.99,
+    "introductoryPrice": true,
+    "licenseScope": "One person, on up to three personally controlled Macs",
+    "updatesIncluded": "All Modeboard 1.x updates",
+    "trialDays": 14,
+    "activation": "Offline signed access code — no account or internet connection required to verify your license",
+    "updateMechanism": "Sparkle, with user-controlled automatic checks plus a manual Check for Updates command",
+    "refundPolicy": "Tideframe Labs offers a refund within 14 days of purchase. Before requesting a refund for a technical issue, customers may be asked to provide basic system information or try reasonable troubleshooting steps. This policy does not limit rights provided by applicable consumer law."
+  }
+}

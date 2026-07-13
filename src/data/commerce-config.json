@@ -1,0 +1,7 @@
+{
+  "enabled": false,
+  "merchantOfRecord": null,
+  "checkoutUrl": null,
+  "allowedCheckoutHosts": [],
+  "merchantProductId": null
+}
