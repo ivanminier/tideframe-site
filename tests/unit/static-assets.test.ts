@@ -27,9 +27,17 @@ describe('static deployment files', () => {
     expect(headers).toContain('https://tideframe-site.pages.dev/*')
   })
 
-  it('configures Wrangler for Pages rather than a standalone Worker', () => {
-    const wrangler = JSON.parse(readFileSync('wrangler.jsonc', 'utf8')) as Record<string, unknown>
-    expect(wrangler.pages_build_output_dir).toBe('./dist')
-    expect(wrangler.assets).toBeUndefined()
+  it('configures Wrangler for the existing static-assets Worker', () => {
+    const wrangler = JSON.parse(readFileSync('wrangler.jsonc', 'utf8')) as {
+      assets?: {
+        directory?: string
+        not_found_handling?: string
+      }
+      pages_build_output_dir?: string
+    }
+
+    expect(wrangler.assets?.directory).toBe('./dist')
+    expect(wrangler.assets?.not_found_handling).toBe('single-page-application')
+    expect(wrangler.pages_build_output_dir).toBeUndefined()
   })
 })
