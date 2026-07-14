@@ -7,6 +7,12 @@
   "theme_color": "#102A43",
   "icons": [
     {
+      "src": "/tideframe-icon-glossy.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
       "src": "/tideframe-mark.svg",
       "sizes": "any",
       "type": "image/svg+xml",

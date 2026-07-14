@@ -23,9 +23,9 @@ export function Products() {
       <section className="section">
         <div className="container">
           <SectionHeading
-            eyebrow="Coming soon"
+            eyebrow="Coming soon for Mac"
             title="Modeboard"
-            description="One profile. Your whole Mac, ready. Modeboard is being prepared for macOS 15 and later."
+            description="One profile. Your whole Mac, ready. Switch the settings that shape your Mac together, then return to the right setup whenever your day changes."
           />
           <div className="products-grid">
             {products.map((product) => (
@@ -39,7 +39,7 @@ export function Products() {
           <GlassPanel className="products-more-panel">
             <p className="eyebrow">What comes next</p>
             <h2>New products will be announced when they are ready.</h2>
-            <p>For now, Tideframe Labs is focused on preparing Modeboard for a careful public release.</p>
+            <p>Modeboard is the first of more thoughtful Mac tools from Tideframe Labs.</p>
           </GlassPanel>
         </div>
       </section>

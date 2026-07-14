@@ -1,7 +1,6 @@
 import { Link } from 'react-router-dom'
 import type { Product } from '../data/products'
 import { useImageFallback } from '../hooks/useImageFallback'
-import { DownloadButton } from './DownloadButton'
 import { PlatformBadge } from './PlatformBadge'
 import { StatusBadge } from './StatusBadge'
 
@@ -33,12 +32,9 @@ export function ProductCard({ product }: { product: Product }) {
         </div>
         <div className="product-card-actions">
           <Link className="text-link" to={product.route}>
-            Learn more <span>→</span>
+            Explore {product.name} <span>→</span>
           </Link>
-          <DownloadButton
-            product={product}
-            className="button button-small"
-          />
+          {product.status === 'coming-soon' ? <StatusBadge status={product.status} /> : null}
         </div>
       </div>
     </article>

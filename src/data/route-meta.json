@@ -1,15 +1,15 @@
 {
   "/": {
-    "title": "Tideframe Labs — Independent Mac software",
-    "description": "Tideframe Labs is an independent Mac software studio in Vermont and the maker of Modeboard."
+    "title": "Tideframe Labs — Thoughtful Mac Software",
+    "description": "Tideframe Labs creates focused, private Mac apps for better digital spaces. Meet Modeboard, a profile-based way to switch your Mac setup."
   },
   "/products": {
     "title": "Products — Tideframe Labs",
     "description": "Mac software from Tideframe Labs, an independent studio based in Vermont."
   },
   "/modeboard": {
-    "title": "Modeboard — One profile. Your whole Mac, ready.",
-    "description": "Create Mac profiles for wallpaper, Dock, appearance, menu bar, and Desktop settings, then apply them manually, from the menu bar, with Apple Shortcuts, or through a Focus Filter.",
+    "title": "Modeboard — Mac Workspace Profiles by Tideframe Labs",
+    "description": "Switch your wallpaper, Dock, appearance, menu bar, and Desktop together with reusable Mac profiles.",
     "ogImage": "/modeboard-social-preview.png"
   },
   "/privacy": {
@@ -25,11 +25,11 @@
   "/support": {
     "h1": "How can we help?",
     "title": "How can we help? — Tideframe Labs",
-    "description": "Modeboard support for installation, permissions, backups, diagnostics, updates, and contact."
+    "description": "Find clear help with Modeboard profiles, permissions, backups, animated wallpapers, diagnostics, and support."
   },
   "/about": {
-    "title": "Independent Mac software, built in Vermont. — Tideframe Labs",
-    "description": "Tideframe Labs is a software studio founded by Ivan Minier."
+    "title": "About Tideframe Labs — Independent Mac Software",
+    "description": "Tideframe Labs is an independent software studio in Vermont creating thoughtful Mac apps for better digital spaces."
   },
   "/brand": {
     "title": "Brand — Tideframe Labs",
@@ -41,6 +41,6 @@
   },
   "/changelog": {
     "title": "Changelog — Tideframe Labs",
-    "description": "Pre-release progress and future release notes for Modeboard."
+    "description": "Modeboard release notes and product updates from Tideframe Labs."
   }
 }

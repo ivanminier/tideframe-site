@@ -20,7 +20,7 @@ describe('public routes', () => {
     expect(screen.getByRole('heading', { name: /couldn't find/i })).toBeVisible()
     await waitFor(() => expect(document.querySelector('meta[name="robots"]')).toHaveAttribute('content', 'noindex, nofollow'))
     await user.click(screen.getByRole('link', { name: /return home/i }))
-    expect(screen.getByRole('heading', { name: /focused tools for a mac that fits your day/i })).toBeVisible()
+    expect(screen.getByRole('heading', { name: /thoughtful tools for a mac that works your way/i })).toBeVisible()
   })
 
   it('has no important automated accessibility violations on primary pages', async () => {
@@ -60,7 +60,15 @@ describe('navigation', () => {
     expect(within(screen.getByRole('banner')).getByRole('link', { name: /tideframe labs/i })).toHaveFocus()
     await user.tab()
     await user.keyboard('{Enter}')
-    expect(screen.getByRole('heading', { name: 'Products' })).toBeVisible()
+    expect(screen.getByRole('heading', { name: /one profile. your whole mac, ready/i })).toBeVisible()
+  })
+
+  it('exposes a working launch-updates email action without a disabled download control', () => {
+    renderRoute('/modeboard')
+    const launchLink = screen.getAllByRole('link', { name: /get launch updates/i })[0]
+    expect(launchLink).toHaveAttribute('href', expect.stringContaining('subject=Modeboard%20launch%20updates'))
+    expect(launchLink).toHaveAttribute('href', expect.stringContaining('please%20let%20me%20know%20when%20Modeboard%20becomes%20available'))
+    expect(screen.queryByRole('button', { name: /coming soon/i })).not.toBeInTheDocument()
   })
 })
 

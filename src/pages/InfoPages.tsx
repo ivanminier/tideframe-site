@@ -26,55 +26,45 @@ const termsMeta = getRouteMeta('/terms')
 export function Support() {
   return (
     <Page eyebrow="Modeboard support" title={supportMeta.h1 ?? supportMeta.title} intro={supportMeta.description}>
-      <div className="notice-card">
-        <strong>Modeboard is coming soon.</strong>
-        <p>There is no public download, purchase, production activation, or production update service yet.</p>
+      <h2>Quick help</h2>
+      <div className="support-topic-grid">
+        <article>
+          <h3>Profile did not change everything</h3>
+          <p>Open the profile and check the setting you expected to change. Modeboard intentionally skips anything left unchanged.</p>
+        </article>
+        <article>
+          <h3>Automation permission</h3>
+          <p>Review Modeboard under System Settings → Privacy &amp; Security → Automation if Finder or appearance changes need attention.</p>
+        </article>
+        <article>
+          <h3>Return to an earlier setup</h3>
+          <p>Open Backups &amp; Restore and use Emergency Restore to bring back the latest safety backup.</p>
+        </article>
+        <article>
+          <h3>Animated wallpaper stopped</h3>
+          <p>Keep Modeboard running for animated GIF and video wallpapers. Static and captured system wallpapers remain applied.</p>
+        </article>
       </div>
 
-      <h2>Installation</h2>
+      <h2>Built-in diagnostics</h2>
       <p>
-        A public download will be posted only after the release build is signed, notarized, and tested from its
-        published location. Until then, this site does not offer an installer.
-      </p>
-
-      <h2>Permissions</h2>
-      <p>
-        Modeboard needs Automation access to work with System Events and Finder. macOS asks for this permission
-        the first time it is needed. If a profile cannot change appearance, wallpaper, or Desktop settings, review
-        Modeboard under System Settings → Privacy &amp; Security → Automation.
-      </p>
-
-      <h2>Profiles, backups, and restore</h2>
-      <p>
-        Applying a profile changes real macOS and Finder settings. Modeboard creates a safety backup before each
-        profile apply. If a switch does not look right, Emergency Restore can restore the latest safety backup.
-      </p>
-
-      <h2>Animated wallpapers</h2>
-      <p>
-        GIF and video wallpapers play while Modeboard is running. Quitting Modeboard stops animated wallpapers.
-        Static images and captured Apple/system wallpapers remain applied.
-      </p>
-
-      <h2>Diagnostics</h2>
-      <p>
-        Settings → Diagnostics can export a report or copy it to the clipboard for a support email. The export
-        redacts common personal paths and identifiers, and Modeboard never sends it automatically.
-      </p>
-
-      <h2>Updates</h2>
-      <p>
-        Production updates are not enabled. Download and update instructions will be added only after the public
-        release service is ready.
+        Built-in diagnostics can show which profile steps succeeded and create a report without including personal
+        file contents. The report stays on your Mac until you choose to copy, export, or send it.
       </p>
 
       <h2>Contact support</h2>
       <p>
-        Include your macOS version, Mac model, Modeboard version, and a short description of what happened. Do not
-        send passwords, access codes, private keys, or an unredacted system log.
+        Tell us what you were trying to do, what happened instead, and which macOS and Modeboard versions you use.
+        A diagnostics report can help when a profile step needs a closer look.
       </p>
-      <a className="button" href={`mailto:${siteConfig.supportEmail}`}>Email support</a>
+      <a className="button" href={`mailto:${siteConfig.supportEmail}?subject=Modeboard%20support`}>Contact support</a>
       <p className="fine-print">{siteConfig.supportEmail}</p>
+
+      <h2>Your privacy</h2>
+      <p>
+        Modeboard has no analytics, advertising, or automatic diagnostics upload. Read the full{' '}
+        <Link to="/privacy">privacy policy</Link> for details about local data and support email.
+      </p>
     </Page>
   )
 }
@@ -106,8 +96,9 @@ export function Privacy() {
 
       <h2>Update checks</h2>
       <p>
-        No production update service is currently enabled. Before public update checks are available, this policy
-        will be updated to explain what the app sends and what the hosting provider processes.
+        Modeboard includes update functionality provided by Sparkle. When update checks are available, checking for
+        an update will request release information from the update host. Profiles, backups, and wallpaper files are
+        not included in that request.
       </p>
 
       <h2>Permissions and diagnostics</h2>
@@ -124,8 +115,8 @@ export function Privacy() {
 
       <h2>Purchases</h2>
       <p>
-        Modeboard is not currently sold on this website, and Tideframe Labs does not collect payment information here.
-        This policy will be updated before any purchase flow is enabled.
+        This website does not collect payment information. Any future checkout provider and its privacy terms will
+        be identified before a purchase flow is available.
       </p>
 
       <h2>Changes and questions</h2>
@@ -142,8 +133,8 @@ export function Terms() {
     <Page eyebrow="Modeboard" title={termsMeta.h1 ?? termsMeta.title} intro={termsMeta.description}>
       <p className="updated">Last updated: July 14, 2026</p>
       <p>
-        Modeboard is not currently available for public download or purchase. These terms govern this website and
-        any private pre-release build Tideframe Labs expressly provides to you for evaluation.
+        These terms govern this website and any copy of Modeboard that Tideframe Labs expressly provides for
+        evaluation before release.
       </p>
 
       <h2>Pre-release access</h2>
@@ -153,10 +144,10 @@ export function Terms() {
         Tideframe Labs may end pre-release access or replace a build when necessary.
       </p>
 
-      <h2>No public offer</h2>
+      <h2>Availability and public terms</h2>
       <p>
-        Nothing on this website is a public download, sale, subscription, trial, or promise of future pricing or
-        availability. Public license, purchase, refund, and update terms will be posted before any such service is enabled.
+        Modeboard is coming soon for Mac. Public license, purchase, refund, and update terms will be posted before
+        downloads or purchasing become available.
       </p>
 
       <h2>Your responsibility for backups</h2>
@@ -210,11 +201,11 @@ export function Terms() {
 
 export function Changelog() {
   return (
-    <Page eyebrow="Modeboard" title="Changelog" intro="Release notes and important changes to Modeboard.">
+    <Page eyebrow="Modeboard" title="Changelog" intro="Release notes for Modeboard will appear here as the app becomes available.">
       <article className="release">
-        <div><h2>1.0.0</h2><span>In development</span></div>
+        <div><h2>1.0.0</h2><span>Coming soon for Mac</span></div>
         <div>
-          <p>Modeboard has not been released. Version 1.0 is being prepared with:</p>
+          <p>The first Modeboard release is being prepared with:</p>
           <ul>
             <li>Profiles for wallpaper, Dock, appearance, menu bar, and Desktop settings.</li>
             <li>Manual, menu bar, Apple Shortcuts, and Focus Filter switching.</li>
@@ -229,23 +220,23 @@ export function Changelog() {
 
 export function About() {
   return (
-    <Page eyebrow="About" title="Independent Mac software, built in Vermont." intro="Tideframe Labs is a software studio founded by Ivan Minier.">
+    <Page eyebrow="About Tideframe Labs" title="Thoughtful Mac apps, made in Vermont." intro="Tideframe Labs is an independent software studio creating focused tools for better digital spaces.">
       <h2>The studio</h2>
       <p>
-        Tideframe Labs builds focused Mac apps with clear uses and familiar interfaces. The goal is simple:
-        make software that earns a place in your everyday workflow.
+        Tideframe Labs builds focused tools that feel native, respect privacy, and make everyday Mac setups easier
+        to shape. Each app starts with a clear purpose and leaves unnecessary noise behind.
       </p>
 
-      <h2>About Ivan</h2>
+      <h2>Independent by design</h2>
       <p>
-        Ivan Minier is the founder and creator of Tideframe Labs, working across product design, development,
-        and customer support. Modeboard is the studio's first product.
+        Ivan Minier founded Tideframe Labs and works across product design, development, and customer support from
+        Vermont. Keeping the studio personal makes it easier to stay close to the product and the people using it.
       </p>
 
-      <h2>Why Modeboard</h2>
+      <h2>Starting with Modeboard</h2>
       <p>
-        Modeboard began with a question: if a Focus mode can change notifications, why cannot it help reshape the
-        rest of the Mac too? That idea became a profile system for the settings that define a workspace.
+        Modeboard is the studio's first app: a profile-based way to switch the wallpaper, Dock, appearance, menu bar,
+        and Desktop settings that shape different parts of the day.
       </p>
 
       <h2>Get in touch</h2>

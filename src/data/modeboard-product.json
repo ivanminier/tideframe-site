@@ -2,7 +2,7 @@
   "slug": "modeboard",
   "name": "Modeboard",
   "tagline": "One profile. Your whole Mac, ready.",
-  "description": "Modeboard is a native Mac utility for creating profiles that switch your wallpaper, Dock, appearance, menu bar, and Desktop settings together.",
+  "description": "Switch your wallpaper, Dock, appearance, menu bar, and Desktop together with reusable Mac profiles.",
   "platforms": ["macOS"],
   "status": "coming-soon",
   "icon": "/modeboard-icon.png",

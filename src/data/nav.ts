@@ -10,8 +10,9 @@ export interface FooterNavGroup {
 
 // Header stays short on purpose. Add a link here if a page belongs in primary navigation.
 export const headerNav: NavLink[] = [
-  { to: '/products', label: 'Products' },
   { to: '/modeboard', label: 'Modeboard' },
+  { to: '/products', label: 'Products' },
+  { to: '/support', label: 'Support' },
   { to: '/about', label: 'About' },
 ]
 

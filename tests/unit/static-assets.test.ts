@@ -1,4 +1,4 @@
-import { readFileSync } from 'node:fs'
+import { existsSync, readFileSync } from 'node:fs'
 import { describe, expect, it } from 'vitest'
 import { routeMeta } from '../../src/data/routeMeta'
 
@@ -14,9 +14,31 @@ describe('static deployment files', () => {
     expect(manifest.icons.some((icon) => icon.src === '/tideframe-mark.svg')).toBe(true)
     expect(readFileSync('public/robots.txt', 'utf8')).toContain('https://tideframelabs.com/sitemap.xml')
     expect(readFileSync('public/favicon.svg', 'utf8')).toContain('<svg')
+    expect(existsSync('public/tideframe-icon-glossy.png')).toBe(true)
+    expect(existsSync('public/social-preview.png')).toBe(true)
+    expect(readFileSync('design-source/social-preview-source/card.html', 'utf8')).not.toContain('In development')
   })
 
-  it('uses a restrictive Cloudflare Pages security policy', () => {
+  it('ships only the curated public Modeboard screenshots', () => {
+    const required = [
+      'modeboard-profile-overview',
+      'modeboard-appearance-dock',
+      'modeboard-menu-bar-desktop',
+      'modeboard-getting-started',
+      'modeboard-onboarding-focus',
+      'modeboard-onboarding-ready',
+      'modeboard-backups-restore',
+    ]
+
+    for (const name of required) {
+      expect(existsSync(`public/screenshots/${name}.png`)).toBe(true)
+      expect(existsSync(`public/screenshots/${name}-800.png`)).toBe(true)
+    }
+    expect(existsSync('public/screenshots/modeboard-menu-bar-menu.png')).toBe(true)
+    expect(existsSync('public/screenshots/modeboard-diagnostics.png')).toBe(false)
+  })
+
+  it('uses a restrictive static-asset security policy', () => {
     const headers = readFileSync('public/_headers', 'utf8')
     expect(headers).toContain("default-src 'self'")
     expect(headers).toContain("frame-ancestors 'none'")
