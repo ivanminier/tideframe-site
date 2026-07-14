@@ -11,7 +11,7 @@ function HeroIcon() {
   return (
     <div className="hero-icon" aria-hidden="true">
       <img
-        src="/tideframe-icon-glossy.png"
+        src="/tideframe-icon-glossy-v2.png"
         alt=""
         width="512"
         height="512"
