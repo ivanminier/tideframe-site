@@ -8,9 +8,11 @@ export function ProductScreenshot({
   width,
   height,
   hasThumbnail = false,
+  thumbnailWidth = 700,
+  sizes = '(max-width: 800px) 92vw, 560px',
   priority = false,
 }: {
-  /** Basename (no extension) under public/screenshots/, e.g. "modeboard-profile-editor". */
+  /** Basename (no extension) under public/screenshots/, e.g. "modeboard-profile-overview". */
   src: string
   alt: string
   caption?: string
@@ -18,8 +20,12 @@ export function ProductScreenshot({
   /** Natural pixel dimensions of the default image — set width/height attrs to prevent layout shift. */
   width?: number
   height?: number
-  /** Only set true when `${src}-700.png` genuinely exists (see ScreenshotEntry doc). */
+  /** Only set true when a matching responsive thumbnail genuinely exists. */
   hasThumbnail?: boolean
+  /** Width used in the thumbnail filename, for example `${src}-800.png`. */
+  thumbnailWidth?: number
+  /** Responsive rendered-width hint used with srcSet. */
+  sizes?: string
   priority?: boolean
 }) {
   const { state, onLoad, onError } = useImageFallback()
@@ -32,8 +38,8 @@ export function ProductScreenshot({
         <div className="product-screenshot-image">
           <img
             src={`/screenshots/${src}.png`}
-            srcSet={hasThumbnail ? `/screenshots/${src}-700.png 700w, /screenshots/${src}.png ${width}w` : undefined}
-            sizes={hasThumbnail ? '(max-width: 800px) 92vw, 560px' : undefined}
+            srcSet={hasThumbnail ? `/screenshots/${src}-${thumbnailWidth}.png ${thumbnailWidth}w, /screenshots/${src}.png ${width}w` : undefined}
+            sizes={hasThumbnail ? sizes : undefined}
             width={width}
             height={height}
             alt={alt}

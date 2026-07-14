@@ -27,14 +27,14 @@ export function Support() {
   return (
     <Page eyebrow="Modeboard support" title={supportMeta.h1 ?? supportMeta.title} intro={supportMeta.description}>
       <div className="notice-card">
-        <strong>Modeboard is not available to download yet.</strong>
-        <p>This guide is here for approved pre-release testers and will be updated when a public build is ready.</p>
+        <strong>Modeboard is coming soon.</strong>
+        <p>There is no public download, purchase, production activation, or production update service yet.</p>
       </div>
 
       <h2>Installation</h2>
       <p>
-        A public download will be posted only after the release build is signed and notarized. When it is available,
-        move Modeboard to your Applications folder and open it like any other Mac app. No account is required.
+        A public download will be posted only after the release build is signed, notarized, and tested from its
+        published location. Until then, this site does not offer an installer.
       </p>
 
       <h2>Permissions</h2>
@@ -46,14 +46,14 @@ export function Support() {
 
       <h2>Profiles, backups, and restore</h2>
       <p>
-        Applying a profile changes real macOS and Finder settings. Modeboard saves a local backup first. If a
-        switch does not look right, use Emergency Restore to return to the previous supported settings.
+        Applying a profile changes real macOS and Finder settings. Modeboard creates a safety backup before each
+        profile apply. If a switch does not look right, Emergency Restore can restore the latest safety backup.
       </p>
 
       <h2>Animated wallpapers</h2>
       <p>
-        Animated wallpapers play while Modeboard is running. If the app quits or the Mac restarts, macOS shows a
-        still frame until Modeboard is running again.
+        GIF and video wallpapers play while Modeboard is running. Quitting Modeboard stops animated wallpapers.
+        Static images and captured Apple/system wallpapers remain applied.
       </p>
 
       <h2>Diagnostics</h2>
@@ -62,11 +62,10 @@ export function Support() {
         redacts common personal paths and identifiers, and Modeboard never sends it automatically.
       </p>
 
-      <h2>Update troubleshooting</h2>
+      <h2>Updates</h2>
       <p>
-        Update checks need an internet connection. If Check for Updates reports an error, confirm the connection
-        and try again. Once a public download exists, you will also be able to quit Modeboard and replace the app
-        manually without removing your local profiles or backups.
+        Production updates are not enabled. Download and update instructions will be added only after the public
+        release service is ready.
       </p>
 
       <h2>Contact support</h2>
@@ -83,19 +82,19 @@ export function Support() {
 export function Privacy() {
   return (
     <Page eyebrow="Modeboard" title={privacyMeta.h1 ?? privacyMeta.title} intro={privacyMeta.description}>
-      <p className="updated">Last updated: July 13, 2026</p>
+      <p className="updated">Last updated: July 14, 2026</p>
 
       <h2>The short version</h2>
       <p>
         Modeboard works without an account, analytics, advertising, or tracking. Profiles, backups, wallpaper
-        files, license information, and diagnostics stay on your Mac unless you choose to share a diagnostics
+        files, app preferences, and diagnostics stay on your Mac unless you choose to share a diagnostics
         report with support.
       </p>
 
       <h2>Data stored on your Mac</h2>
       <p>
         Modeboard stores the profiles you create, the settings needed to apply them, local backups, selected
-        wallpaper files, license information, and app preferences. This data is used to run the app and is not
+        wallpaper files, and app preferences. This data is used to run the app and is not
         uploaded to Tideframe Labs.
       </p>
 
@@ -107,10 +106,8 @@ export function Privacy() {
 
       <h2>Update checks</h2>
       <p>
-        Manual or automatic update checks contact the Tideframe Labs update feed to ask whether a newer version is
-        available. As with any web request, the hosting provider may process standard request information such as
-        an IP address, timestamp, and app version. Profile, backup, wallpaper, license, and diagnostics data are
-        not included in update checks.
+        No production update service is currently enabled. Before public update checks are available, this policy
+        will be updated to explain what the app sends and what the hosting provider processes.
       </p>
 
       <h2>Permissions and diagnostics</h2>
@@ -125,11 +122,10 @@ export function Privacy() {
         provider and ours process the message in the usual way.
       </p>
 
-      <h2>Purchases and order records</h2>
+      <h2>Purchases</h2>
       <p>
-        Modeboard is not currently sold on this website. Before commerce is enabled, this policy will identify the
-        merchant of record and explain the order, payment-status, refund, license-delivery, and support data that the
-        merchant and Tideframe Labs process. Tideframe Labs will not receive or store raw card details.
+        Modeboard is not currently sold on this website, and Tideframe Labs does not collect payment information here.
+        This policy will be updated before any purchase flow is enabled.
       </p>
 
       <h2>Changes and questions</h2>
@@ -144,48 +140,23 @@ export function Privacy() {
 export function Terms() {
   return (
     <Page eyebrow="Modeboard" title={termsMeta.h1 ?? termsMeta.title} intro={termsMeta.description}>
-      <p className="updated">Last updated: July 13, 2026</p>
+      <p className="updated">Last updated: July 14, 2026</p>
       <p>
-        Modeboard is not currently available for public download or purchase. These terms describe the intended
-        license for a public release and apply when Tideframe Labs provides Modeboard to you for trial, download,
-        or purchase.
+        Modeboard is not currently available for public download or purchase. These terms govern this website and
+        any private pre-release build Tideframe Labs expressly provides to you for evaluation.
       </p>
 
-      <h2>License grant</h2>
+      <h2>Pre-release access</h2>
       <p>
-        Tideframe Labs grants you a personal, non-exclusive, non-transferable license to install and use Modeboard
-        for personal or professional work. The software is licensed, not sold, and Tideframe Labs keeps all rights
-        not expressly granted here.
+        A private pre-release build is for the person Tideframe Labs authorizes to evaluate it. You may not publish,
+        redistribute, resell, reverse engineer, or make that build or its access credentials available to anyone else.
+        Tideframe Labs may end pre-release access or replace a build when necessary.
       </p>
 
-      <h2>People and devices</h2>
+      <h2>No public offer</h2>
       <p>
-        One license is for one person and may be used on up to three Macs that person personally owns or controls.
-        A license may not be shared across a team, household, organization, or group of unrelated users.
-      </p>
-
-      <h2>14-day trial</h2>
-      <p>
-        Modeboard includes a 14-day trial for one person to evaluate the app. You may not repeatedly reinstall,
-        duplicate, or modify the app to extend the trial beyond 14 days.
-      </p>
-
-      <h2>Offline access codes</h2>
-      <p>
-        A license is verified on your Mac with a signed access code. Keep that code private. You may not publish,
-        resell, transfer, or share it outside the license scope above. A code that is redistributed or misused may
-        not be used outside the license scope above.
-      </p>
-
-      <p>
-        Paid access codes are designed to keep working offline. Refunds and chargebacks can be recorded in the order
-        system for support and future recovery decisions, but the public website does not perform background license checks.
-      </p>
-
-      <h2>Updates included</h2>
-      <p>
-        A Modeboard license includes all 1.x updates. A later major version may be offered separately, but no
-        future paid upgrade is promised or required by these terms.
+        Nothing on this website is a public download, sale, subscription, trial, or promise of future pricing or
+        availability. Public license, purchase, refund, and update terms will be posted before any such service is enabled.
       </p>
 
       <h2>Your responsibility for backups</h2>
@@ -200,20 +171,6 @@ export function Terms() {
         Modeboard changes real macOS and Finder settings. Some behavior depends on Apple APIs or system details
         that can change with macOS updates. Tideframe Labs may update compatibility requirements as macOS changes
         and cannot guarantee support for every Mac or future macOS release.
-      </p>
-
-      <h2>Refunds</h2>
-      <p>
-        If Modeboard becomes available for purchase, Tideframe Labs intends to accept refund requests made within
-        14 days of purchase. You may be asked for purchase details and basic information needed to understand a
-        technical problem. This does not limit rights provided by applicable consumer law.
-      </p>
-
-      <h2>Payment provider</h2>
-      <p>
-        A future purchase will be completed on a merchant-of-record checkout, not by entering card details into this
-        website. The merchant's purchase terms and privacy notice will apply to its checkout. The selected merchant
-        will be named here before checkout is activated.
       </p>
 
       <h2>Support</h2>
@@ -233,7 +190,7 @@ export function Terms() {
       <p>
         To the extent permitted by law, Tideframe Labs is not liable for indirect, incidental, special, or
         consequential loss arising from your use of Modeboard, including lost settings, data, work, or time.
-        Tideframe Labs' total liability for a claim will not exceed the amount you paid for Modeboard.
+        Tideframe Labs' total liability for a pre-release claim will not exceed the amount you paid for that access.
       </p>
 
       <h2>No Apple affiliation</h2>
@@ -241,8 +198,8 @@ export function Terms() {
 
       <h2>Changes to these terms</h2>
       <p>
-        Tideframe Labs may update these terms as Modeboard changes. The version posted here will apply to downloads
-        or purchases made after its effective date. Material changes will be described clearly on this page.
+        Tideframe Labs may update these terms as Modeboard changes. Material changes will be described clearly on
+        this page, and separate public-release terms will be posted before downloads or purchases are enabled.
       </p>
 
       <h2>Contact</h2>
@@ -260,10 +217,9 @@ export function Changelog() {
           <p>Modeboard has not been released. Version 1.0 is being prepared with:</p>
           <ul>
             <li>Profiles for wallpaper, Dock, appearance, menu bar, and Desktop settings.</li>
-            <li>Menu bar, Shortcuts, and experimental Focus Filter switching.</li>
-            <li>Local backups and Emergency Restore.</li>
-            <li>A 14-day trial and offline signed access-code verification.</li>
-            <li>Manual and optional automatic update checks.</li>
+            <li>Manual, menu bar, Apple Shortcuts, and Focus Filter switching.</li>
+            <li>Safety backups, Emergency Restore, backup history, and diagnostics.</li>
+            <li>Profile transfer and support for static, captured system, GIF, and video wallpapers.</li>
           </ul>
         </div>
       </article>

@@ -1,8 +1,8 @@
 {
   "slug": "modeboard",
   "name": "Modeboard",
-  "tagline": "A workspace for every part of your day.",
-  "description": "Modeboard turns your wallpaper, Dock, appearance, menu bar, and Desktop into profiles you can switch together.",
+  "tagline": "One profile. Your whole Mac, ready.",
+  "description": "Modeboard is a native Mac utility for creating profiles that switch your wallpaper, Dock, appearance, menu bar, and Desktop settings together.",
   "platforms": ["macOS"],
   "status": "coming-soon",
   "icon": "/modeboard-icon.png",
@@ -24,7 +24,7 @@
       "Automation access to System Events and Finder for supported setting changes"
     ],
     "undocumentedBehavior": "Some appearance, Dock, menu bar, and Desktop changes depend on macOS behavior that Apple does not document as a stable third-party API.",
-    "animatedWallpaperLimitations": "Animated wallpapers play only while Modeboard is running. After Modeboard quits or the Mac restarts, macOS shows a still frame until Modeboard runs again."
+    "animatedWallpaperLimitations": "GIF and video wallpapers play while Modeboard is running. Quitting Modeboard stops animated wallpapers. Static and captured Apple/system wallpapers remain applied."
   },
   "featured": true,
   "accent": {

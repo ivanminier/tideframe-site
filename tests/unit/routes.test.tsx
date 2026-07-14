@@ -20,7 +20,7 @@ describe('public routes', () => {
     expect(screen.getByRole('heading', { name: /couldn't find/i })).toBeVisible()
     await waitFor(() => expect(document.querySelector('meta[name="robots"]')).toHaveAttribute('content', 'noindex, nofollow'))
     await user.click(screen.getByRole('link', { name: /return home/i }))
-    expect(screen.getByRole('heading', { name: /make your mac work/i })).toBeVisible()
+    expect(screen.getByRole('heading', { name: /focused tools for a mac that fits your day/i })).toBeVisible()
   })
 
   it('has no important automated accessibility violations on primary pages', async () => {

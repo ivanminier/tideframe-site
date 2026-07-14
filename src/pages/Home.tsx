@@ -1,30 +1,17 @@
 import { Link } from 'react-router-dom'
+import { DownloadButton } from '../components/DownloadButton'
 import { Meta } from '../components/Meta'
 import { ProductScreenshot } from '../components/ProductScreenshot'
 import { siteConfig } from '../config'
+import { featuredProduct } from '../data/products'
 import { getRouteMeta } from '../data/routeMeta'
 import { useReveal } from '../hooks/useReveal'
 
 const meta = getRouteMeta('/')
 
-function HeroIcon() {
-  return (
-    <div className="hero-icon" aria-hidden="true">
-      <img
-        src="/tideframe-icon-glossy-v2.png"
-        alt=""
-        width="512"
-        height="512"
-      />
-    </div>
-  )
-}
-
 export function Home() {
-  const intro = useReveal<HTMLElement>()
   const featured = useReveal<HTMLElement>()
   const principles = useReveal<HTMLElement>()
-  const privacy = useReveal<HTMLElement>()
   const contact = useReveal<HTMLElement>()
 
   return (
@@ -33,31 +20,29 @@ export function Home() {
 
       <section className="hero-section home-hero">
         <span className="glow glow--pacific glow--top-right" aria-hidden="true" />
-        <span className="glow glow--coral glow--bottom-left" aria-hidden="true" />
-        <div className="container hero-grid">
+        <div className="container home-hero-grid">
           <div className="hero-copy">
-            <p className="eyebrow">Independent Mac software</p>
-            <h1>Make your Mac work more like you do.</h1>
+            <p className="eyebrow">Tideframe Labs · Independent Mac software</p>
+            <h1>Focused tools for a Mac that fits your day.</h1>
             <p className="lede">
-              Tideframe Labs builds focused Mac apps that make everyday workflows easier to shape, switch, and manage.
+              Tideframe Labs is an independent software studio in Vermont. Its first app, Modeboard,
+              turns the Mac settings that shape your workspace into profiles you can apply together.
             </p>
             <div className="actions">
               <Link className="button" to="/modeboard">Explore Modeboard <span>→</span></Link>
-              <Link className="text-link" to="/about">About the studio <span>→</span></Link>
+              <Link className="text-link" to="/about">About Tideframe Labs <span>→</span></Link>
             </div>
           </div>
-          <HeroIcon />
-        </div>
-      </section>
-
-      <section className="section studio-intro" ref={intro.ref}>
-        <div className={`container narrow${intro.visible ? ' reveal is-visible' : ' reveal'}`}>
-          <p className="eyebrow">Built independently in Vermont</p>
-          <h2>Useful software, made with a clear point of view.</h2>
-          <p className="lede">
-            Tideframe Labs is an independent software studio created by Ivan Minier. Its first release,
-            Modeboard, started with a simple idea: changing Focus modes should be able to change more than notifications.
-          </p>
+          <ProductScreenshot
+            src="modeboard-profile-overview"
+            alt="Modeboard's Default profile editor showing profile identity, Focus fallback, wallpaper capture, and Apply Now controls."
+            aspectRatio="1600 / 1207"
+            width={1600}
+            height={1207}
+            hasThumbnail
+            thumbnailWidth={800}
+            priority
+          />
         </div>
       </section>
 
@@ -65,48 +50,47 @@ export function Home() {
         <div className={`container split${featured.visible ? ' reveal is-visible' : ' reveal'}`}>
           <div>
             <p className="eyebrow">Meet Modeboard</p>
-            <h2>A workspace for every part of your day.</h2>
-            <p>
-              Modeboard saves your wallpaper, Dock, appearance, menu bar, and Desktop setup as profiles you can switch together.
+            <h2>One profile. Your whole Mac, ready.</h2>
+            <p className="lede">
+              Build profiles for work, rest, travel, study, or anything else. Each profile changes only
+              the settings you choose, and settings left unchanged are skipped.
             </p>
-            <Link className="text-link" to="/modeboard">See how Modeboard works <span>→</span></Link>
+            <div className="actions compact-actions">
+              <Link className="text-link" to="/modeboard">See how Modeboard works <span>→</span></Link>
+              <DownloadButton product={featuredProduct} className="button button-small" />
+            </div>
           </div>
-          <ProductScreenshot
-            src="modeboard-profile-editor"
-            alt="Modeboard profile editor showing a Do Not Disturb profile with wallpaper and automation settings."
-            aspectRatio="1400 / 1056"
-            width={1400}
-            height={1056}
-            hasThumbnail
-            priority
-          />
+          <div className="benefit-list" aria-label="Modeboard highlights">
+            <article><span>01</span><h3>Shape the workspace</h3><p>Switch wallpaper, Dock, appearance, menu bar, and Desktop settings together.</p></article>
+            <article><span>02</span><h3>Switch your way</h3><p>Use Apply Now, the menu-bar menu, Apple Shortcuts, or a Focus Filter.</p></article>
+            <article><span>03</span><h3>Change with confidence</h3><p>Modeboard creates a safety backup before every profile apply.</p></article>
+          </div>
         </div>
       </section>
 
       <section className="principles section" ref={principles.ref}>
         <div className={`container${principles.visible ? ' reveal is-visible' : ' reveal'}`}>
-          <p className="eyebrow">What matters here</p>
-          <h2>Focused, familiar, and easy to trust.</h2>
+          <p className="eyebrow">Made with care</p>
+          <h2>Native, focused, and easy to trust.</h2>
           <div className="three-up">
-            <article><span>01</span><h3>Clear purpose</h3><p>Each product starts with one useful job and stays focused on doing it well.</p></article>
-            <article><span>02</span><h3>Made for the Mac</h3><p>Native controls and familiar interactions help the software feel at home from the first launch.</p></article>
-            <article><span>03</span><h3>Respect for your data</h3><p>Modeboard works without an account, analytics, advertising, or cloud storage for your profiles.</p></article>
+            <article><span>01</span><h3>Made for the Mac</h3><p>Familiar controls and a native interface keep Modeboard at home on macOS.</p></article>
+            <article><span>02</span><h3>Private by default</h3><p>Profiles and backups stay on your Mac. No account, analytics, advertising, or tracking.</p></article>
+            <article><span>03</span><h3>Honest availability</h3><p>Modeboard is coming soon. No public download or purchase is offered before the release is ready.</p></article>
           </div>
-        </div>
-      </section>
-
-      <section className="privacy-band section" ref={privacy.ref}>
-        <div className={`container split${privacy.visible ? ' reveal is-visible' : ' reveal'}`}>
-          <div><p className="eyebrow">Mac first</p><h2>Built for the platform where it belongs.</h2></div>
-          <p>Modeboard is built for the Mac. Future Tideframe Labs products will be announced when they are ready.</p>
         </div>
       </section>
 
       <section className="cta section" ref={contact.ref}>
         <div className={`container centered${contact.visible ? ' reveal is-visible' : ' reveal'}`}>
-          <p className="eyebrow">Get in touch</p>
-          <h2>Questions, feedback, or press?</h2>
-          <p>Email <a href={`mailto:${siteConfig.generalEmail}`}>{siteConfig.generalEmail}</a>, or visit <Link to="/support">Support</Link> for Modeboard help.</p>
+          <p className="eyebrow">Modeboard is coming soon</p>
+          <h2>Make your Mac fit the moment.</h2>
+          <p>Explore the product now, or email {siteConfig.supportEmail} with a question about the upcoming release.</p>
+          <div className="actions cta-links">
+            <Link className="button" to="/modeboard">Explore Modeboard <span>→</span></Link>
+            <a className="text-link" href={`mailto:${siteConfig.supportEmail}?subject=Modeboard%20launch%20updates`}>
+              Ask about launch updates <span>→</span>
+            </a>
+          </div>
         </div>
       </section>
     </>

@@ -2,132 +2,68 @@ import { Link } from 'react-router-dom'
 import { DownloadButton } from '../components/DownloadButton'
 import { Meta } from '../components/Meta'
 import { PlatformBadge } from '../components/PlatformBadge'
-import { PurchaseButton } from '../components/PurchaseButton'
-import { ReleaseDetails } from '../components/ReleaseDetails'
 import { ProductScreenshot } from '../components/ProductScreenshot'
-import { StatusBadge } from '../components/StatusBadge'
 import { siteConfig } from '../config'
 import { featuredProduct } from '../data/products'
-import { getPublicRelease } from '../data/products'
 import { getRouteMeta } from '../data/routeMeta'
 import { buildSoftwareApplicationSchema } from '../data/structuredData'
 
 const meta = getRouteMeta('/modeboard')
-const commercial = featuredProduct.commercial
 
-const FEATURES = [
-  {
-    title: 'One profile, your whole workspace',
-    text: 'Save the Mac settings you use for work, study, rest, or anything else, then switch them together.',
-    screenshot: {
-      id: 'modeboard-profile-editor',
-      alt: 'Modeboard profile editor showing wallpaper, Dock, and appearance settings grouped under one profile.',
-      aspectRatio: '1400 / 1056',
-      width: 1400,
-      height: 1056,
-      hasThumbnail: true,
-    },
-  },
-  {
-    title: 'Wallpaper that matches the moment',
-    text: 'Pair each profile with a still or animated wallpaper that fits the context.',
-    screenshot: {
-      id: 'modeboard-wallpaper',
-      alt: 'Modeboard wallpaper picker showing still and animated wallpaper options for a profile.',
-      aspectRatio: '1400 / 1056',
-      width: 1400,
-      height: 1056,
-      hasThumbnail: true,
-    },
-  },
-  {
-    title: 'A Dock for every context',
-    text: 'Keep the apps you need close at hand. Each profile can bring its own Dock arrangement, size, and behavior.',
-    screenshot: {
-      id: 'modeboard-dock',
-      alt: 'Modeboard Dock settings showing a custom app arrangement saved to a profile.',
-      aspectRatio: '1400 / 1056',
-      width: 1400,
-      height: 1056,
-      hasThumbnail: true,
-    },
-  },
-  {
-    title: 'A cleaner Desktop',
-    text: 'Choose which Desktop items are visible for each context, so the space in front of you stays relevant.',
-    screenshot: {
-      id: 'modeboard-desktop',
-      alt: 'Modeboard Desktop settings showing which Desktop items are visible for a profile.',
-      aspectRatio: '1400 / 1056',
-      width: 1400,
-      height: 1056,
-      hasThumbnail: true,
-    },
-  },
-  {
-    title: 'Switch from the menu bar',
-    text: 'Switch profiles from the menu bar without opening the main window, or build your own workflows with Shortcuts.',
-    screenshot: {
-      id: 'modeboard-menu-bar',
-      alt: 'Modeboard menu bar dropdown showing Switch Profile, Settings, and Emergency Restore.',
-      aspectRatio: '524 / 444',
-      width: 524,
-      height: 444,
-      hasThumbnail: false,
-    },
-  },
-  {
-    title: 'Backups and Emergency Restore',
-    text: 'Modeboard saves a snapshot before applying a profile. Emergency Restore gives you a direct way back if something does not look right.',
-    screenshot: {
-      id: 'modeboard-backup-restore',
-      alt: 'Modeboard backup and restore screen showing a snapshot of settings saved before a profile was applied.',
-      aspectRatio: '1400 / 1056',
-      width: 1400,
-      height: 1056,
-      hasThumbnail: true,
-    },
-  },
+const PROFILE_SETTINGS = [
+  ['Wallpaper', 'Use a still image, an animated GIF or video, or a captured Apple/system wallpaper.'],
+  ['Dock', 'Set its size, position, visibility, magnification, and pinned items.'],
+  ['Appearance', 'Choose Light or Dark mode plus accent and highlight colors.'],
+  ['Menu bar', 'Control menu bar visibility and supported menu bar items.'],
+  ['Desktop', 'Show or hide existing Desktop icons and place custom Desktop shortcuts.'],
 ] as const
 
 const FAQS = [
   {
-    q: 'Is Modeboard available yet?',
-    a: 'Not yet. Modeboard is in active development for macOS — there is no signed, downloadable build yet. This page will be updated with a real download link when one exists.',
+    q: 'Is Modeboard available now?',
+    a: 'Not yet. Modeboard is coming soon, and there is no public download or purchase on this site today.',
   },
   {
-    q: 'How much will Modeboard cost?',
-    a: "The intended launch offer is $14.99 as a one-time purchase, with a 14-day full-feature trial. There is no subscription and nothing is available to buy yet.",
+    q: 'Does Modeboard read all of my existing Focus modes?',
+    a: 'No. You add a Modeboard Focus Filter to a Focus in macOS System Settings, then choose the profile that Focus should use.',
   },
   {
-    q: 'How many Macs can I use one license on?',
-    a: 'One person, on up to three personally controlled Macs.',
+    q: 'What happens to settings I do not configure?',
+    a: 'They are skipped. A profile changes only the settings you explicitly choose.',
   },
   {
-    q: 'Do I need an account to activate Modeboard?',
-    a: "No. Modeboard activates with an offline signed access code — verifying your license doesn't need an account or an internet connection. Checking for app updates does need an internet connection, separately from license activation.",
-  },
-  {
-    q: "What's included in the price after I buy?",
-    a: 'All Modeboard 1.x updates are included at no extra cost. A future major version (2.0 or later) may be offered as a separate purchase.',
-  },
-  {
-    q: 'Is it safe to let Modeboard change my system settings?',
-    a: 'Modeboard creates a backup before applying a profile and includes Emergency Restore. Because it changes real macOS and Finder settings, keeping a separate Mac backup is still a good idea.',
-  },
-  {
-    q: 'What is Focus Filter support?',
-    a: "An experimental way to trigger a Modeboard profile automatically when a macOS Focus turns on. It relies on Apple's Focus Filter APIs, which may change, so it may need adjustments as macOS updates.",
-  },
-  {
-    q: 'Will Modeboard come to iPhone or iPad?',
-    a: "There's no announced plan for that yet. Modeboard is a Mac application first; see the homepage for how Tideframe Labs thinks about other platforms.",
+    q: 'What happens when Modeboard quits?',
+    a: 'Static and captured Apple/system wallpapers remain applied. Animated GIF and video wallpapers stop playing when Modeboard quits.',
   },
 ] as const
 
-export function Modeboard() {
-  const release = getPublicRelease(featuredProduct)
+function WideScreenshot({
+  src,
+  alt,
+  caption,
+  sizes,
+}: {
+  src: string
+  alt: string
+  caption?: string
+  sizes?: string
+}) {
+  return (
+    <ProductScreenshot
+      src={src}
+      alt={alt}
+      caption={caption}
+      aspectRatio="1600 / 1207"
+      width={1600}
+      height={1207}
+      hasThumbnail
+      thumbnailWidth={800}
+      sizes={sizes}
+    />
+  )
+}
 
+export function Modeboard() {
   return (
     <>
       <Meta
@@ -141,166 +77,164 @@ export function Modeboard() {
         <span className="glow glow--pacific glow--top-right" aria-hidden="true" />
         <div className="container centered">
           <p className="eyebrow">Modeboard by Tideframe Labs</p>
-          <h1>Switch your whole Mac with one profile.</h1>
-          <p className="lede">{featuredProduct.description}</p>
+          <h1>One profile. Your whole Mac, ready.</h1>
+          <p className="lede">
+            Create profiles for the Mac settings that shape your workspace, then apply the right setup
+            for work, rest, travel, study, or whatever comes next.
+          </p>
           <div className="product-hero-meta">
-            {featuredProduct.status !== 'coming-soon' ? <StatusBadge status={featuredProduct.status} /> : null}
-            {release ? <span className="meta-chip">Version {release.version} ({release.buildNumber})</span> : null}
-            {commercial ? (
-              <span className="meta-chip">
-                ${commercial.priceUSD} {commercial.introductoryPrice ? 'introductory ' : ''}· one-time · {commercial.trialDays}-day trial
-              </span>
-            ) : null}
-            {featuredProduct.platforms.map((platform) => (
-              <PlatformBadge key={platform} platform={platform} />
+            <span className="meta-chip">Coming Soon</span>
+            {featuredProduct.platforms.map((platform) => <PlatformBadge key={platform} platform={platform} />)}
+          </div>
+          <DownloadButton product={featuredProduct} />
+          <p className="compat-brief">No public download or purchase is available yet.</p>
+        </div>
+        <div className="container product-hero-shot">
+          <WideScreenshot
+            src="modeboard-profile-overview"
+            alt="Modeboard's Default profile editor showing profile identity, Focus fallback, captured wallpaper, and Apply Now controls."
+            caption="A profile changes only the settings you configure."
+            sizes="(max-width: 800px) 92vw, 1040px"
+          />
+        </div>
+      </section>
+
+      <section className="section" aria-labelledby="what-modeboard-does">
+        <div className="container narrow centered">
+          <p className="eyebrow">What Modeboard does</p>
+          <h2 id="what-modeboard-does">Make your Mac fit the moment.</h2>
+          <p className="lede">
+            Modeboard brings the visual and practical parts of a workspace into one reusable profile.
+            Choose what should change, leave everything else alone, and select Apply Now when you are ready.
+          </p>
+        </div>
+      </section>
+
+      <section className="section section-alt" aria-labelledby="profile-settings">
+        <div className="container">
+          <div className="section-heading">
+            <p className="eyebrow">What a profile can change</p>
+            <h2 id="profile-settings">The settings that define your space.</h2>
+            <p>Every category is optional. Settings left unchanged are skipped when a profile is applied.</p>
+          </div>
+          <div className="change-grid">
+            {PROFILE_SETTINGS.map(([title, text]) => (
+              <article key={title}><h3>{title}</h3><p>{text}</p></article>
             ))}
           </div>
-          <DownloadButton
-            product={featuredProduct}
-          />
-          {!release ? (
-            <a className="text-link" href={`mailto:${siteConfig.supportEmail}?subject=Modeboard%20beta%20interest`}>
-              Ask about beta or launch access <span>→</span>
-            </a>
-          ) : null}
-          <p className="compat-brief">Minimum target: macOS {featuredProduct.release.minimumMacOSVersion} or later</p>
+          <div className="screenshot-pair">
+            <WideScreenshot
+              src="modeboard-appearance-dock"
+              alt="Modeboard profile controls for Light appearance, accent and highlight colors, Dock size, position, visibility, magnification, and pinned items."
+              caption="Appearance and Dock controls live together inside each profile."
+            />
+            <WideScreenshot
+              src="modeboard-menu-bar-desktop"
+              alt="Modeboard controls for supported menu bar items, menu bar visibility, Desktop icon visibility, and custom Desktop shortcuts."
+              caption="Choose which menu bar and Desktop elements belong in the profile."
+            />
+          </div>
         </div>
       </section>
 
-      <div className="feature-list">
-        {FEATURES.map((feature, i) => (
-          <section className="feature-row section" key={feature.title}>
-            <div className={`container split ${i % 2 ? 'reverse' : ''}`}>
-              <div className="feature-copy">
-                <p className="feature-number">0{i + 1}</p>
-                <h2>{feature.title}</h2>
-                <p>{feature.text}</p>
-              </div>
+      <section className="section" aria-labelledby="apply-profiles">
+        <div className="container split">
+          <div className="feature-copy">
+            <p className="eyebrow">How profiles are applied</p>
+            <h2 id="apply-profiles">Switch in the way that suits you.</h2>
+            <p>
+              Select Apply Now in Modeboard, choose a profile from the menu-bar menu, or use Modeboard actions
+              in Apple Shortcuts. Each route applies the same profile you configured in the app.
+            </p>
+            <div className="menu-shot-wrap">
               <ProductScreenshot
-                src={feature.screenshot.id}
-                alt={feature.screenshot.alt}
-                aspectRatio={feature.screenshot.aspectRatio}
-                width={feature.screenshot.width}
-                height={feature.screenshot.height}
-                hasThumbnail={feature.screenshot.hasThumbnail}
+                src="modeboard-menu-bar-menu"
+                alt="Modeboard's menu-bar menu showing Switch Profile, Settings, Open Focus Settings, Emergency Restore, and Quit Modeboard."
+                aspectRatio="588 / 444"
+                width={588}
+                height={444}
               />
             </div>
-          </section>
-        ))}
-      </div>
-
-      {commercial ? (
-        <section className="section section-alt">
-          <div className="container narrow">
-            <p className="eyebrow">Pricing</p>
-            <h2>One license. No subscription.</h2>
-            <p className="lede">
-              At release, Modeboard is intended to include a {commercial.trialDays}-day full-feature trial and a{' '}
-              {commercial.introductoryPrice ? 'one-time introductory price.' : 'one-time price.'}
-            </p>
-            <ul>
-              <li>
-                <strong>{commercial.trialDays}-day trial</strong> with every feature available.
-              </li>
-              <li>
-                <strong>
-                  ${commercial.priceUSD} {commercial.introductoryPrice ? 'introductory price' : 'price'}
-                </strong>{' '}
-                as a one-time purchase, not a subscription.
-                {commercial.introductoryPrice ? ' This introductory price may change later.' : ''}
-              </li>
-              <li>
-                <strong>{commercial.licenseScope}.</strong> Activate the same license on each Mac you personally
-                use.
-              </li>
-              <li>
-                <strong>{commercial.updatesIncluded} are included</strong> at no extra cost. A future major version
-                (2.0 or later) may be offered as a separate purchase.
-              </li>
-            </ul>
-            <PurchaseButton />
-            <p className="fine-print">Checkout will be hosted by a merchant of record. Tideframe Labs will not collect raw card details.</p>
           </div>
-        </section>
-      ) : null}
-
-      <section className="section">
-        <div className="container narrow">
-          <p className="eyebrow">Automation</p>
-          <h2>Switch manually, or let macOS do it.</h2>
-          <p>
-            Profiles switch manually from the app or the menu bar, or through Shortcuts for scripted automation.
-            Modeboard can also switch automatically when a macOS Focus turns on. This Focus Filter integration
-            is experimental because it depends on Apple APIs that may change with macOS updates.
-          </p>
+          <WideScreenshot
+            src="modeboard-getting-started"
+            alt="Modeboard's Getting Started screen explaining how to create and apply a profile, add a Focus Filter, switch from the menu bar, and use Apple Shortcuts."
+            caption="Modeboard keeps manual, menu-bar, Shortcuts, and Focus switching in one clear setup guide."
+          />
         </div>
       </section>
 
-      {commercial ? (
-        <section className="section">
-          <div className="container narrow">
-            <p className="eyebrow">Activation &amp; updates</p>
-            <h2>Verified on your Mac. Updated on your terms.</h2>
+      <section className="section focus-section" aria-labelledby="focus-switching">
+        <div className="container split reverse">
+          <div className="feature-copy">
+            <p className="eyebrow">Focus integration</p>
+            <h2 id="focus-switching">Switch automatically with a Focus Filter.</h2>
             <p>
-              Modeboard is designed to activate with <strong>{commercial.activation.toLowerCase()}</strong>. Checking your
-              license doesn't need an internet connection or an account.
+              In macOS System Settings, open a Focus, add a Modeboard Focus Filter, and choose the profile to use.
+              Modeboard does not automatically import, detect, or read every Focus mode.
             </p>
-            {commercial.updateMechanism ? (
-              <p>
-                Updates use <strong>{commercial.updateMechanism}</strong>. Manual and automatic checks contact the
-                Tideframe Labs update feed; license verification remains offline.
-              </p>
-            ) : null}
           </div>
-        </section>
-      ) : null}
+          <WideScreenshot
+            src="modeboard-onboarding-focus"
+            alt="Modeboard onboarding instructions for opening macOS Focus settings, choosing a Focus, and adding a Modeboard Focus Filter with a selected profile."
+            caption="You decide which Focus uses Modeboard and which profile it should apply."
+          />
+        </div>
+      </section>
 
-      <section className="privacy-band section">
+      <section className="section section-alt" aria-labelledby="safety-recovery">
+        <div className="container">
+          <div className="section-heading">
+            <p className="eyebrow">Safety and recovery</p>
+            <h2 id="safety-recovery">A way forward, and a way back.</h2>
+            <p>
+              Modeboard creates a safety backup before applying a profile. Emergency Restore restores the latest
+              safety backup, while Diagnostics shows what happened without exposing personal file contents.
+            </p>
+          </div>
+          <div className="screenshot-pair">
+            <WideScreenshot
+              src="modeboard-backups-restore"
+              alt="Modeboard's Backups and Restore screen with backup retention, Emergency Restore, and a list of safety backups created before profile applies."
+              caption="Review retained backups or restore the latest one in an emergency."
+            />
+            <WideScreenshot
+              src="modeboard-diagnostics"
+              alt="Modeboard's Diagnostics screen showing system information and successful results for the latest profile apply."
+              caption="Diagnostics makes each profile step visible and exportable for support."
+            />
+          </div>
+        </div>
+      </section>
+
+      <section className="privacy-band section" aria-labelledby="animated-wallpapers">
         <div className="container split">
           <div>
-            <p className="eyebrow">Private and local by default</p>
-            <h2>Your profiles stay on your Mac.</h2>
+            <p className="eyebrow">Animated wallpaper behavior</p>
+            <h2 id="animated-wallpapers">Motion while Modeboard is running.</h2>
           </div>
-          <p>
-            Modeboard works without an account, analytics, or advertising. Your profile information, backups,
-            and license are stored and verified locally on your device. The only network requests Modeboard
-            makes are update checks — manual or automatic — which ask Tideframe Labs' update feed whether a
-            newer version exists.
-          </p>
+          <div>
+            <p>GIF and video wallpapers play while Modeboard is running. Quitting Modeboard stops animated wallpapers.</p>
+            <p>Static images and captured Apple/system wallpapers remain applied after Modeboard quits.</p>
+          </div>
         </div>
       </section>
 
-      <section className="compatibility section">
+      <section className="compatibility section" aria-labelledby="availability">
         <div className="container narrow">
-          <p className="eyebrow">Compatibility</p>
-          <h2>Supported means tested.</h2>
+          <p className="eyebrow">Compatibility and availability</p>
+          <h2 id="availability">Coming soon for macOS.</h2>
           <p>
-            The minimum target is macOS {featuredProduct.release.minimumMacOSVersion}. Public release-candidate testing
-            is not complete, so no specific macOS release, Apple silicon Mac, or Intel Mac is being claimed as verified yet.
+            Modeboard is being prepared for macOS {featuredProduct.release.minimumMacOSVersion} and later.
+            Final supported macOS versions and Mac architectures will be published only after the public release
+            build is signed, notarized, and tested.
           </p>
           <dl className="compatibility-grid">
-            <div><dt>Minimum supported</dt><dd>macOS {featuredProduct.release.minimumMacOSVersion} or later</dd></div>
-            <div><dt>Versions tested</dt><dd>{featuredProduct.release.testedMacOSVersions.length ? featuredProduct.release.testedMacOSVersions.join(', ') : 'Release-candidate testing pending'}</dd></div>
-            <div><dt>Apple silicon</dt><dd>Release-candidate verification pending</dd></div>
-            <div><dt>Intel</dt><dd>Release-candidate verification pending</dd></div>
+            <div><dt>Current availability</dt><dd>Coming Soon</dd></div>
+            <div><dt>Public download</dt><dd>Not yet available</dd></div>
+            <div><dt>Purchasing</dt><dd>Not enabled</dd></div>
+            <div><dt>Automatic updates</dt><dd>No production service enabled</dd></div>
           </dl>
-          <aside>
-            <strong>macOS-dependent behavior</strong>
-            <p>{featuredProduct.release.undocumentedBehavior} Support for future macOS releases is evaluated and announced after testing, not guaranteed in advance.</p>
-          </aside>
-        </div>
-      </section>
-
-      <section className="good-to-know-section">
-        <div className="container narrow good-to-know">
-          <p className="eyebrow">Good to know</p>
-          <h2>A few details before you get started.</h2>
-          <ul className="compact-list">
-            <li>{featuredProduct.release.animatedWallpaperLimitations}</li>
-            <li>Focus Filter automation is experimental and may change with macOS updates.</li>
-            <li>{featuredProduct.release.requiredPermissions.join('. ')}.</li>
-            <li>Modeboard backs up supported settings before applying a profile, with Emergency Restore available if something does not look right.</li>
-          </ul>
         </div>
       </section>
 
@@ -309,37 +243,22 @@ export function Modeboard() {
           <p className="eyebrow">FAQ</p>
           <h2>Common questions</h2>
           <dl className="faq-list">
-            {FAQS.map((item) => (
-              <div className="faq-item" key={item.q}>
-                <dt>{item.q}</dt>
-                <dd>{item.a}</dd>
-              </div>
-            ))}
+            {FAQS.map((item) => <div className="faq-item" key={item.q}><dt>{item.q}</dt><dd>{item.a}</dd></div>)}
           </dl>
         </div>
       </section>
 
       <section className="cta section">
         <div className="container centered">
-          <p className="eyebrow">Modeboard</p>
-          <h2>Make your Mac match the moment.</h2>
-          <p>Modeboard is still in development. Release details will be posted here when Modeboard is ready.</p>
-          <DownloadButton
-            product={featuredProduct}
-          />
-          {release ? <ReleaseDetails release={release} /> : null}
+          <p className="eyebrow">Modeboard is coming soon</p>
+          <h2>One profile. Your whole Mac, ready.</h2>
+          <p>No public download or purchase is available yet. Release details will appear here when they are ready.</p>
+          <DownloadButton product={featuredProduct} />
           <div className="actions cta-links">
-            {!release ? (
-              <a className="text-link" href={`mailto:${siteConfig.supportEmail}?subject=Modeboard%20beta%20interest`}>
-                Ask about beta or launch access <span>→</span>
-              </a>
-            ) : null}
-            <Link className="text-link" to="/support">
-              Support <span>→</span>
-            </Link>
-            <a className="text-link" href={`mailto:${siteConfig.supportEmail}`}>
-              Email support <span>→</span>
+            <a className="text-link" href={`mailto:${siteConfig.supportEmail}?subject=Modeboard%20launch%20updates`}>
+              Ask about launch updates <span>→</span>
             </a>
+            <Link className="text-link" to="/support">Read support information <span>→</span></Link>
           </div>
         </div>
       </section>
