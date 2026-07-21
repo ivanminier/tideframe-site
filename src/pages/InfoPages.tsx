@@ -29,27 +29,47 @@ export function Support() {
       <h2>Quick help</h2>
       <div className="support-topic-grid">
         <article>
-          <h3>Profile did not change everything</h3>
-          <p>Open the profile and check the setting you expected to change. Modeboard intentionally skips anything left unchanged.</p>
+          <h3>Install Modeboard</h3>
+          <p>Use only the signed customer download, drag Modeboard to Applications, open it there, and follow the permission explanations during setup.</p>
         </article>
         <article>
-          <h3>Automation permission</h3>
-          <p>Review Modeboard under System Settings → Privacy &amp; Security → Automation if Finder or appearance changes need attention.</p>
+          <h3>Activate a license</h3>
+          <p>Open License &amp; Access, enter the Lemon Squeezy license key from your receipt, and connect once for initial activation. The activated Mac can then work offline.</p>
         </article>
         <article>
-          <h3>Return to an earlier setup</h3>
-          <p>Open Backups &amp; Restore and use Emergency Restore to bring back the latest safety backup.</p>
+          <h3>Deactivate a Mac</h3>
+          <p>While online, use Remove License from This Mac before replacing the Mac or deleting local license data. This returns that activation to the three-Mac allowance.</p>
         </article>
         <article>
-          <h3>Animated wallpaper stopped</h3>
-          <p>Keep Modeboard running for animated GIF and video wallpapers. Static and captured system wallpapers remain applied.</p>
+          <h3>Restore a workspace</h3>
+          <p>Open Backups &amp; Restore to review backup history. Use Emergency Restore to bring back the latest supported safety backup.</p>
+        </article>
+        <article>
+          <h3>Update Modeboard</h3>
+          <p>Use Check for Updates in Modeboard or allow user-controlled automatic checks. Sparkle updates are separate from license activation.</p>
+        </article>
+        <article>
+          <h3>Uninstall Modeboard</h3>
+          <p>Turn off Launch at Login, remove the license while online, quit the app, and move it from Applications to Trash. Profiles and Keychain records remain unless you remove them separately.</p>
         </article>
       </div>
+
+      <h2>Profiles, permissions, and wallpaper</h2>
+      <p>
+        If a profile did not change something, edit it and confirm that setting is selected; Modeboard skips anything
+        left unchanged. Review Modeboard under System Settings → Privacy &amp; Security → Automation if Finder or
+        appearance changes need attention. Animated GIF and video wallpapers require Modeboard to remain running.
+      </p>
 
       <h2>Built-in diagnostics</h2>
       <p>
         Built-in diagnostics can show which profile steps succeeded and create a report without including personal
         file contents. The report stays on your Mac until you choose to copy, export, or send it.
+      </p>
+      <p>
+        Before sharing, read the report and remove anything sensitive. Never send a full license key, payment details,
+        private documents, wallpaper files, profile archives, or other sensitive files unless support specifically
+        explains why a particular non-sensitive item is needed.
       </p>
 
       <h2>Contact support</h2>
@@ -57,6 +77,7 @@ export function Support() {
         Tell us what you were trying to do, what happened instead, and which macOS and Modeboard versions you use.
         A diagnostics report can help when a profile step needs a closer look.
       </p>
+      <p>Support is handled by a small independent studio. Replies are not round-the-clock and may take a few business days.</p>
       <a className="button" href={`mailto:${siteConfig.supportEmail}?subject=Modeboard%20support`}>Contact support</a>
       <p className="fine-print">{siteConfig.supportEmail}</p>
 
@@ -72,33 +93,48 @@ export function Support() {
 export function Privacy() {
   return (
     <Page eyebrow="Modeboard" title={privacyMeta.h1 ?? privacyMeta.title} intro={privacyMeta.description}>
-      <p className="updated">Last updated: July 14, 2026</p>
+      <p className="updated">Last updated: July 21, 2026</p>
 
       <h2>The short version</h2>
       <p>
-        Modeboard works without an account, analytics, advertising, or tracking. Profiles, backups, wallpaper
-        files, app preferences, and diagnostics stay on your Mac unless you choose to share a diagnostics
-        report with support.
+        Modeboard has no analytics, advertising, tracking pixels, behavioral profiling, or sale of customer data.
+        Its working data normally stays on your Mac. Lemon Squeezy processes purchases and paid-license activation,
+        and Sparkle contacts the configured update host when an update check occurs.
       </p>
 
       <h2>Data stored on your Mac</h2>
       <p>
-        Modeboard stores the profiles you create, the settings needed to apply them, local backups, selected
-        wallpaper files, and app preferences. This data is used to run the app and is not
-        uploaded to Tideframe Labs.
+        Modeboard stores profiles, preferences, backups, trial state, a paid-license activation receipt, selected
+        files, folders and wallpapers, and local diagnostics. Profiles, backups, selected content, and system-setting
+        details are not uploaded through licensing or update checks. Diagnostics leave the Mac only when you export
+        and share a report yourself.
       </p>
 
-      <h2>Accounts, analytics, and ads</h2>
+      <h2>Lemon Squeezy purchases and licensing</h2>
       <p>
-        Modeboard has no account system and contains no analytics, advertising, or automatic crash-report upload.
-        Offline access-code verification does not contact a license server.
+        Lemon Squeezy is the merchant of record. It processes checkout, payment, tax, receipts, refunds,
+        chargebacks, and customer information under its own policies. Tideframe Labs does not control Lemon
+        Squeezy's independent data retention.
+      </p>
+      <p>
+        For activation, validation, and deactivation, Modeboard sends the license key you enter and a generated
+        installation instance name or identifier to Lemon Squeezy's public License API. Modeboard does not persist
+        Lemon Squeezy customer names, customer email addresses, payment details, or full order records. It stores the
+        minimum activation data needed for offline access in a device-only macOS Keychain item.
+      </p>
+      <p>
+        Internet is required for initial paid-license activation. Modeboard may occasionally validate the saved
+        instance when a connection is available. Temporary connection, rate-limit, or server failures do not revoke
+        an activated perpetual license. Removing a license while online releases that Mac's activation.
       </p>
 
       <h2>Update checks</h2>
       <p>
-        Modeboard includes update functionality provided by Sparkle. When update checks are available, checking for
-        an update will request release information from the update host. Profiles, backups, and wallpaper files are
-        not included in that request.
+        Modeboard uses Sparkle for user-controlled update checks. A check contacts the configured Tideframe Labs
+        update host and may include ordinary network and technical information needed to determine whether an update
+        is available, such as IP address, app version, macOS version, and system architecture. Profiles, backups,
+        selected files, license keys, and wallpaper contents are not included in that request. Updates and licensing
+        are separate systems.
       </p>
 
       <h2>Permissions and diagnostics</h2>
@@ -107,16 +143,11 @@ export function Privacy() {
         is created locally and shared only when you export it and send it yourself.
       </p>
 
-      <h2>Website and email</h2>
+      <h2>Website, analytics, and email</h2>
       <p>
-        This website uses no analytics, cookies, tracking pixels, or forms. If you email Tideframe Labs, your email
-        provider and ours process the message in the usual way.
-      </p>
-
-      <h2>Purchases</h2>
-      <p>
-        This website does not collect payment information. Any future checkout provider and its privacy terms will
-        be identified before a purchase flow is available.
+        This website uses no analytics, advertising, tracking pixels, behavioral profiling, marketing cookies, or
+        sale of visitor data. It does not collect payment information; checkout will be hosted by Lemon Squeezy when
+        sales are enabled. If you email Tideframe Labs, your email provider and ours process the message in the usual way.
       </p>
 
       <h2>Changes and questions</h2>
@@ -131,23 +162,43 @@ export function Privacy() {
 export function Terms() {
   return (
     <Page eyebrow="Modeboard" title={termsMeta.h1 ?? termsMeta.title} intro={termsMeta.description}>
-      <p className="updated">Last updated: July 14, 2026</p>
+      {/* Owner-review draft. Not legal advice. */}
+      <p className="updated">Last updated: July 21, 2026</p>
       <p>
-        These terms govern this website and any copy of Modeboard that Tideframe Labs expressly provides for
-        evaluation before release.
+        These terms describe the Modeboard license and purchase model. Nothing here limits rights that cannot
+        lawfully be limited.
       </p>
 
-      <h2>Pre-release access</h2>
+      <h2>Trial and purchase</h2>
       <p>
-        A private pre-release build is for the person Tideframe Labs authorizes to evaluate it. You may not publish,
-        redistribute, resell, reverse engineer, or make that build or its access credentials available to anyone else.
-        Tideframe Labs may end pre-release access or replace a build when necessary.
+        Modeboard includes a 14-day full-feature trial. The introductory price is $14.99 USD as a one-time purchase,
+        not a subscription. Lemon Squeezy is the merchant of record and handles checkout, payment, tax, receipts,
+        refunds, chargebacks, and related customer information under its own terms and policies.
       </p>
 
-      <h2>Availability and public terms</h2>
+      <h2>Individual license and updates</h2>
       <p>
-        Modeboard is coming soon for Mac. Public license, purchase, refund, and update terms will be posted before
-        downloads or purchasing become available.
+        A purchase licenses one individual to use Modeboard on up to three Macs personally controlled by that person.
+        The license permits perpetual use of the purchased version and includes all Modeboard 1.x updates. Tideframe
+        Labs does not promise that a future major version will be free.
+      </p>
+
+      <h2>Activation, deactivation, and license keys</h2>
+      <p>
+        Initial activation requires internet access so Lemon Squeezy can validate the key and register the Mac. An
+        activated perpetual license can continue working offline, with occasional validation when a connection is
+        available. Before replacing a Mac, use Remove License from This Mac while online to release its activation.
+        Do not share, publish, resell, transfer for value, or distribute a license key except where applicable law
+        gives you a non-waivable right to do so.
+      </p>
+
+      <h2>Refunds and chargebacks</h2>
+      <p>
+        To request a refund, contact <a href={`mailto:${siteConfig.supportEmail}`}>{siteConfig.supportEmail}</a> with
+        the minimum order reference needed to locate the purchase; never email a full license key. The intended
+        policy is to consider requests made within 14 days of purchase, and reasonable troubleshooting may be
+        requested for technical issues. This does not limit mandatory refund, cancellation, or other consumer rights.
+        A refunded or charged-back purchase may have its license disabled when continued access is no longer authorized.
       </p>
 
       <h2>Your responsibility for backups</h2>
@@ -166,9 +217,16 @@ export function Terms() {
 
       <h2>Support</h2>
       <p>
-        Email support is provided on a best-effort basis at{' '}
-        <a href={`mailto:${siteConfig.supportEmail}`}>{siteConfig.supportEmail}</a>. No response time or resolution
-        time is guaranteed.
+        Email support is provided on a reasonable, best-effort basis at{' '}
+        <a href={`mailto:${siteConfig.supportEmail}`}>{siteConfig.supportEmail}</a>. Support is not round-the-clock,
+        and no specific response or resolution time is guaranteed.
+      </p>
+
+      <h2>Acceptable use and termination</h2>
+      <p>
+        You may not use Modeboard to violate law, interfere with services, bypass license controls, or distribute
+        unauthorized copies. Tideframe Labs may terminate a license for material abuse, key sharing, resale, or
+        unauthorized distribution, subject to applicable law and any required notice or remedy rights.
       </p>
 
       <h2>Warranty disclaimer</h2>
@@ -181,7 +239,9 @@ export function Terms() {
       <p>
         To the extent permitted by law, Tideframe Labs is not liable for indirect, incidental, special, or
         consequential loss arising from your use of Modeboard, including lost settings, data, work, or time.
-        Tideframe Labs' total liability for a pre-release claim will not exceed the amount you paid for that access.
+        Where a monetary cap is lawful, Tideframe Labs' total liability relating to Modeboard will not exceed the
+        amount paid for the license giving rise to the claim. Some jurisdictions do not allow particular exclusions
+        or limits, so these limits apply only to the extent permitted by law.
       </p>
 
       <h2>No Apple affiliation</h2>
@@ -189,8 +249,8 @@ export function Terms() {
 
       <h2>Changes to these terms</h2>
       <p>
-        Tideframe Labs may update these terms as Modeboard changes. Material changes will be described clearly on
-        this page, and separate public-release terms will be posted before downloads or purchases are enabled.
+        Tideframe Labs may update these terms for future purchases or versions as Modeboard changes. Material
+        changes will be described clearly, and final owner-reviewed terms will be posted before public sales.
       </p>
 
       <h2>Contact</h2>
@@ -235,8 +295,8 @@ export function About() {
 
       <h2>Starting with Modeboard</h2>
       <p>
-        Modeboard is the studio's first app: a profile-based way to switch the wallpaper, Dock, appearance, menu bar,
-        and Desktop settings that shape different parts of the day.
+        Modeboard is the studio's first app: a profile-based way to switch apps, Dock, wallpaper, Desktop,
+        appearance, and Focus together for different parts of the day.
       </p>
 
       <h2>Get in touch</h2>

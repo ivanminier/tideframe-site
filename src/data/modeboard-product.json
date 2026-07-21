@@ -1,8 +1,8 @@
 {
   "slug": "modeboard",
   "name": "Modeboard",
-  "tagline": "One profile. Your whole Mac, ready.",
-  "description": "Switch your wallpaper, Dock, appearance, menu bar, and Desktop together with reusable Mac profiles.",
+  "tagline": "Switch your whole Mac workspace with one profile.",
+  "description": "Bring your apps, Dock, wallpaper, Desktop, appearance, and Focus together with reusable Mac workspace profiles.",
   "platforms": ["macOS"],
   "status": "coming-soon",
   "icon": "/modeboard-icon.png",
@@ -16,6 +16,9 @@
     "minimumMacOSVersion": "15.0",
     "testedMacOSVersions": [],
     "releaseDate": null,
+    "bundleIdentifier": "com.tideframelabs.modeboard",
+    "developerIdSigned": false,
+    "notarized": false,
     "architectures": {
       "appleSilicon": "not-yet-verified",
       "intel": "not-yet-verified"
@@ -23,6 +26,15 @@
     "requiredPermissions": [
       "Automation access to System Events and Finder for supported setting changes"
     ],
+    "appcast": {
+      "url": "https://tideframelabs.com/updates/modeboard/appcast.xml",
+      "validSparkleXML": false,
+      "xmlContentTypeVerified": false,
+      "signedReleaseEntry": false,
+      "archiveMatchesRelease": false,
+      "productionPublicKeyConfigured": false,
+      "updateFromPreviousBuildTested": false
+    },
     "undocumentedBehavior": "Some appearance, Dock, menu bar, and Desktop changes depend on macOS behavior that Apple does not document as a stable third-party API.",
     "animatedWallpaperLimitations": "GIF and video wallpapers play while Modeboard is running. Quitting Modeboard stops animated wallpapers. Static and captured Apple/system wallpapers remain applied."
   },
@@ -36,8 +48,11 @@
     "introductoryPrice": true,
     "licenseScope": "One person, on up to three personally controlled Macs",
     "updatesIncluded": "All Modeboard 1.x updates",
+    "perpetualAccess": "Perpetual use of the purchased version; future major-version upgrades are not included unless Tideframe Labs says otherwise",
     "trialDays": 14,
-    "activation": "Offline signed access code — no account or internet connection required to verify your license",
+    "activation": "Internet is required for initial Lemon Squeezy activation. A device-only receipt is then stored in macOS Keychain for offline use, with occasional validation when a connection is available.",
+    "merchantOfRecord": "Lemon Squeezy",
+    "focusIntegration": "Supported. A Modeboard profile can be connected to a macOS Focus Filter so a supported Focus change applies that profile automatically.",
     "updateMechanism": "Sparkle, with user-controlled automatic checks plus a manual Check for Updates command",
     "refundPolicy": "Tideframe Labs offers a refund within 14 days of purchase. Before requesting a refund for a technical issue, customers may be asked to provide basic system information or try reasonable troubleshooting steps. This policy does not limit rights provided by applicable consumer law."
   }

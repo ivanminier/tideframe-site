@@ -4,7 +4,7 @@ The public site is intentionally pre-release. Keep these items accurate before e
 
 ## Modeboard release state
 
-- [ ] Keep the release URL, version, build, byte size, SHA-256, tested versions, architecture status, and release date incomplete until each value is verified against a real public artifact.
+- [ ] Keep the release URL, version, build, byte size, SHA-256, tested versions, architecture status, signing, notarization, and release date incomplete until each value is verified against the exact public artifact.
 - [ ] Keep `status: 'coming-soon'` until that artifact is Developer ID signed, notarized, hosted over HTTPS, and tested from the published URL.
 - [ ] Re-check the public price, 14-day trial, one-person/three-Mac license, 1.x update policy, access-code behavior, and refund language against the release build before accepting payment.
 - [ ] Confirm the public minimum macOS version against the final release build.
@@ -14,9 +14,9 @@ The public site is intentionally pre-release. Keep these items accurate before e
 ## Customer-facing checks
 
 - [ ] Confirm `support@tideframelabs.com` and `hello@tideframelabs.com` receive mail.
-- [ ] Confirm the update feed URL and download URL use HTTPS before publishing either one.
+- [ ] Confirm the production appcast serves valid signed Sparkle XML with an XML content type, the enclosure matches the exact update archive, the production public key is configured, and an installed N → N+1 update succeeds.
 - [ ] Re-check Support, Privacy, Terms, and Acknowledgments whenever app permissions, data handling, licensing, or third-party software changes.
-- [ ] Before commerce, name the merchant of record in Privacy and Terms and verify its checkout, webhook, order-data, refund, email, and recovery disclosures.
+- [ ] Before commerce, confirm Lemon Squeezy approval, the exact allowlisted shareable checkout, Store `436050`, Product `1236025`, Variant `1932083`, and a real purchase/activation/offline/deactivation/refund lifecycle.
 - [ ] Keep the Terms and Privacy updated dates accurate when their content changes.
 
 ## Deployment checks
@@ -30,5 +30,5 @@ The public site is intentionally pre-release. Keep these items accurate before e
 ## Intentionally absent
 
 - No analytics, cookies, tracking, forms, customer claims, testimonials, or speculative product roadmap.
-- No selected payment processor, governing jurisdiction, entity type, or business address is stated until those facts are established.
+- Lemon Squeezy is the selected merchant of record. No governing jurisdiction, entity type, or business address is stated until those facts are established.
 - Changelog remains a reserved route for future release notes and is not linked in public navigation before release.

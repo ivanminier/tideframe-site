@@ -13,16 +13,18 @@ const DEFAULT_LABEL: Record<ProductStatus, (productName: string) => string> = {
 export function DownloadButton({
   product,
   label,
+  enabled = true,
   className = 'button',
 }: {
   product: Product
   label?: string
+  enabled?: boolean
   className?: string
 }) {
   const release = getPublicRelease(product)
   const text = label ?? DEFAULT_LABEL[product.status](product.name)
 
-  if (!release) {
+  if (!release || !enabled) {
     return (
       <button type="button" className={`${className} button-disabled`} disabled>
         {text}

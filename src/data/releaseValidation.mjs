@@ -3,6 +3,8 @@ const VERSION_PATTERN = /^\d+\.\d+(?:\.\d+)?(?:[-+][0-9A-Za-z.-]+)?$/
 const MACOS_VERSION_PATTERN = /^\d+(?:\.\d+){0,2}$/
 const SHA256_PATTERN = /^[a-fA-F0-9]{64}$/
 const RELEASE_FILE_PATTERN = /\.(?:dmg|pkg|zip)$/i
+const EXPECTED_BUNDLE_IDENTIFIER = 'com.tideframelabs.modeboard'
+const EXPECTED_APPCAST_URL = 'https://tideframelabs.com/updates/modeboard/appcast.xml'
 
 export function validateReleaseData(product, now = new Date()) {
   const { release } = product
@@ -23,9 +25,19 @@ export function validateReleaseData(product, now = new Date()) {
   if (release.testedMacOSVersions.length === 0 || release.testedMacOSVersions.some((version) => !MACOS_VERSION_PATTERN.test(version))) errors.push('At least one valid tested macOS version is required.')
   if (!release.releaseDate || Number.isNaN(Date.parse(`${release.releaseDate}T00:00:00Z`))) errors.push('Release date is missing or invalid.')
   else if (new Date(`${release.releaseDate}T00:00:00Z`) > now) errors.push('Release date cannot be in the future.')
+  if (release.bundleIdentifier !== EXPECTED_BUNDLE_IDENTIFIER) errors.push('Bundle identifier is missing or incorrect.')
+  if (release.developerIdSigned !== true) errors.push('Developer ID signing is not verified.')
+  if (release.notarized !== true) errors.push('Apple notarization is not verified.')
   if (Object.values(release.architectures).includes('not-yet-verified')) errors.push('Apple silicon and Intel support must each be explicitly verified or unsupported.')
   if (!Object.values(release.architectures).includes('supported')) errors.push('At least one Mac architecture must be supported.')
   if (release.requiredPermissions.length === 0) errors.push('Required permissions must be documented.')
+  if (release.appcast?.url !== EXPECTED_APPCAST_URL) errors.push('Production appcast URL is missing or incorrect.')
+  if (release.appcast?.validSparkleXML !== true) errors.push('Production appcast is not verified as valid Sparkle XML.')
+  if (release.appcast?.xmlContentTypeVerified !== true) errors.push('Production appcast XML content type is not verified.')
+  if (release.appcast?.signedReleaseEntry !== true) errors.push('Production appcast does not have a verified signed release entry.')
+  if (release.appcast?.archiveMatchesRelease !== true) errors.push('Production appcast archive is not verified against the release.')
+  if (release.appcast?.productionPublicKeyConfigured !== true) errors.push('Production Sparkle public key is not verified.')
+  if (release.appcast?.updateFromPreviousBuildTested !== true) errors.push('Installed N to N+1 update is not verified.')
   if (!release.undocumentedBehavior.trim()) errors.push('Undocumented macOS dependencies must be documented.')
   if (!release.animatedWallpaperLimitations.trim()) errors.push('Animated wallpaper limitations must be documented.')
   return { isReady: errors.length === 0, errors }

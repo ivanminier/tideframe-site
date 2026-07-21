@@ -33,10 +33,16 @@ export interface ProductCommercial {
   licenseScope: string
   /** e.g. "All Modeboard 1.x updates" */
   updatesIncluded: string
+  /** Perpetual-use and major-version policy. */
+  perpetualAccess: string
   /** Full-feature trial length in days, or null if there is no trial. */
   trialDays: number | null
-  /** How a license is activated, e.g. "Offline signed access code — no account or internet connection required." */
+  /** How a public paid license is activated and used offline afterward. */
   activation: string
+  /** Merchant of record for public paid licenses. */
+  merchantOfRecord: string
+  /** Supported Focus integration wording. */
+  focusIntegration: string
   /** How the app checks for/installs updates, e.g. "Sparkle 2, user-controlled automatic checks plus a manual Check for Updates command." */
   updateMechanism: string | null
   /** Exact refund policy wording — do not paraphrase; this is reviewed business language. */
@@ -54,11 +60,23 @@ export interface ProductRelease {
   minimumMacOSVersion: string
   testedMacOSVersions: string[]
   releaseDate: string | null
+  bundleIdentifier: string | null
+  developerIdSigned: boolean
+  notarized: boolean
   architectures: {
     appleSilicon: ArchitectureSupport
     intel: ArchitectureSupport
   }
   requiredPermissions: string[]
+  appcast: {
+    url: string | null
+    validSparkleXML: boolean
+    xmlContentTypeVerified: boolean
+    signedReleaseEntry: boolean
+    archiveMatchesRelease: boolean
+    productionPublicKeyConfigured: boolean
+    updateFromPreviousBuildTested: boolean
+  }
   undocumentedBehavior: string
   animatedWallpaperLimitations: string
 }

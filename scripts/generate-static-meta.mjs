@@ -57,9 +57,11 @@ function buildSoftwareApplicationSchema(product, commerce) {
     name: product.name,
     description: product.description,
     applicationCategory: 'UtilitiesApplication',
-    operatingSystem: `macOS ${release.minimumMacOSVersion} or later`,
     url: `${SITE_URL}${product.route}`,
-    ...(releaseComplete ? { softwareVersion: release.version } : {}),
+    ...(releaseComplete ? {
+      softwareVersion: release.version,
+      operatingSystem: `macOS ${release.minimumMacOSVersion} or later`,
+    } : {}),
     ...(releaseComplete && checkoutUrl && product.status === 'available' && product.commercial
       ? {
           offers: {

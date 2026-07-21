@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test'
+import { resolve } from 'node:path'
 
 const routes = ['/', '/products', '/modeboard', '/support', '/privacy', '/terms', '/changelog', '/about', '/brand', '/acknowledgments']
 
@@ -16,7 +17,8 @@ test('navigation and launch-updates action work', async ({ page }) => {
   await expect(page).toHaveURL(/\/modeboard$/)
   const launchLink = page.getByRole('link', { name: 'Get launch updates' }).first()
   await expect(launchLink).toHaveAttribute('href', /subject=Modeboard%20launch%20updates/)
-  await expect(page.getByRole('button', { name: 'Coming Soon' })).toHaveCount(0)
+  await expect(page.getByRole('button', { name: 'Download Free Trial — Coming Soon' })).toBeDisabled()
+  await expect(page.getByRole('button', { name: 'Buy for $14.99 — Coming Soon' })).toBeDisabled()
 })
 
 test('mobile navigation opens, follows a link, and closes', async ({ page }) => {
@@ -34,6 +36,7 @@ test('mobile navigation opens, follows a link, and closes', async ({ page }) => 
 test('critical pages stay within the viewport and load their images', async ({ page }) => {
   for (const viewport of [
     { width: 1440, height: 1000 },
+    { width: 768, height: 1024 },
     { width: 390, height: 844 },
   ]) {
     await page.setViewportSize(viewport)
@@ -55,10 +58,36 @@ test('critical pages stay within the viewport and load their images', async ({ p
   }
 })
 
+test('critical pages remain usable at 200% text size', async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 900 })
+  for (const route of ['/', '/modeboard', '/support', '/privacy', '/terms']) {
+    await page.goto(route)
+    await page.evaluate(() => { document.documentElement.style.fontSize = '200%' })
+    const hasHorizontalOverflow = await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth)
+    expect(hasHorizontalOverflow, `${route} overflows with 200% text`).toBe(false)
+    await expect(page.locator('h1')).toBeVisible()
+  }
+})
+
+test('primary pages have no automated browser accessibility violations', async ({ page }) => {
+  for (const route of ['/', '/modeboard', '/support', '/privacy', '/terms']) {
+    await page.goto(route)
+    await page.addScriptTag({ path: resolve('node_modules/axe-core/axe.min.js') })
+    const violations = await page.evaluate(async () => {
+      const axe = (window as typeof window & {
+        axe: { run: (root: Document) => Promise<{ violations: Array<{ id: string }> }> }
+      }).axe
+      const result = await axe.run(document)
+      return result.violations.map((violation) => violation.id)
+    })
+    expect(violations, `${route} accessibility violations`).toEqual([])
+  }
+})
+
 test('homepage remains legible in dark appearance', async ({ page }) => {
   await page.emulateMedia({ colorScheme: 'dark', reducedMotion: 'reduce' })
   await page.goto('/')
-  await expect(page.getByRole('heading', { name: /thoughtful tools for a Mac that works your way/i })).toBeVisible()
+  await expect(page.getByRole('heading', { name: /Tideframe Labs makes thoughtful native software for the Mac/i })).toBeVisible()
   await expect(page.locator('body')).toHaveCSS('background-color', 'rgb(16, 24, 32)')
 })
 

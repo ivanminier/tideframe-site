@@ -49,6 +49,12 @@ describe('static deployment files', () => {
     expect(headers).toContain('https://tideframe-site.pages.dev/*')
   })
 
+  it('keeps the production appcast path fail-closed instead of serving the SPA shell', () => {
+    const redirects = readFileSync('public/_redirects', 'utf8')
+    expect(redirects.split('\n')[0]).toBe('/updates/modeboard/appcast.xml /updates/modeboard/appcast-unavailable.txt 404')
+    expect(readFileSync('public/updates/modeboard/appcast-unavailable.txt', 'utf8')).not.toContain('<?xml')
+  })
+
   it('configures Wrangler for the existing static-assets Worker', () => {
     const wrangler = JSON.parse(readFileSync('wrangler.jsonc', 'utf8')) as {
       assets?: {

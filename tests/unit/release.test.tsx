@@ -17,7 +17,19 @@ function validProduct(): Product {
       sha256: '8c1f3a4b5d6e7f8091a2b3c4d5e6f708192a3b4c5d6e7f8091a2b3c4d5e6f708',
       testedMacOSVersions: ['15.5', '26.0'],
       releaseDate: '2026-07-01',
+      bundleIdentifier: 'com.tideframelabs.modeboard',
+      developerIdSigned: true,
+      notarized: true,
       architectures: { appleSilicon: 'supported', intel: 'unsupported' },
+      appcast: {
+        url: 'https://tideframelabs.com/updates/modeboard/appcast.xml',
+        validSparkleXML: true,
+        xmlContentTypeVerified: true,
+        signedReleaseEntry: true,
+        archiveMatchesRelease: true,
+        productionPublicKeyConfigured: true,
+        updateFromPreviousBuildTested: true,
+      },
     },
   }
 }
@@ -57,12 +69,27 @@ describe('release download integrity', () => {
     ['placeholder checksum', { sha256: 'a'.repeat(64) }],
     ['missing tested versions', { testedMacOSVersions: [] }],
     ['future date', { releaseDate: '2027-01-01' }],
+    ['wrong bundle identifier', { bundleIdentifier: 'com.example.modeboard' }],
+    ['unsigned artifact', { developerIdSigned: false }],
+    ['unnotarized artifact', { notarized: false }],
     ['unverified architecture', { architectures: { appleSilicon: 'not-yet-verified', intel: 'unsupported' } }],
+    ['invalid appcast XML', { appcast: { ...validProduct().release.appcast, validSparkleXML: false } }],
+    ['unverified appcast content type', { appcast: { ...validProduct().release.appcast, xmlContentTypeVerified: false } }],
+    ['unsigned appcast entry', { appcast: { ...validProduct().release.appcast, signedReleaseEntry: false } }],
+    ['wrong update archive', { appcast: { ...validProduct().release.appcast, archiveMatchesRelease: false } }],
+    ['placeholder Sparkle key', { appcast: { ...validProduct().release.appcast, productionPublicKeyConfigured: false } }],
+    ['untested update path', { appcast: { ...validProduct().release.appcast, updateFromPreviousBuildTested: false } }],
   ])('rejects %s', (_label, releasePatch) => {
     const product = validProduct()
     product.release = { ...product.release, ...(releasePatch as Partial<ProductRelease>) }
     expect(validateReleaseConfiguration(product, new Date('2026-07-13T00:00:00Z')).isReady).toBe(false)
     const { container } = render(<DownloadButton product={product} />)
     expect(container.querySelector('a')).toBeNull()
+  })
+
+  it('can withhold a valid release link when the combined commerce gate is closed', () => {
+    render(<DownloadButton product={validProduct()} enabled={false} label="Download Free Trial — Coming Soon" />)
+    expect(screen.getByRole('button', { name: /download free trial — coming soon/i })).toBeDisabled()
+    expect(screen.queryByRole('link', { name: /download/i })).not.toBeInTheDocument()
   })
 })

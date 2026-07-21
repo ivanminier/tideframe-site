@@ -3,5 +3,7 @@
   "merchantOfRecord": null,
   "checkoutUrl": null,
   "allowedCheckoutHosts": [],
-  "merchantProductId": null
+  "merchantStoreId": null,
+  "merchantProductId": null,
+  "merchantVariantId": null
 }

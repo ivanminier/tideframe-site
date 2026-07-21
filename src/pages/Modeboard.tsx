@@ -1,17 +1,27 @@
 import { Link } from 'react-router-dom'
+import { DownloadButton } from '../components/DownloadButton'
 import { Meta } from '../components/Meta'
 import { PlatformBadge } from '../components/PlatformBadge'
 import { ProductScreenshot } from '../components/ProductScreenshot'
+import { PurchaseButton } from '../components/PurchaseButton'
 import { launchUpdatesMailto } from '../config'
+import { commerceConfig, getVerifiedCheckoutUrl } from '../data/commerce'
 import { featuredProduct } from '../data/products'
+import { getPublicRelease } from '../data/products'
 import { getRouteMeta } from '../data/routeMeta'
 import { buildSoftwareApplicationSchema } from '../data/structuredData'
 
 const meta = getRouteMeta('/modeboard')
 
-const USE_CASES = ['Work', 'School and studying', 'Relaxing', 'Travel', 'Personal projects'] as const
+const USE_CASES = [
+  ['Work', 'Open work apps, set the right Dock, apply a focused wallpaper, and show useful Desktop shortcuts. A Work Focus can apply the profile automatically.'],
+  ['Study', 'Open study tools, simplify the Dock, and bring course files and shortcuts forward. A Study Focus can handle the switch.'],
+  ['Create', 'Open creative apps and project folders, bring media tools into the Dock, and change the workspace appearance.'],
+  ['Relax', 'Restore personal apps, wallpaper, Desktop items, appearance, and Dock arrangement when the workday is over.'],
+] as const
 
 const PROFILE_SETTINGS = [
+  ['Apps and files', 'Open the apps, files, and folders that belong with the profile.'],
   ['Wallpaper', 'Still images, animated GIF or video, and captured Apple/system wallpapers.'],
   ['Appearance', 'Light or Dark mode with the accent and highlight colors you choose.'],
   ['Dock', 'Size, position, visibility, magnification, and the apps you keep pinned.'],
@@ -19,14 +29,81 @@ const PROFILE_SETTINGS = [
   ['Desktop', 'Existing Desktop icons and custom shortcuts for the files and folders you need.'],
 ] as const
 
+const FEATURE_GROUPS = [
+  ['Workspace', ['Apps', 'Files and folders', 'Desktop shortcuts', 'Dock configuration']],
+  ['Appearance', ['Wallpaper', 'Light or Dark appearance', 'Accent and highlight colors']],
+  ['Automation', ['Focus Filter integration', 'Apple Shortcuts and App Intents', 'Launch at Login']],
+  ['Safety', ['Automatic backups', 'Restore support', 'Emergency Restore', 'Diagnostics and support reporting']],
+] as const
+
 const FAQS = [
   {
-    q: 'What happens to settings I leave alone?',
-    a: 'Modeboard skips them. Each profile changes only the settings you choose to configure.',
+    q: 'What does Modeboard change?',
+    a: 'A profile can open selected apps, files, and folders and change selected Dock, wallpaper, Desktop, appearance, menu-bar, and related workspace preferences. Choose what each profile changes.',
   },
   {
-    q: 'How does Focus switching work?',
-    a: 'Add a Modeboard Focus Filter to the Focus modes you choose in System Settings, then select the profile each one should apply.',
+    q: 'Does Modeboard manage macOS Focus modes?',
+    a: 'No. You create and manage Focus modes in macOS. Modeboard supplies a Focus Filter that connects a Focus to one Modeboard profile.',
+  },
+  {
+    q: 'How does Focus integration work?',
+    a: 'In macOS Focus settings, add the Modeboard Focus Filter to a Focus and choose a profile. A supported change to that Focus can then apply the matching profile automatically.',
+  },
+  {
+    q: 'Can I choose which settings a profile changes?',
+    a: 'Yes. Modeboard skips settings left unchanged, and you can preview and edit a profile before applying it.',
+  },
+  {
+    q: 'Is there a trial?',
+    a: 'Yes. Modeboard includes a 14-day full-feature trial.',
+  },
+  {
+    q: 'Is this a subscription?',
+    a: 'No. The introductory price is $14.99 USD as a one-time purchase.',
+  },
+  {
+    q: 'How many Macs can I use?',
+    a: 'One individual license can be activated on up to three Macs personally controlled by that person.',
+  },
+  {
+    q: 'Does Modeboard work offline?',
+    a: 'Yes after activation. An activated perpetual license uses a device-only Keychain receipt and continues working offline.',
+  },
+  {
+    q: 'Why does activation initially require internet?',
+    a: 'Modeboard contacts Lemon Squeezy once to validate the license key and register that Mac against the three-Mac activation limit.',
+  },
+  {
+    q: 'What if Lemon Squeezy is temporarily unavailable?',
+    a: 'A temporary connection or server failure does not revoke an already activated perpetual license. Modeboard can validate again when a connection is available.',
+  },
+  {
+    q: 'Are my profiles uploaded?',
+    a: 'No. Profiles, backups, selected files, folders, wallpapers, and local diagnostics normally remain on your Mac.',
+  },
+  {
+    q: 'Does Modeboard include analytics?',
+    a: 'No. Modeboard has no analytics, advertising, tracking pixels, or behavioral profiling.',
+  },
+  {
+    q: 'How do backups and Emergency Restore work?',
+    a: 'Modeboard creates a backup before applying relevant changes. Backups & Restore lets you review history, and Emergency Restore brings back the latest supported backup.',
+  },
+  {
+    q: 'How do I uninstall Modeboard?',
+    a: 'Turn off Launch at Login, remove the active license while online to release its seat, quit Modeboard, and move it from Applications to Trash. The Support page explains optional local-data cleanup.',
+  },
+  {
+    q: 'Are all future major versions included?',
+    a: 'The purchase includes perpetual use of the purchased version and all Modeboard 1.x updates. Free upgrades to future major versions are not promised.',
+  },
+  {
+    q: 'How do updates work?',
+    a: 'Sparkle provides user-controlled automatic checks and a manual Check for Updates command. Updates and licensing are separate systems.',
+  },
+  {
+    q: 'Which macOS versions are supported?',
+    a: 'Modeboard declares macOS 15 or later. The exact tested macOS versions and hardware support will be published only after the signed customer build completes the clean-machine compatibility matrix.',
   },
   {
     q: 'What happens to an animated wallpaper when Modeboard quits?',
@@ -61,6 +138,10 @@ function WideScreenshot({
 }
 
 export function Modeboard() {
+  const releaseReady = getPublicRelease(featuredProduct) !== null
+  const commerceReady = getVerifiedCheckoutUrl(commerceConfig) !== null
+  const launchReady = releaseReady && commerceReady
+
   return (
     <>
       <Meta
@@ -73,20 +154,39 @@ export function Modeboard() {
       <section className="hero-section product-hero">
         <span className="glow glow--pacific glow--top-right" aria-hidden="true" />
         <div className="container centered">
-          <p className="eyebrow">Modeboard by Tideframe Labs</p>
-          <h1>One profile. Your whole Mac, ready.</h1>
+          <p className="eyebrow">Native workspace profiles for macOS</p>
+          <h1>Switch your whole Mac workspace with one profile.</h1>
           <p className="lede">
-            Switch your wallpaper, Dock, appearance, menu bar, and Desktop together. Save each setup as a profile,
-            then apply it whenever your day changes.
+            Change your apps, Dock, wallpaper, Desktop, appearance, and Focus together—then switch back just as easily.
           </p>
           <p className="product-hero-detail">
             Switch manually, from the menu bar, with Apple Shortcuts, or automatically through a Focus Filter.
           </p>
-          <div className="product-hero-meta">
-            <span className="meta-chip">Coming soon for Mac</span>
+          <p className="product-hero-detail">
+            Choose exactly what changes, preview and edit every profile, and rely on a safety backup before relevant settings are applied.
+          </p>
+          <p className="commercial-price"><strong>$14.99 introductory price</strong> · One-time purchase</p>
+          <p className="commercial-summary">14-day full-feature trial · One person · Up to 3 Macs · All Modeboard 1.x updates</p>
+          <div className="product-hero-meta" aria-label="Platform and availability">
+            <span className="meta-chip">{launchReady ? 'Available for Mac' : 'Coming soon for Mac'}</span>
             {featuredProduct.platforms.map((platform) => <PlatformBadge key={platform} platform={platform} />)}
           </div>
-          <a className="button" href={launchUpdatesMailto}>Get launch updates <span>→</span></a>
+          <div className="launch-actions" aria-label="Modeboard download and purchase availability">
+            <DownloadButton
+              product={featuredProduct}
+              enabled={launchReady}
+              label={launchReady ? 'Download Free Trial' : 'Download Free Trial — Coming Soon'}
+            />
+            <PurchaseButton
+              enabled={launchReady}
+              label="Buy for $14.99"
+              unavailableLabel="Buy for $14.99 — Coming Soon"
+            />
+          </div>
+          {!launchReady ? (
+            <p className="availability-note">Downloads and checkout remain unavailable until the customer release and commerce checks both pass.</p>
+          ) : null}
+          <a className="text-link" href={launchUpdatesMailto}>Get launch updates <span>→</span></a>
         </div>
         <div className="container product-hero-shot">
           <WideScreenshot
@@ -106,9 +206,9 @@ export function Modeboard() {
             Create a setup for each part of your day. Modeboard changes only the settings you choose and leaves
             everything else alone.
           </p>
-          <ul className="use-case-list" aria-label="Example Modeboard profiles">
-            {USE_CASES.map((item) => <li key={item}>{item}</li>)}
-          </ul>
+          <div className="use-case-grid" aria-label="Example Modeboard profiles">
+            {USE_CASES.map(([title, text]) => <article key={title}><h3>{title}</h3><p>{text}</p></article>)}
+          </div>
         </div>
       </section>
 
@@ -116,8 +216,8 @@ export function Modeboard() {
         <div className="container">
           <div className="section-heading">
             <p className="eyebrow">What a profile can change</p>
-            <h2 id="profile-settings">The details that make a Mac feel like yours.</h2>
-            <p>Choose a few settings or shape the whole setup. Anything you leave unchanged stays just as it is.</p>
+            <h2 id="profile-settings">Choose what each profile changes.</h2>
+            <p>Use a few settings or shape the whole workspace. Anything you leave unchanged stays just as it is.</p>
           </div>
           <div className="change-grid">
             {PROFILE_SETTINGS.map(([title, text]) => (
@@ -131,6 +231,20 @@ export function Modeboard() {
               caption="Fine-tune appearance and Dock settings inside the same profile."
               sizes="(max-width: 800px) 92vw, 1040px"
             />
+          </div>
+        </div>
+      </section>
+
+      <section className="section" aria-labelledby="feature-groups">
+        <div className="container">
+          <div className="section-heading">
+            <p className="eyebrow">Everything in its place</p>
+            <h2 id="feature-groups">Built around outcomes, with the safeguards close by.</h2>
+          </div>
+          <div className="feature-group-grid">
+            {FEATURE_GROUPS.map(([title, items]) => (
+              <article key={title}><h3>{title}</h3><ul>{items.map((item) => <li key={item}>{item}</li>)}</ul></article>
+            ))}
           </div>
         </div>
       </section>
@@ -169,8 +283,8 @@ export function Modeboard() {
             <p className="eyebrow">Automatic switching</p>
             <h2 id="focus-switching">Let Focus handle the switch.</h2>
             <p>
-              Connect only the Focus modes you choose. Add a Modeboard Focus Filter in System Settings, then select
-              the profile it should apply.
+              Connect a Modeboard profile to a macOS Focus Filter and let your workspace change with your Focus.
+              You configure the filter in macOS Focus settings; Modeboard does not create or manage your Focus modes.
             </p>
           </div>
           <WideScreenshot
@@ -240,7 +354,8 @@ export function Modeboard() {
             <h2 id="private-local">Your profiles stay yours.</h2>
           </div>
           <div>
-            <p>Modeboard works without an account. Profiles, wallpaper files, app preferences, and safety backups stay on your Mac.</p>
+            <p>Profiles, selected files and wallpapers, local diagnostics, and safety backups stay on your Mac.</p>
+            <p>Lemon Squeezy is contacted for initial paid-license activation and occasional validation when online; activated perpetual licenses continue working offline.</p>
             <p>There is no analytics, advertising, or tracking.</p>
           </div>
         </div>
@@ -251,8 +366,8 @@ export function Modeboard() {
           <p className="eyebrow">Stay in the loop</p>
           <h2 id="availability">Coming soon for Mac.</h2>
           <p>
-            Modeboard is currently being prepared for release on macOS {featuredProduct.release.minimumMacOSVersion} and later.
-            Final compatibility, pricing, and download details will be shared at launch.
+            Modeboard declares macOS {featuredProduct.release.minimumMacOSVersion} and later. Final tested versions,
+            hardware support, signed download details, and checkout will be published only after every launch gate passes.
           </p>
           <a className="button" href={launchUpdatesMailto}>Get launch updates <span>→</span></a>
         </div>

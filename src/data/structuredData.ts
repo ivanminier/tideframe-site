@@ -29,9 +29,11 @@ export function buildSoftwareApplicationSchema(product: Product) {
     name: product.name,
     description: product.description,
     applicationCategory: 'UtilitiesApplication',
-    operatingSystem: `macOS ${product.release.minimumMacOSVersion} or later`,
     url: `${siteConfig.siteUrl}${product.route}`,
-    ...(release?.version ? { softwareVersion: release.version } : {}),
+    ...(release?.version ? {
+      softwareVersion: release.version,
+      operatingSystem: `macOS ${release.minimumMacOSVersion} or later`,
+    } : {}),
     ...(release && checkoutUrl && product.status === 'available' && product.commercial
       ? {
           offers: {

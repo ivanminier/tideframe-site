@@ -6,7 +6,9 @@ export interface CommerceConfiguration {
   merchantOfRecord: string | null
   checkoutUrl: string | null
   allowedCheckoutHosts: string[]
+  merchantStoreId: string | null
   merchantProductId: string | null
+  merchantVariantId: string | null
 }
 
 /**

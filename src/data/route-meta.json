@@ -1,7 +1,7 @@
 {
   "/": {
     "title": "Tideframe Labs — Thoughtful Mac Software",
-    "description": "Tideframe Labs creates focused, private Mac apps for better digital spaces. Meet Modeboard, a profile-based way to switch your Mac setup."
+    "description": "Tideframe Labs makes thoughtful native software for the Mac. Meet Modeboard, workspace profiles for apps, Dock, wallpaper, Desktop, appearance, and Focus."
   },
   "/products": {
     "title": "Products — Tideframe Labs",
@@ -9,23 +9,23 @@
   },
   "/modeboard": {
     "title": "Modeboard — Mac Workspace Profiles by Tideframe Labs",
-    "description": "Switch your wallpaper, Dock, appearance, menu bar, and Desktop together with reusable Mac profiles.",
+    "description": "Switch your whole Mac workspace with one profile for apps, Dock, wallpaper, Desktop, appearance, and Focus.",
     "ogImage": "/modeboard-social-preview.png"
   },
   "/privacy": {
     "h1": "Privacy Policy",
     "title": "Privacy Policy — Tideframe Labs",
-    "description": "Modeboard keeps profiles and backups on your Mac, with no account, analytics, advertising, or tracking."
+    "description": "How Modeboard handles local app data, Lemon Squeezy license activation, Sparkle update checks, support email, and this tracking-free website."
   },
   "/terms": {
     "h1": "Software Terms",
     "title": "Software Terms — Tideframe Labs",
-    "description": "Current website and pre-release software terms for Tideframe Labs and Modeboard."
+    "description": "Modeboard trial, one-time purchase, license, updates, support, refund, compatibility, and consumer-rights terms."
   },
   "/support": {
     "h1": "How can we help?",
     "title": "How can we help? — Tideframe Labs",
-    "description": "Find clear help with Modeboard profiles, permissions, backups, animated wallpapers, diagnostics, and support."
+    "description": "Modeboard help for installation, activation, deactivation, backups, Emergency Restore, updates, uninstalling, and diagnostics."
   },
   "/about": {
     "title": "About Tideframe Labs — Independent Mac Software",

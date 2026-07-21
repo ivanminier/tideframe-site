@@ -1,65 +1,63 @@
-# Modeboard purchase and license fulfillment specification
+# Modeboard purchase and license architecture
 
-Status: design only. No merchant, checkout, webhook, fulfillment service, email provider, or production signing key is configured in this repository.
+Status: v1 architecture, owner approval still pending. Commerce remains disabled.
 
-## Boundary and customer model
+## Public commercial model
 
-- Sell Modeboard as a one-time purchase through a merchant of record (MoR). The MoR hosts checkout, handles raw card data, tax calculation/remittance, receipts, and its own payment compliance.
-- The license is for one individual on up to three personally controlled Macs. This is a contractual allowance; the offline app does not silently inventory customer Macs.
-- The full-feature trial lasts 14 days. Paid licenses include all 1.x updates.
-- The static website contains only public checkout settings. Never place an MoR API key, webhook secret, email credential, license-signing private key, or recovery secret in this repository, a `VITE_*` variable, browser storage, a downloadable app, or client-visible logs.
+- $14.99 USD introductory one-time purchase.
+- One individual on up to three personally controlled Macs.
+- 14-day full-feature trial.
+- Perpetual use of the purchased version and all Modeboard 1.x updates.
+- Future major-version upgrades are not promised.
+- Lemon Squeezy is the merchant of record: Store `436050`, Product `1236025`, Variant `1932083`.
 
-## Required services
+## Actual v1 system
 
-1. **MoR checkout:** a hosted checkout for the Modeboard product and price. Configure an exact allowlisted checkout hostname in `src/data/commerce-config.json` only after a real account and product exist.
-2. **Webhook receiver:** a small private server endpoint, for example `POST /webhooks/merchant`, that reads the raw request body, verifies the MoR signature and timestamp, rejects unverifiable events, and returns quickly.
-3. **Order and fulfillment store:** a transactional database holding provider event IDs, provider order IDs, payment state, customer email, license ID, fulfillment state, and timestamps. Store only the information needed for fulfillment, support, tax/receipt links, refund state, and recovery.
-4. **License signer:** an isolated server job or protected CI job with access to the signing private key. The webhook-facing process should enqueue signing rather than log or expose key material. The app contains only the public verification key.
-5. **Transactional email:** sends the access code and recovery messages. Do not include the access code in analytics, exception reports, URL query strings, or routine logs.
+1. The static website links to a Lemon Squeezy-hosted, shareable checkout only after the fail-closed validator accepts the exact URL and identifiers.
+2. Lemon Squeezy handles checkout, payment, tax, receipts, refunds, chargebacks, customer records, and license-key delivery.
+3. The customer enters the Lemon Squeezy license key in Modeboard. Modeboard sends the key and a generated installation instance name to Lemon Squeezy's public License API for activation.
+4. Modeboard verifies the expected store, product, variant, perpetual state, three-activation limit, and returned instance. It then stores a device-only activation receipt in macOS Keychain.
+5. The activated perpetual license works offline. Modeboard performs occasional validation while a connection is available; temporary connection, rate-limit, or server failures preserve offline access.
+6. Removing a license while online deactivates the saved instance and returns its seat before the local receipt is removed.
+7. Sparkle handles application updates independently of licensing.
 
-## Payment-to-license sequence
+No custom webhook receiver, customer database, fulfillment backend, recovery portal, transactional-email service, or paid-license signing service is required for v1. A future backend is optional and should be added only for a concrete customer or operational need.
 
-1. The browser follows an ordinary HTTPS link to the hosted MoR checkout. Tideframe Labs never renders card fields.
-2. The MoR redirects the browser to a Tideframe success URL carrying only an opaque checkout reference supported by that provider. The success page treats the browser redirect as untrusted and asks the private backend for status.
-3. Independently, the MoR sends a signed `payment completed` webhook. The receiver verifies the signature against the raw body, confirms the expected product/currency/amount, and writes the event and order in one transaction.
-4. A fulfillment job allocates a unique UUID license ID, constructs the canonical payload, signs its exact bytes with the private key, stores the resulting access code, and marks fulfillment complete.
-5. The success page polls an authenticated, rate-limited endpoint using an opaque, short-lived HttpOnly SameSite cookie or one-time token. It shows the code only after server-side payment verification and fulfillment. It must never mint or sign a license in the browser.
-6. The email service sends the same code to the MoR-verified purchaser email. Delivery retries are recorded without printing the code in logs.
+Existing `MB1` signed codes are internal owner-issued offline, beta, or support licenses. Do not market them publicly, explain their format in customer material, or submit them to Lemon Squeezy.
 
-## Signed payload
+## Static website boundary
 
-Use a versioned canonical serialization such as deterministic JSON or CBOR. A paid payload should contain:
+`src/data/commerce-config.json` contains public, non-secret settings only. Never put a Lemon Squeezy account API key, secret, full customer license key, payment data, private signing material, or customer record in this repository, a `VITE_*` variable, browser storage, source archives, screenshots, or logs.
 
-```text
-schema_version, license_id, product_id, product_major_version,
-license_kind=paid, issued_at, purchaser_reference, max_personal_macs=3
-```
+Commerce stays disabled until all of these are true:
 
-`purchaser_reference` should be a non-secret support reference, not raw card data. Paid payloads have no expiry and continue verifying offline. Beta payloads use `license_kind=beta` and a required `expires_at`. Sign the payload with the Modeboard licensing private key and encode payload plus signature as the customer access code.
+- Lemon Squeezy business approval is complete.
+- The owner supplies the exact live shareable `/checkout/buy/` URL.
+- The exact Lemon Squeezy hostname is allowlisted.
+- Store `436050`, Product `1236025`, and Variant `1932083` are confirmed in the live account.
+- A real purchase, activation, offline relaunch, validation, deactivation, seat reuse, refund, and chargeback lifecycle passes.
+- Privacy, Terms, refund language, and support procedures receive owner review.
 
-## Idempotency and state
+The website purchase link is still withheld unless the separate release validator also passes. Pricing schema is not an availability signal and remains without an `Offer` until both boundaries pass.
 
-- Put a unique database constraint on `(provider, provider_event_id)` and another on `(provider, provider_order_id)`.
-- Process each event in a transaction. A duplicate completed-payment event returns success with the existing order/license and never creates or emails a second license.
-- Give every license a unique UUID and keep an audit trail linking it to the provider order and each fulfillment attempt.
-- Suggested order states: `pending`, `paid`, `refunded`, `partially_refunded`, `chargeback_open`, `charged_back`, `canceled`.
-- Suggested fulfillment states: `not_ready`, `queued`, `signed`, `emailed`, `delivery_failed`.
-- Refund and chargeback events update order state idempotently. Because paid codes verify offline, already issued codes are not silently revoked. The state can block future recovery/reissue and inform support while preserving honest offline behavior.
+## Refund and chargeback owner runbook
 
-## Recovery
+After a Lemon Squeezy refund or chargeback:
 
-- Offer `POST /license-recovery` with a verified order ID or purchaser email. Always return the same generic response to prevent account enumeration and rate-limit by IP and normalized email hash.
-- Send a short-lived, single-use recovery link only to the MoR-verified order email. The link opens a backend-served page or exchanges for an HttpOnly session before revealing the code.
-- Record recovery attempts and successful retrievals. Support can search by license ID or provider order ID; never by raw card details.
+1. Locate the corresponding order in Lemon Squeezy.
+2. Locate the issued license using the minimum order reference needed.
+3. Confirm whether Lemon Squeezy disabled the license.
+4. If continued access is no longer authorized and the key remains active, disable it manually.
+5. Never place the full license key in support logs, tickets, screenshots, analytics, or public documentation.
+6. Retain only the minimum support reference required for the case and follow Lemon Squeezy's independent retention rules.
 
-## Failure and security requirements
+Do not build a v1 webhook backend solely to automate this owner procedure.
 
-- Verify webhook signatures, timestamps, expected environment, product ID, currency, amount, and final payment state before fulfillment.
-- Rotate webhook and email secrets without rotating the offline license key. Rotate license keys only with a versioned public-key migration plan in the app.
-- Disable request-body logging on webhook, success, signing, and recovery endpoints. Redact email, checkout references, access codes, signatures, and all secrets from errors.
-- Back up the order/license database encrypted. Restrict private-key access to the signing workload and named operators; keep an auditable key-access policy.
-- Test duplicate delivery, out-of-order refund events, signer timeout, email failure, success-page refresh, expired beta codes, paid offline verification, and recovery replay before launch.
+## Failure expectations
 
-## Still required before activation
-
-Select the MoR and email provider; create the product/price; obtain approved checkout hostnames, webhook signing secret, product ID, success URL format, and refund event names; provision the private backend/database/queue; install the real public verification key in Modeboard; store the private key in protected secret storage; complete legal review; and run sandbox plus live low-value purchase/refund/recovery drills. Only then set `commerceConfig.enabled` to `true`.
+- Initial activation requires internet access.
+- An activated perpetual license starts from its local Keychain receipt without waiting for the network.
+- Temporary network or Lemon Squeezy service failure must not revoke an activated perpetual license.
+- An authoritative invalid or revoked response may remove the entitlement.
+- If online deactivation cannot complete, Modeboard retains the receipt and asks the user to retry rather than orphaning a server-side activation.
+- Updates must remain available independently of purchase-provider availability, subject to the signed Sparkle feed being valid.

@@ -1,9 +1,19 @@
 import { commerceConfig, getVerifiedCheckoutUrl, type CommerceConfiguration } from '../data/commerce'
 
-export function PurchaseButton({ config = commerceConfig }: { config?: CommerceConfiguration }) {
+export function PurchaseButton({
+  config = commerceConfig,
+  enabled = true,
+  label = 'Buy Modeboard',
+  unavailableLabel = 'Purchase available at launch',
+}: {
+  config?: CommerceConfiguration
+  enabled?: boolean
+  label?: string
+  unavailableLabel?: string
+}) {
   const checkoutUrl = getVerifiedCheckoutUrl(config)
-  if (!checkoutUrl) {
-    return <button className="button button-disabled" type="button" disabled>Purchase available at launch</button>
+  if (!checkoutUrl || !enabled) {
+    return <button className="button button-disabled" type="button" disabled>{unavailableLabel}</button>
   }
-  return <a className="button" href={checkoutUrl}>Buy Modeboard</a>
+  return <a className="button" href={checkoutUrl}>{label}</a>
 }

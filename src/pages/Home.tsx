@@ -21,10 +21,10 @@ export function Home() {
         <div className="container home-hero-grid">
           <div className="hero-copy">
             <p className="eyebrow">Independent Mac software from Vermont</p>
-            <h1>Thoughtful tools for a Mac that works your way.</h1>
+            <h1>Tideframe Labs makes thoughtful native software for the Mac.</h1>
             <p className="lede">
-              Tideframe Labs makes focused Mac apps that simplify everyday digital spaces. Our first app,
-              Modeboard, turns your workspace settings into profiles you can switch in a moment.
+              Our first app, Modeboard, brings your apps, Dock, wallpaper, Desktop, appearance, and Focus together
+              in workspace profiles you can switch in a moment.
             </p>
             <div className="actions">
               <Link className="button" to="/modeboard">Explore Modeboard <span>→</span></Link>
@@ -51,12 +51,12 @@ export function Home() {
                 <img src="/modeboard-icon.png" alt="" width="72" height="72" aria-hidden="true" />
                 <div>
                   <p className="eyebrow">Featured product · Coming soon for Mac</p>
-                  <h2>One profile. Your whole Mac, ready.</h2>
+                  <h2>Switch your whole Mac workspace with one profile.</h2>
                 </div>
               </div>
               <p className="lede">
-                Switch your wallpaper, Dock, appearance, menu bar, and Desktop together. Save each setup as a
-                profile for work, studying, relaxing, travel, or anything else.
+                Choose what each profile changes, then switch your apps, Dock, wallpaper, Desktop, appearance,
+                and Focus together for work, study, creativity, or downtime.
               </p>
               <Link className="text-link" to="/modeboard">Learn how Modeboard works <span>→</span></Link>
             </div>
