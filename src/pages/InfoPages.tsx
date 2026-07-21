@@ -104,6 +104,9 @@ export function Support() {
         Modeboard has no analytics, advertising, or automatic diagnostics upload. Read the full{' '}
         <Link to="/privacy">privacy policy</Link> for details about local data and support email.
       </p>
+      <p>
+        New to the app? See what <Link to="/modeboard">Modeboard for Mac</Link> does and how workspace profiles work.
+      </p>
     </Page>
   )
 }
@@ -296,6 +299,9 @@ export function Changelog() {
           </ul>
         </div>
       </article>
+      <p>
+        For the full feature overview, see <Link to="/modeboard">Modeboard for Mac</Link>.
+      </p>
     </Page>
   )
 }

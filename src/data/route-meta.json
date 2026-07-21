@@ -1,15 +1,16 @@
 {
   "/": {
-    "title": "Tideframe Labs — Thoughtful Mac Software",
-    "description": "Tideframe Labs makes thoughtful native software for the Mac. Meet Modeboard, workspace profiles for apps, Dock, wallpaper, Desktop, appearance, and Focus."
+    "title": "Tideframe Labs — Native Mac Apps",
+    "description": "Tideframe Labs makes thoughtful native software for the Mac, including Modeboard, a workspace-profile utility for macOS."
   },
   "/products": {
     "title": "Products — Tideframe Labs",
-    "description": "Mac software from Tideframe Labs, an independent studio based in Vermont."
+    "description": "Native Mac software from Tideframe Labs, an independent studio in Vermont. Modeboard brings workspace profiles to macOS."
   },
   "/modeboard": {
-    "title": "Modeboard — Mac Workspace Profiles by Tideframe Labs",
-    "description": "Switch your whole Mac workspace with one profile for apps, Dock, wallpaper, Desktop, appearance, and Focus.",
+    "h1": "Modeboard for Mac",
+    "title": "Modeboard for Mac — Workspace Profiles for macOS | Tideframe Labs",
+    "description": "Modeboard is a native Mac app that switches your apps, Dock, wallpaper, Desktop, appearance, and Focus with reusable workspace profiles.",
     "ogImage": "/modeboard-social-preview.png"
   },
   "/privacy": {

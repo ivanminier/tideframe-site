@@ -3,14 +3,14 @@ import { Meta } from '../components/Meta'
 import { ProductCard } from '../components/ProductCard'
 import { SectionHeading } from '../components/SectionHeading'
 import { products } from '../data/products'
+import { getRouteMeta } from '../data/routeMeta'
+
+const meta = getRouteMeta('/products')
 
 export function Products() {
   return (
     <>
-      <Meta
-        title="Products — Tideframe Labs"
-        description="Mac software from Tideframe Labs, an independent studio based in Vermont."
-      />
+      <Meta title={meta.title} description={meta.description} />
       <section className="page-hero">
         <div className="container narrow">
           <p className="eyebrow">Tideframe Labs</p>
@@ -24,7 +24,7 @@ export function Products() {
         <div className="container">
           <SectionHeading
             eyebrow="Coming soon for Mac"
-            title="Modeboard"
+            title="Modeboard for Mac"
             description="One profile. Your whole Mac, ready. Switch the settings that shape your Mac together, then return to the right setup whenever your day changes."
           />
           <div className="products-grid">

@@ -3,6 +3,7 @@ import { Meta } from '../components/Meta'
 import { ProductScreenshot } from '../components/ProductScreenshot'
 import { launchUpdatesMailto } from '../config'
 import { getRouteMeta } from '../data/routeMeta'
+import { webSiteSchema } from '../data/structuredData'
 import { useReveal } from '../hooks/useReveal'
 
 const meta = getRouteMeta('/')
@@ -14,7 +15,7 @@ export function Home() {
 
   return (
     <>
-      <Meta title={meta.title} description={meta.description} />
+      <Meta title={meta.title} description={meta.description} structuredData={webSiteSchema} />
 
       <section className="hero-section home-hero">
         <span className="glow glow--pacific glow--top-right" aria-hidden="true" />
@@ -27,7 +28,7 @@ export function Home() {
               in workspace profiles you can switch in a moment.
             </p>
             <div className="actions">
-              <Link className="button" to="/modeboard">Explore Modeboard <span>→</span></Link>
+              <Link className="button" to="/modeboard">Explore Modeboard for Mac <span>→</span></Link>
               <Link className="text-link" to="/about">Meet Tideframe Labs <span>→</span></Link>
             </div>
           </div>
@@ -58,7 +59,7 @@ export function Home() {
                 Choose what each profile changes, then switch your apps, Dock, wallpaper, Desktop, appearance,
                 and Focus together for work, study, creativity, or downtime.
               </p>
-              <Link className="text-link" to="/modeboard">Learn how Modeboard works <span>→</span></Link>
+              <Link className="text-link" to="/modeboard">Learn how Modeboard for Mac works <span>→</span></Link>
             </div>
             <ProductScreenshot
               src="modeboard-profile-overview"

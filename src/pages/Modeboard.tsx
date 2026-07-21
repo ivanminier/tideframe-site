@@ -146,7 +146,7 @@ export function Modeboard() {
     <>
       <Meta
         title={meta.title}
-        description={featuredProduct.description}
+        description={meta.description}
         ogImage="/modeboard-social-preview.png"
         structuredData={buildSoftwareApplicationSchema(featuredProduct)}
       />
@@ -155,9 +155,10 @@ export function Modeboard() {
         <span className="glow glow--pacific glow--top-right" aria-hidden="true" />
         <div className="container centered">
           <p className="eyebrow">Native workspace profiles for macOS</p>
-          <h1>Switch your whole Mac workspace with one profile.</h1>
+          <h1>{meta.h1 ?? meta.title}</h1>
           <p className="lede">
-            Change your apps, Dock, wallpaper, Desktop, appearance, and Focus together—then switch back just as easily.
+            Switch your whole Mac workspace with one profile. Modeboard is a native macOS app that changes the apps,
+            Dock, wallpaper, Desktop items, appearance, and Focus you select—then switches back just as easily.
           </p>
           <p className="product-hero-detail">
             Switch manually, from the menu bar, with Apple Shortcuts, or automatically through a Focus Filter.
@@ -201,7 +202,7 @@ export function Modeboard() {
       <section className="section" aria-labelledby="use-cases">
         <div className="container narrow centered">
           <p className="eyebrow">Built around your day</p>
-          <h2 id="use-cases">Your Mac, set up for what comes next.</h2>
+          <h2 id="use-cases">Workspace profiles for each part of your day.</h2>
           <p className="lede">
             Create a setup for each part of your day. Modeboard changes only the settings you choose and leaves
             everything else alone.
@@ -281,7 +282,7 @@ export function Modeboard() {
         <div className="container split reverse">
           <div className="feature-copy">
             <p className="eyebrow">Automatic switching</p>
-            <h2 id="focus-switching">Let Focus handle the switch.</h2>
+            <h2 id="focus-switching">Let a macOS Focus Filter handle the switch.</h2>
             <p>
               Connect a Modeboard profile to a macOS Focus Filter and let your workspace change with your Focus.
               You configure the filter in macOS Focus settings; Modeboard does not create or manage your Focus modes.
@@ -361,10 +362,26 @@ export function Modeboard() {
         </div>
       </section>
 
+      <section className="section" aria-labelledby="pricing">
+        <div className="container narrow">
+          <p className="eyebrow">Trial and pricing</p>
+          <h2 id="pricing">A 14-day trial, then a one-time purchase.</h2>
+          <p>
+            Modeboard includes a 14-day full-feature trial, so you can build real profiles before deciding. It is a
+            one-time purchase at an introductory $14.99 USD, not a subscription.
+          </p>
+          <p>
+            One purchase covers one person on up to three personally controlled Macs and includes all Modeboard 1.x
+            updates. Free upgrades to a future major version are not promised. Read the full{' '}
+            <Link to="/terms">software terms</Link> before purchasing.
+          </p>
+        </div>
+      </section>
+
       <section className="compatibility section" aria-labelledby="availability">
         <div className="container narrow centered">
           <p className="eyebrow">Stay in the loop</p>
-          <h2 id="availability">Coming soon for Mac.</h2>
+          <h2 id="availability">macOS compatibility and availability.</h2>
           <p>
             Modeboard declares macOS {featuredProduct.release.minimumMacOSVersion} and later. Final tested versions,
             hardware support, signed download details, and checkout will be published only after every launch gate passes.

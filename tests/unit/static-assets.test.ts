@@ -24,6 +24,28 @@ describe('static deployment files', () => {
     expect(new Set(urls)).toEqual(new Set(Object.keys(routeMeta)))
   })
 
+  it('keeps the HTML template defaults in sync with the "/" route metadata', () => {
+    // generate-static-meta.mjs rewrites these per route, but the template is what a
+    // crawler sees for any path the generator does not pre-render.
+    const html = readFileSync('index.html', 'utf8')
+    const home = routeMeta['/']
+    expect(html).toContain(`<title>${home.title}</title>`)
+    expect(html).toContain(`<meta name="description" content="${home.description}" />`)
+    expect(html).toContain(`<meta property="og:title" content="${home.title}" />`)
+    expect(html).toContain(`<meta property="og:description" content="${home.description}" />`)
+    expect(html).toContain('<link rel="canonical" href="https://tideframelabs.com/" />')
+    expect(html).not.toMatch(/pages\.dev|workers\.dev/)
+  })
+
+  it('declares a square favicon Google can fetch', () => {
+    const html = readFileSync('index.html', 'utf8')
+    expect(html).toContain('<link rel="icon" type="image/svg+xml" href="/tideframe-mark.svg" />')
+    // Raster fallback: 512×512, square, and not blocked by robots.txt.
+    expect(html).toContain('<link rel="icon" type="image/png" sizes="512x512" href="/tideframe-icon-glossy.png" />')
+    expect(existsSync('public/tideframe-icon-glossy.png')).toBe(true)
+    expect(readFileSync('public/robots.txt', 'utf8')).not.toMatch(/^Disallow: \/\s*$/m)
+  })
+
   it('ships metadata assets and an installable manifest', () => {
     const manifest = JSON.parse(readFileSync('public/site.webmanifest', 'utf8')) as { icons: Array<{ src: string }> }
     expect(manifest.icons.some((icon) => icon.src === '/tideframe-mark.svg')).toBe(true)

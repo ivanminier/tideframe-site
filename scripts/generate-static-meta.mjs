@@ -24,17 +24,34 @@ const templatePath = join(distDir, 'index.html')
 const SITE_URL = 'https://tideframelabs.com'
 const DEFAULT_OG_IMAGE = `${SITE_URL}/social-preview.png`
 
+const ORGANIZATION_ID = `${SITE_URL}/#organization`
+
 // Mirrors src/data/structuredData.ts's organizationSchema — see the cross-reference
 // comment there. Injected on every generated route, matching what Layout.tsx also
-// injects client-side for every route.
+// injects client-side for every route. Keep both in sync.
 const organizationSchema = {
   '@context': 'https://schema.org',
   '@type': 'Organization',
+  '@id': ORGANIZATION_ID,
   name: 'Tideframe Labs',
-  url: SITE_URL,
+  alternateName: 'Tideframe',
+  url: `${SITE_URL}/`,
+  logo: `${SITE_URL}/tideframe-icon-glossy.png`,
   description: 'Independent Mac software built in Vermont.',
-  email: 'hello@tideframelabs.com',
+  email: 'support@tideframelabs.com',
   founder: { '@type': 'Person', name: 'Ivan Minier' },
+}
+
+// Mirrors src/data/structuredData.ts's webSiteSchema. Homepage only.
+const webSiteSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  '@id': `${SITE_URL}/#website`,
+  name: 'Tideframe Labs',
+  alternateName: 'Tideframe',
+  url: `${SITE_URL}/`,
+  description: 'Independent Mac software built in Vermont.',
+  publisher: { '@id': ORGANIZATION_ID },
 }
 
 function readRouteMeta() {
@@ -43,6 +60,7 @@ function readRouteMeta() {
   const product = JSON.parse(readFileSync(join(root, 'src/data/modeboard-product.json'), 'utf8'))
   const commerce = JSON.parse(readFileSync(join(root, 'src/data/commerce-config.json'), 'utf8'))
   routeMeta['/modeboard'].structuredData = buildSoftwareApplicationSchema(product, commerce)
+  routeMeta['/'].structuredData = webSiteSchema
   return routeMeta
 }
 
@@ -57,11 +75,11 @@ function buildSoftwareApplicationSchema(product, commerce) {
     name: product.name,
     description: product.description,
     applicationCategory: 'UtilitiesApplication',
+    operatingSystem: `macOS ${release.minimumMacOSVersion} or later`,
     url: `${SITE_URL}${product.route}`,
-    ...(releaseComplete ? {
-      softwareVersion: release.version,
-      operatingSystem: `macOS ${release.minimumMacOSVersion} or later`,
-    } : {}),
+    author: { '@id': ORGANIZATION_ID },
+    publisher: { '@id': ORGANIZATION_ID },
+    ...(releaseComplete ? { softwareVersion: release.version } : {}),
     ...(releaseComplete && checkoutUrl && product.status === 'available' && product.commercial
       ? {
           offers: {
@@ -88,7 +106,8 @@ function escapeHtmlAttr(value) {
 }
 
 function buildRouteHtml(template, routePath, entry) {
-  const url = `${SITE_URL}${routePath === '/' ? '' : routePath}`
+  // Root keeps its trailing slash so the canonical matches the sitemap entry exactly.
+  const url = `${SITE_URL}${routePath}`
   const title = escapeHtmlAttr(entry.title)
   const description = escapeHtmlAttr(entry.description)
   const image = entry.ogImage ? `${SITE_URL}${entry.ogImage}` : DEFAULT_OG_IMAGE

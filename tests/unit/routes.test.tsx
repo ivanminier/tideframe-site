@@ -60,7 +60,7 @@ describe('navigation', () => {
     expect(within(screen.getByRole('banner')).getByRole('link', { name: /tideframe labs/i })).toHaveFocus()
     await user.tab()
     await user.keyboard('{Enter}')
-    expect(screen.getByRole('heading', { name: /switch your whole mac workspace with one profile/i })).toBeVisible()
+    expect(screen.getByRole('heading', { level: 1, name: /modeboard for mac/i })).toBeVisible()
   })
 
   it('keeps both launch actions unavailable while preserving a working updates email', () => {
@@ -80,8 +80,69 @@ describe('metadata', () => {
     await waitFor(() => expect(document.title).toBe(routeMeta['/modeboard'].title))
     expect(document.querySelector('link[rel="canonical"]')).toHaveAttribute('href', 'https://tideframelabs.com/modeboard')
     expect(document.querySelector('meta[property="og:image"]')).toHaveAttribute('content', 'https://tideframelabs.com/modeboard-social-preview.png')
-    expect(document.querySelector('script#page-jsonld')).toHaveTextContent('SoftwareApplication')
-    expect(document.querySelector('script#page-jsonld')).not.toHaveTextContent('InStock')
-    expect(document.querySelector('script#page-jsonld')).not.toHaveTextContent('operatingSystem')
+    // The rendered description must match the pre-rendered static HTML, which is
+    // generated from route-meta.json — otherwise hydration contradicts the crawler.
+    expect(document.querySelector('meta[name="description"]')).toHaveAttribute('content', routeMeta['/modeboard'].description)
+    expect(document.querySelector('meta[property="og:title"]')).toHaveAttribute('content', routeMeta['/modeboard'].title)
+  })
+
+  it('canonicalizes the homepage with a trailing slash, matching the sitemap', async () => {
+    renderRoute('/')
+    await waitFor(() => expect(document.querySelector('link[rel="canonical"]')).toHaveAttribute('href', 'https://tideframelabs.com/'))
+  })
+
+  it('publishes only verifiable Modeboard structured data while coming-soon', async () => {
+    renderRoute('/modeboard')
+    await waitFor(() => expect(document.querySelector('script#page-jsonld')).not.toBeNull())
+    const schema = JSON.parse(document.querySelector('script#page-jsonld')?.textContent ?? '{}')
+
+    expect(schema['@type']).toBe('SoftwareApplication')
+    expect(schema.name).toBe('Modeboard')
+    expect(schema.url).toBe('https://tideframelabs.com/modeboard')
+    expect(schema.applicationCategory).toBe('UtilitiesApplication')
+    expect(schema.operatingSystem).toBe('macOS 15.0 or later')
+    expect(schema.author['@id']).toBe('https://tideframelabs.com/#organization')
+    expect(schema.publisher['@id']).toBe('https://tideframelabs.com/#organization')
+
+    // Withheld until the release and commerce validators both pass.
+    for (const withheld of ['offers', 'aggregateRating', 'review', 'downloadUrl', 'softwareVersion']) {
+      expect(schema, `${withheld} must stay absent while coming-soon`).not.toHaveProperty(withheld)
+    }
+  })
+
+  it('publishes WebSite and Organization structured data on the homepage', async () => {
+    renderRoute('/')
+    await waitFor(() => expect(document.querySelector('script#page-jsonld')).not.toBeNull())
+    const website = JSON.parse(document.querySelector('script#page-jsonld')?.textContent ?? '{}')
+    const organization = JSON.parse(document.querySelector('script#org-jsonld')?.textContent ?? '{}')
+
+    expect(website['@type']).toBe('WebSite')
+    expect(website.name).toBe('Tideframe Labs')
+    expect(website.url).toBe('https://tideframelabs.com/')
+    expect(website.publisher['@id']).toBe('https://tideframelabs.com/#organization')
+
+    expect(organization['@type']).toBe('Organization')
+    expect(organization['@id']).toBe('https://tideframelabs.com/#organization')
+    expect(organization.name).toBe('Tideframe Labs')
+    expect(organization.url).toBe('https://tideframelabs.com/')
+    expect(organization.logo).toBe('https://tideframelabs.com/tideframe-icon-glossy.png')
+    expect(organization.email).toBe('support@tideframelabs.com')
+
+    // Unverifiable properties must never be invented to chase a rich result.
+    for (const withheld of ['address', 'telephone', 'foundingDate', 'numberOfEmployees', 'sameAs', 'award']) {
+      expect(organization, `${withheld} is not verified`).not.toHaveProperty(withheld)
+    }
+  })
+
+  it('gives every indexable route a unique title and description', () => {
+    const titles = Object.values(routeMeta).map((entry) => entry.title)
+    const descriptions = Object.values(routeMeta).map((entry) => entry.description)
+    expect(new Set(titles).size).toBe(titles.length)
+    expect(new Set(descriptions).size).toBe(descriptions.length)
+    for (const entry of Object.values(routeMeta)) {
+      expect(entry.title.length).toBeLessThanOrEqual(70)
+      expect(entry.description.length).toBeGreaterThanOrEqual(50)
+      expect(entry.description.length).toBeLessThanOrEqual(160)
+    }
   })
 })

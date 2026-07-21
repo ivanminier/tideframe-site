@@ -63,7 +63,8 @@ export function Meta({
   const routePath = path ?? location.pathname
 
   useEffect(() => {
-    const url = `${siteConfig.siteUrl}${routePath === '/' ? '' : routePath}`
+    // Root keeps its trailing slash so the canonical matches the sitemap entry exactly.
+    const url = `${siteConfig.siteUrl}${routePath}`
     const absoluteImage = ogImage.startsWith('http') ? ogImage : `${siteConfig.siteUrl}${ogImage}`
 
     document.title = title
