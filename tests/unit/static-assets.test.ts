@@ -1,6 +1,21 @@
 import { existsSync, readFileSync } from 'node:fs'
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 import { routeMeta } from '../../src/data/routeMeta'
+import worker from '../../worker/index.js'
+
+const APPCAST_PATH = '/updates/modeboard/appcast.xml'
+
+/** A stand-in for the Workers static-assets binding, so fall-through is observable. */
+function assetsEnv() {
+  const fetchAsset = vi.fn(
+    async (request: Request) => new Response(`asset:${new URL(request.url).pathname}`, { status: 200 }),
+  )
+  return { env: { ASSETS: { fetch: fetchAsset } }, fetchAsset }
+}
+
+function get(path: string) {
+  return new Request(`https://tideframelabs.com${path}`)
+}
 
 describe('static deployment files', () => {
   it('keeps sitemap routes consistent with registered public metadata', () => {
@@ -46,26 +61,118 @@ describe('static deployment files', () => {
     expect(headers).toContain('Referrer-Policy: strict-origin-when-cross-origin')
     expect(headers).toContain('Permissions-Policy:')
     expect(headers).not.toMatch(/default-src[^\n]*\*/)
-    expect(headers).toContain('https://tideframe-site.pages.dev/*')
+    // tideframelabs.com is the only host that serves this site, so there is no
+    // Cloudflare-generated hostname left to scope a noindex rule to.
+    expect(headers).not.toContain('pages.dev')
+    expect(headers).not.toContain('workers.dev')
   })
 
-  it('keeps the production appcast path fail-closed instead of serving the SPA shell', () => {
-    const redirects = readFileSync('public/_redirects', 'utf8')
-    expect(redirects.split('\n')[0]).toBe('/updates/modeboard/appcast.xml /updates/modeboard/appcast-unavailable.txt 404')
-    expect(readFileSync('public/updates/modeboard/appcast-unavailable.txt', 'utf8')).not.toContain('<?xml')
+  it('does not reintroduce the obsolete _redirects appcast implementation', () => {
+    // The appcast is now failed closed in worker/index.js. A Pages-era `_redirects`
+    // file would reintroduce a second, conflicting routing layer (and, with a
+    // catch-all rule, an SPA redirect loop), so it must stay absent.
+    expect(existsSync('public/_redirects')).toBe(false)
+    expect(existsSync('dist/_redirects')).toBe(false)
+    expect(existsSync('public/updates/modeboard/appcast-unavailable.txt')).toBe(false)
+    expect(existsSync('public/updates/modeboard/appcast.xml')).toBe(false)
+  })
+})
+
+describe('appcast Worker route', () => {
+  it('fails the exact appcast path closed with a plain-text, uncacheable 404', async () => {
+    const { env, fetchAsset } = assetsEnv()
+    const response = await worker.fetch(get(APPCAST_PATH), env)
+
+    expect(response.status).toBe(404)
+    expect(response.headers.get('Content-Type')).toBe('text/plain; charset=utf-8')
+    expect(response.headers.get('Cache-Control')).toBe('no-store')
+    expect(response.headers.get('X-Content-Type-Options')).toBe('nosniff')
+
+    const body = await response.text()
+    expect(body).toContain('not available')
+    expect(body).not.toContain('<?xml')
+    expect(body).not.toContain('<rss')
+    expect(fetchAsset).not.toHaveBeenCalled()
   })
 
-  it('configures Wrangler for the existing static-assets Worker', () => {
+  it('still fails closed when Sparkle appends a query string', async () => {
+    const { env, fetchAsset } = assetsEnv()
+    const response = await worker.fetch(get(`${APPCAST_PATH}?appVersion=1.0.0`), env)
+
+    expect(response.status).toBe(404)
+    expect(fetchAsset).not.toHaveBeenCalled()
+  })
+
+  it('passes ordinary website requests through to the static-assets binding', async () => {
+    for (const path of ['/', '/modeboard', '/support', '/sitemap.xml', '/screenshots/modeboard-profile-overview.png']) {
+      const { env, fetchAsset } = assetsEnv()
+      const response = await worker.fetch(get(path), env)
+
+      expect(fetchAsset).toHaveBeenCalledTimes(1)
+      expect(response.status).toBe(200)
+      expect(await response.text()).toBe(`asset:${path}`)
+    }
+  })
+
+  it('intercepts only the exact appcast path, never a near match', async () => {
+    for (const path of [
+      '/updates/modeboard/appcast.xml/',
+      '/updates/modeboard/appcast.xml.bak',
+      '/updates/modeboard/appcast.XML',
+      '/updates/modeboard/appcast.rss',
+      '/updates/modeboard/',
+      '/updates/modeboard',
+      '/updates/appcast.xml',
+      '/appcast.xml',
+    ]) {
+      const { env, fetchAsset } = assetsEnv()
+      const response = await worker.fetch(get(path), env)
+
+      expect(fetchAsset, `${path} should fall through to ASSETS`).toHaveBeenCalledTimes(1)
+      expect(response.status).toBe(200)
+    }
+  })
+
+  it('configures Wrangler to run the Worker first for the appcast route', () => {
     const wrangler = JSON.parse(readFileSync('wrangler.jsonc', 'utf8')) as {
+      main?: string
+      workers_dev?: boolean
+      preview_urls?: boolean
+      route?: unknown
+      routes?: unknown
       assets?: {
         directory?: string
+        binding?: string
         not_found_handling?: string
+        run_worker_first?: string[]
       }
       pages_build_output_dir?: string
     }
 
+    expect(wrangler.main).toBe('./worker/index.js')
     expect(wrangler.assets?.directory).toBe('./dist')
+    expect(wrangler.assets?.binding).toBe('ASSETS')
     expect(wrangler.assets?.not_found_handling).toBe('single-page-application')
+    expect(wrangler.assets?.run_worker_first).toContain(APPCAST_PATH)
+    // A broad `run_worker_first` would push every asset request through the Worker.
+    expect(wrangler.assets?.run_worker_first).not.toContain('/*')
     expect(wrangler.pages_build_output_dir).toBeUndefined()
+  })
+
+  it('serves the site only from the custom production domain', () => {
+    const wrangler = JSON.parse(readFileSync('wrangler.jsonc', 'utf8')) as {
+      workers_dev?: boolean
+      preview_urls?: boolean
+      route?: unknown
+      routes?: unknown
+    }
+
+    // No second, indexable copy of the site on a Cloudflare-generated hostname.
+    expect(wrangler.workers_dev).toBe(false)
+    expect(wrangler.preview_urls).toBe(false)
+    // tideframelabs.com is attached as a custom domain in the Cloudflare
+    // dashboard. Declaring a route here would take over that binding.
+    expect(wrangler.route).toBeUndefined()
+    expect(wrangler.routes).toBeUndefined()
   })
 })

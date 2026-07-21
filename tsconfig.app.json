@@ -6,6 +6,8 @@
     "module": "esnext",
     "types": ["vite/client", "vitest/globals", "@testing-library/jest-dom", "node"],
     "allowArbitraryExtensions": true,
+    /* The Cloudflare Worker entry is plain JS and is imported by its unit test. */
+    "allowJs": true,
     "skipLibCheck": true,
 
     /* Bundler mode */
@@ -23,5 +25,5 @@
     "erasableSyntaxOnly": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["src", "tests", "vitest.setup.ts"]
+  "include": ["src", "tests", "worker", "vitest.setup.ts"]
 }

@@ -91,7 +91,7 @@ const FAQS = [
   },
   {
     q: 'How do I uninstall Modeboard?',
-    a: 'Turn off Launch at Login, remove the active license while online to release its seat, quit Modeboard, and move it from Applications to Trash. The Support page explains optional local-data cleanup.',
+    a: 'Quit Modeboard after using Deactivate This Mac while online so the activation can be reused, then move Modeboard from Applications to Trash. The Support page explains optional local-data cleanup.',
   },
   {
     q: 'Are all future major versions included?',

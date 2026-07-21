@@ -1,6 +1,8 @@
 # Deployment security
 
-`public/_headers` is copied to `dist/_headers` by Vite and is intended for Cloudflare Pages. Test the deployed custom domain, because Vite's local preview server does not emulate Pages response-header rules.
+`public/_headers` is copied to `dist/_headers` by Vite and is applied by Cloudflare Workers static assets. Test the deployed custom domain, because Vite's local preview server does not emulate those response-header rules. The Sparkle appcast 404 is set separately in `worker/index.js`, which sets its own headers before the assets binding is reached.
+
+Every rule in `_headers` is path-scoped and applies to the production host. There are no host-scoped `X-Robots-Tag: noindex` rules, because `wrangler.jsonc` sets `workers_dev: false` and `preview_urls: false` — Cloudflare publishes no alternate hostname for this Worker, so `tideframelabs.com` is the only origin that can be indexed. If a preview hostname is ever re-enabled, restore a noindex rule for it at the same time.
 
 ## Policy rationale
 

@@ -38,7 +38,11 @@ export function Support() {
         </article>
         <article>
           <h3>Deactivate a Mac</h3>
-          <p>While online, use Remove License from This Mac before replacing the Mac or deleting local license data. This returns that activation to the three-Mac allowance.</p>
+          <p>While online, use Deactivate This Mac before replacing the Mac or deleting local license data. This returns that activation to the three-Mac allowance.</p>
+        </article>
+        <article>
+          <h3>Activation limits and offline use</h3>
+          <p>One license covers one person on up to three personally controlled Macs. If activation reports no remaining allowance, use Deactivate This Mac on a Mac you no longer use, or email support. After activation, a Mac keeps working offline.</p>
         </article>
         <article>
           <h3>Restore a workspace</h3>
@@ -50,9 +54,23 @@ export function Support() {
         </article>
         <article>
           <h3>Uninstall Modeboard</h3>
-          <p>Turn off Launch at Login, remove the license while online, quit the app, and move it from Applications to Trash. Profiles and Keychain records remain unless you remove them separately.</p>
+          <p>Deactivate the Mac while online, quit Modeboard, and move it from Applications to Trash. See Uninstalling Modeboard below for what stays behind.</p>
         </article>
       </div>
+
+      <h2>Uninstalling Modeboard</h2>
+      <ol>
+        <li>Quit Modeboard.</li>
+        <li>If you purchased a license, use Deactivate This Mac first while online, where possible, so that activation can be reused on another Mac.</li>
+        <li>Move Modeboard from Applications to the Trash.</li>
+        <li>Removing the app may leave local Modeboard data behind, including profiles, backups, preferences, and license or trial records.</li>
+        <li>If you intentionally want a complete reset, you can also remove that local Modeboard data.</li>
+        <li>Deleting local profiles and backups is irreversible. Export anything you want to keep first.</li>
+      </ol>
+      <p>
+        For help with a complete reset, email <a href={`mailto:${siteConfig.supportEmail}?subject=Modeboard%20complete%20reset`}>{siteConfig.supportEmail}</a>{' '}
+        and we will walk through the steps for your version of Modeboard.
+      </p>
 
       <h2>Profiles, permissions, and wallpaper</h2>
       <p>
@@ -125,7 +143,7 @@ export function Privacy() {
       <p>
         Internet is required for initial paid-license activation. Modeboard may occasionally validate the saved
         instance when a connection is available. Temporary connection, rate-limit, or server failures do not revoke
-        an activated perpetual license. Removing a license while online releases that Mac's activation.
+        an activated perpetual license. Using Deactivate This Mac while online releases that Mac's activation.
       </p>
 
       <h2>Update checks</h2>
@@ -187,18 +205,22 @@ export function Terms() {
       <p>
         Initial activation requires internet access so Lemon Squeezy can validate the key and register the Mac. An
         activated perpetual license can continue working offline, with occasional validation when a connection is
-        available. Before replacing a Mac, use Remove License from This Mac while online to release its activation.
+        available. Before replacing a Mac, use Deactivate This Mac while online to release its activation.
         Do not share, publish, resell, transfer for value, or distribute a license key except where applicable law
         gives you a non-waivable right to do so.
       </p>
 
       <h2>Refunds and chargebacks</h2>
       <p>
+        Refund requests may be submitted within 14 days of purchase. Eligibility is reviewed subject to applicable
+        consumer law and may be limited where there is evidence of abuse, unauthorized distribution, or substantial
+        use. Lemon Squeezy processes approved refunds as Tideframe Labs' merchant of record.
+      </p>
+      <p>
         To request a refund, contact <a href={`mailto:${siteConfig.supportEmail}`}>{siteConfig.supportEmail}</a> with
-        the minimum order reference needed to locate the purchase; never email a full license key. The intended
-        policy is to consider requests made within 14 days of purchase, and reasonable troubleshooting may be
-        requested for technical issues. This does not limit mandatory refund, cancellation, or other consumer rights.
-        A refunded or charged-back purchase may have its license disabled when continued access is no longer authorized.
+        the minimum order reference needed to locate the purchase; never email a full license key. Nothing here limits
+        mandatory refund, cancellation, or other consumer rights. A refunded or charged-back purchase may have its
+        license disabled when continued access is no longer authorized.
       </p>
 
       <h2>Your responsibility for backups</h2>

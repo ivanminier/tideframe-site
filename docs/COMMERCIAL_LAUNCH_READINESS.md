@@ -29,6 +29,6 @@ Current fail-closed state:
 - Developer ID signing, notarization, production Sparkle feed checks, and installed N → N+1 updating remain false.
 - Commerce remains disabled with no checkout URL or allowlisted host.
 - Software structured data contains no `Offer`, availability, unverified OS compatibility, ratings, reviews, or download counts.
-- `/updates/modeboard/appcast.xml` is explicitly routed to a plain unavailable response with HTTP 404 until the signed production feed replaces that rule.
+- `/updates/modeboard/appcast.xml` is intercepted by `worker/index.js` and returns a plain-text, `no-store` HTTP 404 until the signed production feed deliberately replaces that route.
 
 External owner gates remain Apple Developer approval, a signed/notarized customer artifact, exact downloaded-DMG Gatekeeper testing, clean-machine compatibility testing, Lemon Squeezy approval and live checkout, a real license lifecycle, a valid production appcast, and final owner/legal review.

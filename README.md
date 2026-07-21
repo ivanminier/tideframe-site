@@ -101,7 +101,7 @@ Screenshots live in `public/screenshots/` as PNG files, usually at two sizes: `n
    If your image is narrower than 800px to begin with (like the menu-bar screenshot), skip the `-800` file — don't upscale a small image.
 3. Add a `ProductScreenshot` to the relevant page with the filename (no extension), honest alt text, natural dimensions, and `hasThumbnail` only when the matching `-800.png` file exists. A failed image is removed from the layout rather than exposing a broken or unfinished card.
 
-**Optimizing further:** no image-processing tool is bundled with this project, to keep the toolchain simple and dependency-free — the `sips` resizing above is what's already been applied to every current screenshot. For extra compression (smaller file size at the same dimensions), drag a resized PNG into a free tool like [Squoosh](https://squoosh.app) and export as optimized PNG or WebP before uploading. If you add real `.webp` files, you'd need to update `src/components/ProductScreenshot.tsx` to reference them — the component intentionally uses plain `<img src>`/`srcset` rather than a `<picture>` with a `.webp` fallback source, because this site's SPA routing (`public/_redirects`) makes a missing-file probe unreliable (see the comment in that file for details). Only reference a `.webp` file once it actually exists.
+**Optimizing further:** no image-processing tool is bundled with this project, to keep the toolchain simple and dependency-free — the `sips` resizing above is what's already been applied to every current screenshot. For extra compression (smaller file size at the same dimensions), drag a resized PNG into a free tool like [Squoosh](https://squoosh.app) and export as optimized PNG or WebP before uploading. If you add real `.webp` files, you'd need to update `src/components/ProductScreenshot.tsx` to reference them — the component intentionally uses plain `<img src>`/`srcset` rather than a `<picture>` with a `.webp` fallback source, because this site's SPA fallback routing makes a missing-file probe unreliable. Only reference a `.webp` file once it actually exists.
 
 ### Replace logo files
 
@@ -122,20 +122,20 @@ Each named route gets pre-rendered metadata so search engines and social preview
 
 To change a title or description used by search engines and social shares, edit the matching entry in `src/data/route-meta.json` and keep the page component's `Meta` text aligned. `npm run build` regenerates the pre-rendered HTML in `dist/` automatically.
 
-## Deploy to Cloudflare Pages
+## Deploy to Cloudflare Workers
+
+This site is a Cloudflare Worker with static assets, configured in `wrangler.jsonc` — not a Pages project. There is no `public/_redirects` file, and one must not be added back.
 
 1. Put this project in a GitHub repository.
-2. In Cloudflare, open **Workers & Pages**, choose **Create**, then connect the repository.
-3. Set **Build command** to `npm run build`.
-4. Set **Build output directory** to `dist`.
-5. Deploy. The static frontend requires no environment variables. Never add backend or signing secrets as `VITE_*` values.
-6. Add `tideframelabs.com` under the Pages project's custom domains.
+2. Run `npm ci`, `npm run check`, and `npm run test:e2e`.
+3. Deploy with `npx wrangler deploy`. The static frontend requires no environment variables. Never add backend or signing secrets as `VITE_*` values.
+4. Add `tideframelabs.com` as a custom domain on the Worker, in the Cloudflare dashboard.
 
-For an intentional manual Pages upload after the project exists, run `npm ci`, `npm run check`, `npm run test:e2e`, then `npx wrangler pages deploy dist --project-name tideframe-site`. Do not use `wrangler deploy`; this repository is configured for Pages, not a standalone Worker.
+`tideframelabs.com` is the only host that serves this site. `wrangler.jsonc` sets `workers_dev: false` and `preview_urls: false`, so Cloudflare publishes no `*.workers.dev` or preview hostname — there is no second, indexable copy of the site to keep out of search results, which is why `public/_headers` carries no host-scoped `X-Robots-Tag` rule. Custom domains stay dashboard-managed on purpose: do not add a `route`/`routes` entry to `wrangler.jsonc`, because that would take over the custom-domain binding.
 
-For React Router routes such as `/products` to work when opened directly, configure Cloudflare Pages to fall back to `index.html`. The included `public/_redirects` file handles this automatically. Five routes (`/`, `/modeboard`, `/privacy`, `/terms`, `/support`) don't actually need that fallback — they get their own real, pre-rendered `index.html` file at build time (see "Search engine and social-preview metadata" above), which Cloudflare Pages serves directly since a real file always takes precedence over a `_redirects` rule.
+For React Router routes such as `/products` to work when opened directly, `assets.not_found_handling` is set to `single-page-application`, so unmatched paths fall back to `index.html`. Five routes (`/`, `/modeboard`, `/privacy`, `/terms`, `/support`) don't need that fallback — they get their own real, pre-rendered `index.html` file at build time (see "Search engine and social-preview metadata" above), and a real file always takes precedence over the SPA fallback.
 
-The same redirects file returns a plain 404 for `/updates/modeboard/appcast.xml` while no real signed appcast exists, instead of allowing the SPA shell to look like an update feed. Replace that rule only when the production appcast is ready to publish.
+`worker/index.js` returns a plain-text 404 for `/updates/modeboard/appcast.xml` while no real signed appcast exists, instead of allowing the SPA shell to look like an update feed. `assets.run_worker_first` lists that exact path so the Worker sees the request before the assets binding does; every other request goes straight to `env.ASSETS`. Change that route only when the production appcast is ready to publish. `tests/unit/static-assets.test.ts` covers both halves of that behavior.
 
 For a safe source archive, follow `docs/SOURCE_ARCHIVE.md`. Never treat a source archive as the customer app distribution.
 

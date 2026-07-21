@@ -22,7 +22,7 @@ The public site is intentionally pre-release. Keep these items accurate before e
 ## Deployment checks
 
 - [ ] Run `npm ci`, `npm run type-check`, `npm run lint`, `npm test`, `npm run build`, and `npm run test:e2e`.
-- [ ] Confirm `dist/_redirects`, `dist/_headers`, the two Tideframe mark SVGs, the approved glossy icon, the Modeboard icon, both social cards, and every referenced screenshot are present.
+- [ ] Confirm `dist/_headers`, the two Tideframe mark SVGs, the approved glossy icon, the Modeboard icon, both social cards, and every referenced screenshot are present.
 - [ ] Open every public route directly on the Cloudflare deployment, including an invalid route.
 - [ ] Review the site at mobile, tablet, iPad, and desktop widths and check the browser console.
 - [ ] Confirm no download button is linked until the real release exists.
