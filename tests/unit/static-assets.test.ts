@@ -24,6 +24,23 @@ describe('static deployment files', () => {
     expect(new Set(urls)).toEqual(new Set(Object.keys(routeMeta)))
   })
 
+  it('lists every sitemap URL without a trailing slash, except the root', () => {
+    const sitemap = readFileSync('public/sitemap.xml', 'utf8')
+    const locs = [...sitemap.matchAll(/<loc>(.*?)<\/loc>/g)].map((match) => match[1])
+
+    expect(locs).toContain('https://tideframelabs.com/')
+    expect(locs).toContain('https://tideframelabs.com/modeboard')
+    for (const loc of locs) {
+      expect(loc.startsWith('https://tideframelabs.com')).toBe(true)
+      if (loc !== 'https://tideframelabs.com/') {
+        expect(loc, `${loc} must not carry a trailing slash`).not.toMatch(/\/$/)
+      }
+    }
+    // A slash and non-slash variant of the same route would be two indexable URLs.
+    expect(new Set(locs).size).toBe(locs.length)
+    expect(locs).not.toContain('https://tideframelabs.com/modeboard/')
+  })
+
   it('keeps the HTML template defaults in sync with the "/" route metadata', () => {
     // generate-static-meta.mjs rewrites these per route, but the template is what a
     // crawler sees for any path the generator does not pre-render.
@@ -165,6 +182,7 @@ describe('appcast Worker route', () => {
       assets?: {
         directory?: string
         binding?: string
+        html_handling?: string
         not_found_handling?: string
         run_worker_first?: string[]
       }
@@ -179,6 +197,26 @@ describe('appcast Worker route', () => {
     // A broad `run_worker_first` would push every asset request through the Worker.
     expect(wrangler.assets?.run_worker_first).not.toContain('/*')
     expect(wrangler.pages_build_output_dir).toBeUndefined()
+  })
+
+  it('serves each pre-rendered route at its canonical, slash-free path', () => {
+    const wrangler = JSON.parse(readFileSync('wrangler.jsonc', 'utf8')) as {
+      assets?: { html_handling?: string; not_found_handling?: string }
+    }
+
+    // Every route except "/" is generated as dist/<route>/index.html. Under the
+    // default "auto-trailing-slash", Cloudflare 307s /modeboard -> /modeboard/,
+    // which contradicts the canonical and the sitemap. "drop-trailing-slash"
+    // serves that file at /modeboard and redirects the slashed form back to it.
+    expect(wrangler.assets?.html_handling).toBe('drop-trailing-slash')
+    expect(wrangler.assets?.not_found_handling).toBe('single-page-application')
+
+    // The canonical each route advertises must be the slash-free form the
+    // sitemap lists, so there is exactly one indexable URL per route.
+    for (const path of Object.keys(routeMeta)) {
+      if (path === '/') continue
+      expect(path).not.toMatch(/\/$/)
+    }
   })
 
   it('serves the site only from the custom production domain', () => {

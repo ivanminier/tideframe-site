@@ -91,6 +91,23 @@ describe('metadata', () => {
     await waitFor(() => expect(document.querySelector('link[rel="canonical"]')).toHaveAttribute('href', 'https://tideframelabs.com/'))
   })
 
+  it('advertises exactly one slash-free canonical per route', async () => {
+    const seen = new Set<string>()
+    for (const path of Object.keys(routeMeta)) {
+      const view = renderRoute(path)
+      const expected = `https://tideframelabs.com${path}`
+      await waitFor(() => expect(document.querySelector('link[rel="canonical"]')).toHaveAttribute('href', expected))
+      expect(document.querySelectorAll('link[rel="canonical"]')).toHaveLength(1)
+      if (path !== '/') {
+        expect(expected, `${path} canonical must not carry a trailing slash`).not.toMatch(/\/$/)
+      }
+      // A slash and non-slash variant of one route would be two indexable URLs.
+      expect(seen.has(expected)).toBe(false)
+      seen.add(expected)
+      view.unmount()
+    }
+  })
+
   it('publishes only verifiable Modeboard structured data while coming-soon', async () => {
     renderRoute('/modeboard')
     await waitFor(() => expect(document.querySelector('script#page-jsonld')).not.toBeNull())
