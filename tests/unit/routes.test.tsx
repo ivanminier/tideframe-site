@@ -63,14 +63,17 @@ describe('navigation', () => {
     expect(screen.getByRole('heading', { level: 1, name: /modeboard for mac/i })).toBeVisible()
   })
 
-  it('keeps both launch actions unavailable while preserving a working updates email', () => {
+  it('publishes the download while keeping unconfigured checkout unavailable', () => {
     renderRoute('/modeboard')
-    const launchLink = screen.getAllByRole('link', { name: /get launch updates/i })[0]
-    expect(launchLink).toHaveAttribute('href', expect.stringContaining('subject=Modeboard%20launch%20updates'))
-    expect(launchLink).toHaveAttribute('href', expect.stringContaining('please%20let%20me%20know%20when%20Modeboard%20becomes%20available'))
-    expect(screen.getByRole('button', { name: /download free trial — coming soon/i })).toBeDisabled()
-    expect(screen.getByRole('button', { name: /buy for \$14\.99 — coming soon/i })).toBeDisabled()
-    expect(screen.queryByRole('link', { name: /download free trial|buy for \$14\.99/i })).not.toBeInTheDocument()
+    const downloads = screen.getAllByRole('link', { name: /download modeboard 1\.0\.0/i })
+    expect(downloads).toHaveLength(2)
+    for (const download of downloads) {
+      expect(download).toHaveAttribute('href', 'https://tideframelabs.com/downloads/modeboard/Modeboard-1.0.0-7.dmg')
+    }
+    expect(screen.getByRole('button', { name: /purchase coming soon/i })).toBeDisabled()
+    expect(screen.queryByRole('link', { name: /buy for \$14\.99/i })).not.toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: /download modeboard 1\.0\.0 for mac/i })).toBeVisible()
+    expect(screen.getByText(/notarized by apple and stapled for gatekeeper/i)).toBeVisible()
   })
 })
 
@@ -108,7 +111,7 @@ describe('metadata', () => {
     }
   })
 
-  it('publishes only verifiable Modeboard structured data while coming-soon', async () => {
+  it('publishes verified Modeboard release data without inventing an offer', async () => {
     renderRoute('/modeboard')
     await waitFor(() => expect(document.querySelector('script#page-jsonld')).not.toBeNull())
     const schema = JSON.parse(document.querySelector('script#page-jsonld')?.textContent ?? '{}')
@@ -121,9 +124,10 @@ describe('metadata', () => {
     expect(schema.author['@id']).toBe('https://tideframelabs.com/#organization')
     expect(schema.publisher['@id']).toBe('https://tideframelabs.com/#organization')
 
-    // Withheld until the release and commerce validators both pass.
-    for (const withheld of ['offers', 'aggregateRating', 'review', 'downloadUrl', 'softwareVersion']) {
-      expect(schema, `${withheld} must stay absent while coming-soon`).not.toHaveProperty(withheld)
+    expect(schema.softwareVersion).toBe('1.0.0')
+    expect(schema.downloadUrl).toBe('https://tideframelabs.com/downloads/modeboard/Modeboard-1.0.0-7.dmg')
+    for (const withheld of ['offers', 'aggregateRating', 'review']) {
+      expect(schema, `${withheld} must stay absent without verified commerce`).not.toHaveProperty(withheld)
     }
   })
 

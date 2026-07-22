@@ -1,14 +1,20 @@
-import { existsSync, readFileSync } from 'node:fs'
+import { createHash } from 'node:crypto'
+import { existsSync, readFileSync, statSync } from 'node:fs'
 import { describe, expect, it, vi } from 'vitest'
 import { routeMeta } from '../../src/data/routeMeta'
 import worker from '../../worker/index.js'
 
 const APPCAST_PATH = '/updates/modeboard/appcast.xml'
+const UPDATE_PREFIX = '/updates/modeboard/'
+const DOWNLOAD_PATH = '/downloads/modeboard/Modeboard-1.0.0-7.dmg'
 
 /** A stand-in for the Workers static-assets binding, so fall-through is observable. */
-function assetsEnv() {
+function assetsEnv(responseForRequest?: (request: Request) => Response) {
   const fetchAsset = vi.fn(
-    async (request: Request) => new Response(`asset:${new URL(request.url).pathname}`, { status: 200 }),
+    async (request: Request) => responseForRequest?.(request) ?? new Response(
+      `asset:${new URL(request.url).pathname}`,
+      { status: 200, headers: { 'Content-Type': 'application/octet-stream' } },
+    ),
   )
   return { env: { ASSETS: { fetch: fetchAsset } }, fetchAsset }
 }
@@ -106,40 +112,132 @@ describe('static deployment files', () => {
     expect(headers).not.toContain('workers.dev')
   })
 
-  it('does not reintroduce the obsolete _redirects appcast implementation', () => {
-    // The appcast is now failed closed in worker/index.js. A Pages-era `_redirects`
-    // file would reintroduce a second, conflicting routing layer (and, with a
-    // catch-all rule, an SPA redirect loop), so it must stay absent.
+  it('ships the exact signed Sparkle feed files without a competing _redirects layer', () => {
     expect(existsSync('public/_redirects')).toBe(false)
     expect(existsSync('dist/_redirects')).toBe(false)
     expect(existsSync('public/updates/modeboard/appcast-unavailable.txt')).toBe(false)
-    expect(existsSync('public/updates/modeboard/appcast.xml')).toBe(false)
+
+    const appcast = readFileSync('public/updates/modeboard/appcast.xml', 'utf8')
+    const enclosure = appcast.match(/<enclosure url="https:\/\/tideframelabs\.com\/updates\/modeboard\/(Modeboard-[^"]+\.zip)" length="(\d+)"[^>]+sparkle:edSignature="([^"]+)"/)
+    const notes = appcast.match(/sparkle:releaseNotesLink sparkle:edSignature="([^"]+)" sparkle:length="(\d+)">https:\/\/tideframelabs\.com\/updates\/modeboard\/(Modeboard-[^<]+\.md)</)
+
+    expect(appcast).toContain('sparkle-signatures:')
+    expect(appcast).not.toContain('.dmg')
+    expect(enclosure).not.toBeNull()
+    expect(notes).not.toBeNull()
+
+    const zipPath = `public/updates/modeboard/${enclosure?.[1]}`
+    const notesPath = `public/updates/modeboard/${notes?.[3]}`
+    expect(existsSync(zipPath)).toBe(true)
+    expect(existsSync(notesPath)).toBe(true)
+    expect(statSync(zipPath).size).toBe(Number(enclosure?.[2]))
+    expect(statSync(notesPath).size).toBe(Number(notes?.[2]))
+    expect(Buffer.from(enclosure?.[3] ?? '', 'base64')).toHaveLength(64)
+    expect(Buffer.from(notes?.[1] ?? '', 'base64')).toHaveLength(64)
+  })
+
+  it('ships the exact notarized Modeboard DMG declared by release metadata', () => {
+    const product = JSON.parse(readFileSync('src/data/modeboard-product.json', 'utf8')) as {
+      release: { downloadUrl: string; fileSizeBytes: number; sha256: string }
+    }
+    const dmgPath = `public${DOWNLOAD_PATH}`
+    const digest = createHash('sha256').update(readFileSync(dmgPath)).digest('hex')
+
+    expect(existsSync(dmgPath)).toBe(true)
+    expect(product.release.downloadUrl).toBe(`https://tideframelabs.com${DOWNLOAD_PATH}`)
+    expect(statSync(dmgPath).size).toBe(product.release.fileSizeBytes)
+    expect(digest).toBe(product.release.sha256)
+  })
+})
+
+describe('download Worker route', () => {
+  it('serves the versioned DMG as an immutable attachment', async () => {
+    const { env, fetchAsset } = assetsEnv()
+    const response = await worker.fetch(get(DOWNLOAD_PATH), env)
+
+    expect(response.status).toBe(200)
+    expect(response.headers.get('Content-Type')).toBe('application/x-apple-diskimage')
+    expect(response.headers.get('Content-Disposition')).toContain('Modeboard-1.0.0-7.dmg')
+    expect(response.headers.get('Cache-Control')).toContain('immutable')
+    expect(response.headers.get('X-Content-Type-Options')).toBe('nosniff')
+    expect(response.headers.get('X-Robots-Tag')).toBe('noindex')
+    expect(await response.text()).toBe(`asset:${DOWNLOAD_PATH}`)
+    expect(fetchAsset).toHaveBeenCalledTimes(1)
+  })
+
+  it('fails missing or malformed download paths closed instead of serving HTML', async () => {
+    for (const path of [
+      '/downloads/modeboard',
+      '/downloads/modeboard/',
+      '/downloads/modeboard/Modeboard-latest.dmg',
+      '/downloads/modeboard/Modeboard-1.0.0-7.zip',
+    ]) {
+      const { env, fetchAsset } = assetsEnv()
+      const response = await worker.fetch(get(path), env)
+      expect(response.status).toBe(404)
+      expect(fetchAsset).not.toHaveBeenCalled()
+    }
+
+    const { env } = assetsEnv(() => new Response('<!doctype html>', {
+      status: 200,
+      headers: { 'Content-Type': 'text/html; charset=utf-8' },
+    }))
+    const missing = await worker.fetch(get(DOWNLOAD_PATH), env)
+    expect(missing.status).toBe(503)
+    expect(await missing.text()).toContain('download file is not available')
   })
 })
 
 describe('appcast Worker route', () => {
-  it('fails the exact appcast path closed with a plain-text, uncacheable 404', async () => {
+  it('serves the signed appcast as uncacheable XML without changing its body', async () => {
     const { env, fetchAsset } = assetsEnv()
     const response = await worker.fetch(get(APPCAST_PATH), env)
 
-    expect(response.status).toBe(404)
-    expect(response.headers.get('Content-Type')).toBe('text/plain; charset=utf-8')
-    expect(response.headers.get('Cache-Control')).toBe('no-store')
+    expect(response.status).toBe(200)
+    expect(response.headers.get('Content-Type')).toBe('application/xml; charset=utf-8')
+    expect(response.headers.get('Cache-Control')).toBe('no-cache, no-store, must-revalidate')
     expect(response.headers.get('X-Content-Type-Options')).toBe('nosniff')
-
-    const body = await response.text()
-    expect(body).toContain('not available')
-    expect(body).not.toContain('<?xml')
-    expect(body).not.toContain('<rss')
-    expect(fetchAsset).not.toHaveBeenCalled()
+    expect(response.headers.get('X-Robots-Tag')).toBe('noindex')
+    expect(await response.text()).toBe(`asset:${APPCAST_PATH}`)
+    expect(fetchAsset).toHaveBeenCalledTimes(1)
   })
 
-  it('still fails closed when Sparkle appends a query string', async () => {
+  it('still serves the appcast when Sparkle appends a query string', async () => {
     const { env, fetchAsset } = assetsEnv()
     const response = await worker.fetch(get(`${APPCAST_PATH}?appVersion=1.0.0`), env)
 
-    expect(response.status).toBe(404)
-    expect(fetchAsset).not.toHaveBeenCalled()
+    expect(response.status).toBe(200)
+    expect(response.headers.get('Content-Type')).toContain('application/xml')
+    expect(fetchAsset).toHaveBeenCalledTimes(1)
+  })
+
+  it('serves versioned update files with immutable cache and download headers', async () => {
+    const zipPath = `${UPDATE_PREFIX}Modeboard-1.0.0-7.zip`
+    const notesPath = `${UPDATE_PREFIX}Modeboard-1.0.0-7.md`
+
+    const zip = await worker.fetch(get(zipPath), assetsEnv().env)
+    expect(zip.status).toBe(200)
+    expect(zip.headers.get('Content-Type')).toBe('application/zip')
+    expect(zip.headers.get('Content-Disposition')).toContain('Modeboard-1.0.0-7.zip')
+    expect(zip.headers.get('Cache-Control')).toContain('immutable')
+
+    const notes = await worker.fetch(get(notesPath), assetsEnv().env)
+    expect(notes.status).toBe(200)
+    expect(notes.headers.get('Content-Type')).toBe('text/markdown; charset=utf-8')
+    expect(notes.headers.get('Cache-Control')).toContain('immutable')
+  })
+
+  it('fails closed if an allowlisted update file falls through to the SPA shell', async () => {
+    const { env } = assetsEnv(() => new Response('<!doctype html>', {
+      status: 200,
+      headers: { 'Content-Type': 'text/html; charset=utf-8' },
+    }))
+    const response = await worker.fetch(get(APPCAST_PATH), env)
+
+    expect(response.status).toBe(503)
+    expect(response.headers.get('Content-Type')).toBe('text/plain; charset=utf-8')
+    expect(response.headers.get('Cache-Control')).toBe('no-store')
+    expect(await response.text()).toContain('not available')
   })
 
   it('passes ordinary website requests through to the static-assets binding', async () => {
@@ -153,7 +251,7 @@ describe('appcast Worker route', () => {
     }
   })
 
-  it('intercepts only the exact appcast path, never a near match', async () => {
+  it('fails unknown update paths closed instead of serving the SPA shell', async () => {
     for (const path of [
       '/updates/modeboard/appcast.xml/',
       '/updates/modeboard/appcast.xml.bak',
@@ -161,18 +259,26 @@ describe('appcast Worker route', () => {
       '/updates/modeboard/appcast.rss',
       '/updates/modeboard/',
       '/updates/modeboard',
-      '/updates/appcast.xml',
-      '/appcast.xml',
     ]) {
       const { env, fetchAsset } = assetsEnv()
       const response = await worker.fetch(get(path), env)
 
-      expect(fetchAsset, `${path} should fall through to ASSETS`).toHaveBeenCalledTimes(1)
+      expect(fetchAsset, `${path} must not reach ASSETS`).not.toHaveBeenCalled()
+      expect(response.status).toBe(404)
+    }
+  })
+
+  it('does not capture appcast-like paths outside the Modeboard update directory', async () => {
+    for (const path of ['/updates/appcast.xml', '/appcast.xml']) {
+      const { env, fetchAsset } = assetsEnv()
+      const response = await worker.fetch(get(path), env)
+
+      expect(fetchAsset).toHaveBeenCalledTimes(1)
       expect(response.status).toBe(200)
     }
   })
 
-  it('configures Wrangler to run the Worker first for the appcast route', () => {
+  it('configures Wrangler to run the Worker first for downloads and updates', () => {
     const wrangler = JSON.parse(readFileSync('wrangler.jsonc', 'utf8')) as {
       main?: string
       workers_dev?: boolean
@@ -193,7 +299,10 @@ describe('appcast Worker route', () => {
     expect(wrangler.assets?.directory).toBe('./dist')
     expect(wrangler.assets?.binding).toBe('ASSETS')
     expect(wrangler.assets?.not_found_handling).toBe('single-page-application')
-    expect(wrangler.assets?.run_worker_first).toContain(APPCAST_PATH)
+    expect(wrangler.assets?.run_worker_first).toContain('/downloads/modeboard')
+    expect(wrangler.assets?.run_worker_first).toContain('/downloads/modeboard/*')
+    expect(wrangler.assets?.run_worker_first).toContain('/updates/modeboard')
+    expect(wrangler.assets?.run_worker_first).toContain('/updates/modeboard/*')
     // A broad `run_worker_first` would push every asset request through the Worker.
     expect(wrangler.assets?.run_worker_first).not.toContain('/*')
     expect(wrangler.pages_build_output_dir).toBeUndefined()

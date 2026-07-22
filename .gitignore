@@ -51,3 +51,6 @@ tmp
 *.tar.gz
 *.tgz
 *.7z
+
+# Signed Sparkle archives are intentional public website assets.
+!public/updates/modeboard/*.zip

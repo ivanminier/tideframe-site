@@ -32,3 +32,9 @@ Current fail-closed state:
 - `/updates/modeboard/appcast.xml` is intercepted by `worker/index.js` and returns a plain-text, `no-store` HTTP 404 until the signed production feed deliberately replaces that route.
 
 External owner gates remain Apple Developer approval, a signed/notarized customer artifact, exact downloaded-DMG Gatekeeper testing, clean-machine compatibility testing, Lemon Squeezy approval and live checkout, a real license lifecycle, a valid production appcast, and final owner/legal review.
+
+## Public-download pass — July 22, 2026
+
+Modeboard 1.0.0 (build 7) now has versioned, signed, notarized, and stapled release artifacts. The website publishes the exact canonical DMG from the Modeboard release directory at `/downloads/modeboard/Modeboard-1.0.0-7.dmg`; its byte size and SHA-256 are enforced by automated tests. The signed Sparkle appcast, ZIP, and release notes are staged separately under `/updates/modeboard/`.
+
+The direct trial download is intentionally independent of commerce and future-update acceptance. Checkout remains disabled until its own Lemon Squeezy configuration passes. The Sparkle readiness check also remains incomplete until the deployed appcast content type and a real installed N → N+1 update are verified. The site makes no claim that Intel runtime was independently tested: it states only that the notarized Universal artifact contains Apple silicon and Intel code.

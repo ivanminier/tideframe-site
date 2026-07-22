@@ -49,7 +49,7 @@ export interface ProductCommercial {
   refundPolicy: string
 }
 
-export type ArchitectureSupport = 'supported' | 'unsupported' | 'not-yet-verified'
+export type ArchitectureSupport = 'supported' | 'included-not-runtime-tested' | 'unsupported' | 'not-yet-verified'
 
 export interface ProductRelease {
   downloadUrl: string | null
@@ -116,6 +116,19 @@ export interface ReleaseValidation {
 
 export function validateReleaseConfiguration(product: Product, now = new Date()): ReleaseValidation {
   return validateReleaseData(product, now)
+}
+
+export function validateAppcastConfiguration(product: Product): ReleaseValidation {
+  const errors: string[] = []
+  const appcast = product.release.appcast
+  if (!appcast.url) errors.push('Production appcast URL is missing.')
+  if (!appcast.validSparkleXML) errors.push('Production appcast is not verified as valid Sparkle XML.')
+  if (!appcast.xmlContentTypeVerified) errors.push('Production appcast XML content type is not verified.')
+  if (!appcast.signedReleaseEntry) errors.push('Production appcast does not have a verified signed release entry.')
+  if (!appcast.archiveMatchesRelease) errors.push('Production appcast archive is not verified against the release.')
+  if (!appcast.productionPublicKeyConfigured) errors.push('Production Sparkle public key is not verified.')
+  if (!appcast.updateFromPreviousBuildTested) errors.push('Installed N to N+1 update is not verified.')
+  return { isReady: errors.length === 0, errors }
 }
 
 export function getPublicRelease(product: Product): ProductRelease | null {

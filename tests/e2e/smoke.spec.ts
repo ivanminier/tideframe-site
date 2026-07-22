@@ -11,14 +11,14 @@ for (const route of routes) {
   })
 }
 
-test('navigation and launch-updates action work', async ({ page }) => {
+test('navigation and public download action work', async ({ page }) => {
   await page.goto('/')
   await page.getByRole('navigation', { name: 'Primary navigation' }).getByRole('link', { name: 'Modeboard' }).click()
   await expect(page).toHaveURL(/\/modeboard$/)
-  const launchLink = page.getByRole('link', { name: 'Get launch updates' }).first()
-  await expect(launchLink).toHaveAttribute('href', /subject=Modeboard%20launch%20updates/)
-  await expect(page.getByRole('button', { name: 'Download Free Trial — Coming Soon' })).toBeDisabled()
-  await expect(page.getByRole('button', { name: 'Buy for $14.99 — Coming Soon' })).toBeDisabled()
+  const download = page.getByRole('link', { name: 'Download Modeboard 1.0.0' }).first()
+  await expect(download).toHaveAttribute('href', 'https://tideframelabs.com/downloads/modeboard/Modeboard-1.0.0-7.dmg')
+  await expect(page.getByRole('button', { name: 'Purchase coming soon' })).toBeDisabled()
+  await expect(page.getByRole('heading', { name: 'Download Modeboard 1.0.0 for Mac.' })).toBeVisible()
 })
 
 test('mobile navigation opens, follows a link, and closes', async ({ page }) => {

@@ -10,7 +10,10 @@
     "not_found_handling": "single-page-application",
     "binding": "ASSETS",
     "run_worker_first": [
-      "/updates/modeboard/appcast.xml"
+      "/downloads/modeboard",
+      "/downloads/modeboard/*",
+      "/updates/modeboard",
+      "/updates/modeboard/*"
     ]
   },
   "main": "./worker/index.js"

@@ -23,7 +23,7 @@ export function Products() {
       <section className="section">
         <div className="container">
           <SectionHeading
-            eyebrow="Coming soon for Mac"
+            eyebrow="Available for Mac"
             title="Modeboard for Mac"
             description="One profile. Your whole Mac, ready. Switch the settings that shape your Mac together, then return to the right setup whenever your day changes."
           />

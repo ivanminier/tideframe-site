@@ -85,8 +85,10 @@ Once the domain is live, check the following by visiting the real URLs in a brow
 - [ ] A test email to `support@tideframelabs.com` and `hello@tideframelabs.com` both arrive.
 - [ ] The header stays visible while scrolling (sticky), and the mobile menu opens and closes correctly on a phone-sized screen.
 - [ ] Response headers match `public/_headers`; there are no CSP violations during navigation, images, mail links, downloads, or the merchant sandbox redirect.
+- [ ] `https://tideframelabs.com/downloads/modeboard/Modeboard-1.0.0-7.dmg` downloads the exact 6,170,974-byte DMG and its SHA-256 is `9310287038060fe96413a6fc6ea43627f1d1c7fba64263ee2ef69a40856969e5`.
+- [ ] `https://tideframelabs.com/updates/modeboard/appcast.xml` returns HTTP 200 with an XML content type; its referenced ZIP and release-notes URLs also return HTTP 200.
 
-**Before setting a real `downloadUrl` in `src/data/products.ts`:**
+**Before publishing a new `downloadUrl` in `src/data/modeboard-product.json`:**
 
 - [ ] The linked file is served over `https://`, is the exact signed/notarized build, and (if you've set a `sha256` checksum on the site) the checksum actually matches that exact file — run `shasum -a 256 <file>` locally and compare.
 - [ ] If Sparkle is wired up by then, confirm the appcast/feed URL it points to also uses `https://`.

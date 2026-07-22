@@ -13,8 +13,3 @@ export const siteConfig = {
 
 export const appleNotice =
   'Apple, macOS, and related marks are trademarks of Apple Inc. Tideframe Labs and Modeboard are independent software and are not affiliated with Apple Inc.'
-
-const launchSubject = encodeURIComponent('Modeboard launch updates')
-const launchBody = encodeURIComponent('Hi Tideframe Labs, please let me know when Modeboard becomes available.')
-
-export const launchUpdatesMailto = `mailto:${siteConfig.supportEmail}?subject=${launchSubject}&body=${launchBody}`

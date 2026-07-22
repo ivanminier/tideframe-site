@@ -286,11 +286,11 @@ export function Terms() {
 
 export function Changelog() {
   return (
-    <Page eyebrow="Modeboard" title="Changelog" intro="Release notes for Modeboard will appear here as the app becomes available.">
+    <Page eyebrow="Modeboard" title="Changelog" intro="Release notes for Modeboard from Tideframe Labs.">
       <article className="release">
-        <div><h2>1.0.0</h2><span>Coming soon for Mac</span></div>
+        <div><h2>1.0.0</h2><span>July 22, 2026</span></div>
         <div>
-          <p>The first Modeboard release is being prepared with:</p>
+          <p>The first Modeboard release includes:</p>
           <ul>
             <li>Profiles for wallpaper, Dock, appearance, menu bar, and Desktop settings.</li>
             <li>Manual, menu bar, Apple Shortcuts, and Focus Filter switching.</li>

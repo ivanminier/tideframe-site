@@ -62,6 +62,7 @@ export function buildSoftwareApplicationSchema(product: Product) {
     author: { '@id': ORGANIZATION_ID },
     publisher: { '@id': ORGANIZATION_ID },
     ...(release?.version ? { softwareVersion: release.version } : {}),
+    ...(release?.downloadUrl ? { downloadUrl: release.downloadUrl } : {}),
     ...(release && checkoutUrl && product.status === 'available' && product.commercial
       ? {
           offers: {

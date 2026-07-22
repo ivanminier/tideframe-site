@@ -68,15 +68,21 @@ The `/products` page renders automatically from this array. Add a homepage featu
 
 ### Configure a public release
 
-Open `src/data/modeboard-product.json` and complete the `release` object. The download stays disabled unless the central validator accepts every required field: HTTPS artifact URL, version, build number, byte size, SHA-256, minimum and tested macOS versions, release date, bundle identity, architecture status, Developer ID signing, notarization, permissions, limitations, and every production Sparkle appcast gate.
+Open `src/data/modeboard-product.json` and complete the `release` object. The download stays disabled unless the central validator accepts the required customer-release facts: HTTPS artifact URL, version, build number, byte size, SHA-256, minimum macOS version, release date, bundle identity, architecture status, Developer ID signing, notarization, permissions, and limitations. Sparkle readiness is checked separately so a safe initial DMG download does not pretend that a future N → N+1 update has already been tested.
 
 - incomplete fields or `status: 'coming-soon'` → the button is disabled and reads "Coming Soon."
 - a complete valid release with `status: 'beta'` → the button reads "Download Beta."
 - a complete valid release with `status: 'available'` → the button reads "Download Modeboard."
 
-This is the only release-data file that needs to change — the Modeboard and products pages both read from it. **Only ever set `downloadUrl` to the real HTTPS link for the exact signed, notarized customer artifact.** The product page exposes its trial and purchase links, and structured data exposes an `Offer`, only when both the release and commerce validators pass.
+This is the only release-data file that needs to change — the Modeboard and products pages both read from it. **Only ever set `downloadUrl` to the real HTTPS link for the exact signed, notarized customer artifact.** A verified download can be public while checkout stays disabled. Structured data exposes a paid `Offer` only when the separate commerce validator passes.
 
-Never add the artifact itself to this repository. Verify its exact byte size and checksum from the hosted, signed, notarized file before changing status.
+The customer DMG lives at `public/downloads/modeboard/Modeboard-<version>-<build>.dmg`. For 1.0.0, the public URL is:
+
+```text
+https://tideframelabs.com/downloads/modeboard/Modeboard-1.0.0-7.dmg
+```
+
+Copy only the canonical artifact from Modeboard's versioned `release/` directory, never an unverified same-named copy from Downloads. Update the release byte size and SHA-256, then run `npm run check`; the static-asset tests fail if the file and metadata do not match.
 
 ### Configure purchasing
 
@@ -135,7 +141,9 @@ This site is a Cloudflare Worker with static assets, configured in `wrangler.jso
 
 For React Router routes such as `/products` to work when opened directly, `assets.not_found_handling` is set to `single-page-application`, so unmatched paths fall back to `index.html`. Five routes (`/`, `/modeboard`, `/privacy`, `/terms`, `/support`) don't need that fallback — they get their own real, pre-rendered `index.html` file at build time (see "Search engine and social-preview metadata" above), and a real file always takes precedence over the SPA fallback.
 
-`worker/index.js` returns a plain-text 404 for `/updates/modeboard/appcast.xml` while no real signed appcast exists, instead of allowing the SPA shell to look like an update feed. `assets.run_worker_first` lists that exact path so the Worker sees the request before the assets binding does; every other request goes straight to `env.ASSETS`. Change that route only when the production appcast is ready to publish. `tests/unit/static-assets.test.ts` covers both halves of that behavior.
+Modeboard's customer DMG lives under `public/downloads/modeboard/`; signed Sparkle files live separately under `public/updates/modeboard/`. `assets.run_worker_first` sends only those two directories through `worker/index.js`. The Worker serves DMGs as immutable downloads, gives the appcast an XML content type and no-cache policy, gives versioned ZIP/release-notes files immutable caching, and fails closed if an expected file is missing instead of allowing the SPA shell to look like a release file.
+
+Do not hand-edit files in the updates directory. From the Modeboard repository, run `scripts/stage_sparkle_for_website.sh RELEASE_DIR TIDEFRAME_SITE_DIR`; it verifies the appcast/archive relationship and copies the exact already-signed appcast, ZIP, and release notes. The script never deploys. For every later release, complete the installed N → N+1 update test before publishing its feed, then run `npm run check` and `npx wrangler deploy --dry-run`. Publish with an explicit `npx wrangler deploy`. After deployment, verify the DMG, appcast, ZIP, and release-notes URLs return HTTP 200 and that the appcast uses an XML content type.
 
 For a safe source archive, follow `docs/SOURCE_ARCHIVE.md`. Never treat a source archive as the customer app distribution.
 

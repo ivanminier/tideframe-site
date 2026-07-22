@@ -1,7 +1,6 @@
 import { Link } from 'react-router-dom'
 import { Meta } from '../components/Meta'
 import { ProductScreenshot } from '../components/ProductScreenshot'
-import { launchUpdatesMailto } from '../config'
 import { getRouteMeta } from '../data/routeMeta'
 import { webSiteSchema } from '../data/structuredData'
 import { useReveal } from '../hooks/useReveal'
@@ -51,7 +50,7 @@ export function Home() {
               <div className="featured-product-heading">
                 <img src="/modeboard-icon.png" alt="" width="72" height="72" aria-hidden="true" />
                 <div>
-                  <p className="eyebrow">Featured product · Coming soon for Mac</p>
+                  <p className="eyebrow">Featured product · Available for Mac</p>
                   <h2>Switch your whole Mac workspace with one profile.</h2>
                 </div>
               </div>
@@ -96,10 +95,10 @@ export function Home() {
 
       <section className="cta section" ref={contact.ref}>
         <div className={`container centered${contact.visible ? ' reveal is-visible' : ' reveal'}`}>
-          <p className="eyebrow">Stay in the loop</p>
-          <h2>Modeboard is coming soon for Mac.</h2>
-          <p>Get launch updates when downloads and final compatibility details are available.</p>
-          <a className="button" href={launchUpdatesMailto}>Get launch updates <span>→</span></a>
+          <p className="eyebrow">Available now</p>
+          <h2>Download Modeboard 1.0.0 for Mac.</h2>
+          <p>Try Modeboard for 14 days on macOS 15 or later.</p>
+          <Link className="button" to="/modeboard#download">Download Modeboard <span>→</span></Link>
         </div>
       </section>
     </>

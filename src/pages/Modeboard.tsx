@@ -4,7 +4,7 @@ import { Meta } from '../components/Meta'
 import { PlatformBadge } from '../components/PlatformBadge'
 import { ProductScreenshot } from '../components/ProductScreenshot'
 import { PurchaseButton } from '../components/PurchaseButton'
-import { launchUpdatesMailto } from '../config'
+import { ReleaseDetails } from '../components/ReleaseDetails'
 import { commerceConfig, getVerifiedCheckoutUrl } from '../data/commerce'
 import { featuredProduct } from '../data/products'
 import { getPublicRelease } from '../data/products'
@@ -103,7 +103,7 @@ const FAQS = [
   },
   {
     q: 'Which macOS versions are supported?',
-    a: 'Modeboard declares macOS 15 or later. The exact tested macOS versions and hardware support will be published only after the signed customer build completes the clean-machine compatibility matrix.',
+    a: 'Modeboard 1.0.0 requires macOS 15 or later. The Universal download includes native code for Apple silicon and Intel Macs; Intel runtime has not been independently tested.',
   },
   {
     q: 'What happens to an animated wallpaper when Modeboard quits?',
@@ -138,9 +138,9 @@ function WideScreenshot({
 }
 
 export function Modeboard() {
-  const releaseReady = getPublicRelease(featuredProduct) !== null
+  const publicRelease = getPublicRelease(featuredProduct)
+  const releaseReady = publicRelease !== null
   const commerceReady = getVerifiedCheckoutUrl(commerceConfig) !== null
-  const launchReady = releaseReady && commerceReady
 
   return (
     <>
@@ -169,25 +169,25 @@ export function Modeboard() {
           <p className="commercial-price"><strong>$14.99 introductory price</strong> · One-time purchase</p>
           <p className="commercial-summary">14-day full-feature trial · One person · Up to 3 Macs · All Modeboard 1.x updates</p>
           <div className="product-hero-meta" aria-label="Platform and availability">
-            <span className="meta-chip">{launchReady ? 'Available for Mac' : 'Coming soon for Mac'}</span>
+            <span className="meta-chip">{releaseReady ? 'Available for Mac' : 'Coming soon for Mac'}</span>
             {featuredProduct.platforms.map((platform) => <PlatformBadge key={platform} platform={platform} />)}
           </div>
           <div className="launch-actions" aria-label="Modeboard download and purchase availability">
             <DownloadButton
               product={featuredProduct}
-              enabled={launchReady}
-              label={launchReady ? 'Download Free Trial' : 'Download Free Trial — Coming Soon'}
+              enabled={releaseReady}
+              label={releaseReady ? 'Download Modeboard 1.0.0' : 'Download Modeboard — Coming Soon'}
             />
             <PurchaseButton
-              enabled={launchReady}
+              enabled={releaseReady && commerceReady}
               label="Buy for $14.99"
-              unavailableLabel="Buy for $14.99 — Coming Soon"
+              unavailableLabel="Purchase coming soon"
             />
           </div>
-          {!launchReady ? (
-            <p className="availability-note">Downloads and checkout remain unavailable until the customer release and commerce checks both pass.</p>
+          {releaseReady && !commerceReady ? (
+            <p className="availability-note">The 14-day trial is available now. Purchasing will open after checkout is ready.</p>
           ) : null}
-          <a className="text-link" href={launchUpdatesMailto}>Get launch updates <span>→</span></a>
+          <Link className="text-link" to="/support">Get Modeboard support <span>→</span></Link>
         </div>
         <div className="container product-hero-shot">
           <WideScreenshot
@@ -378,15 +378,52 @@ export function Modeboard() {
         </div>
       </section>
 
+      {publicRelease ? (
+        <section className="section section-alt download-section" id="download" aria-labelledby="download-modeboard">
+          <div className="container narrow">
+            <p className="eyebrow">Download and install</p>
+            <h2 id="download-modeboard">Download Modeboard 1.0.0 for Mac.</h2>
+            <p className="lede">
+              Modeboard requires macOS 15 or later. This Universal app includes native code for Apple silicon and
+              Intel Macs; Intel runtime has not been independently tested.
+            </p>
+            <DownloadButton product={featuredProduct} label="Download Modeboard 1.0.0" />
+            <p className="fine-print">Disk image (.dmg) · Version 1.0.0 · Build 7</p>
+
+            <div className="download-grid">
+              <div>
+                <h3>How to install</h3>
+                <ol>
+                  <li>Download and open the Modeboard disk image.</li>
+                  <li>Drag Modeboard into the Applications folder.</li>
+                  <li>Eject the disk image, then open Modeboard from Applications.</li>
+                  <li>Follow Modeboard's setup explanations for any macOS permissions it needs.</li>
+                </ol>
+              </div>
+              <div>
+                <h3>Built for trust</h3>
+                <ul>
+                  <li>Signed with a Tideframe Labs Developer ID certificate.</li>
+                  <li>Notarized by Apple and stapled for Gatekeeper.</li>
+                  <li>No analytics, advertising, or behavioral tracking.</li>
+                </ul>
+                <p><Link to="/support">Visit Modeboard support</Link> if installation or setup needs attention.</p>
+              </div>
+            </div>
+            <ReleaseDetails release={publicRelease} />
+          </div>
+        </section>
+      ) : null}
+
       <section className="compatibility section" aria-labelledby="availability">
         <div className="container narrow centered">
-          <p className="eyebrow">Stay in the loop</p>
-          <h2 id="availability">macOS compatibility and availability.</h2>
+          <p className="eyebrow">System requirements</p>
+          <h2 id="availability">Ready for macOS 15 and later.</h2>
           <p>
-            Modeboard declares macOS {featuredProduct.release.minimumMacOSVersion} and later. Final tested versions,
-            hardware support, signed download details, and checkout will be published only after every launch gate passes.
+            Modeboard 1.0.0 requires macOS {featuredProduct.release.minimumMacOSVersion} or later. It is distributed
+            as a Universal app containing both Apple silicon and Intel code. Intel runtime has not been independently tested.
           </p>
-          <a className="button" href={launchUpdatesMailto}>Get launch updates <span>→</span></a>
+          <a className="button" href="#download">Go to download <span>→</span></a>
         </div>
       </section>
 
