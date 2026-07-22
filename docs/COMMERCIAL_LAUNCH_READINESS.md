@@ -38,3 +38,7 @@ External owner gates remain Apple Developer approval, a signed/notarized custome
 Modeboard 1.0.0 (build 7) now has versioned, signed, notarized, and stapled release artifacts. The website publishes the exact canonical DMG from the Modeboard release directory at `/downloads/modeboard/Modeboard-1.0.0-7.dmg`; its byte size and SHA-256 are enforced by automated tests. The signed Sparkle appcast, ZIP, and release notes are staged separately under `/updates/modeboard/`.
 
 The direct trial download is intentionally independent of commerce and future-update acceptance. Checkout remains disabled until its own Lemon Squeezy configuration passes. The Sparkle readiness check also remains incomplete until the deployed appcast content type and a real installed N → N+1 update are verified. The site makes no claim that Intel runtime was independently tested: it states only that the notarized Universal artifact contains Apple silicon and Intel code.
+
+## Modeboard 1.0.1 website preparation — July 22, 2026
+
+The website now points its primary download and structured release metadata to Modeboard 1.0.1 (build 8). The canonical notarized DMG and signed Sparkle ZIP, appcast, and release notes were staged from `release/v1.0.1` without regenerating signatures. The previously published 1.0.0 DMG, ZIP, and notes remain present and are guarded by exact size and SHA-256 regression checks. Commerce remains disabled and unchanged.

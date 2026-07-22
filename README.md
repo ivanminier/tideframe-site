@@ -76,13 +76,15 @@ Open `src/data/modeboard-product.json` and complete the `release` object. The do
 
 This is the only release-data file that needs to change — the Modeboard and products pages both read from it. **Only ever set `downloadUrl` to the real HTTPS link for the exact signed, notarized customer artifact.** A verified download can be public while checkout stays disabled. Structured data exposes a paid `Offer` only when the separate commerce validator passes.
 
-The customer DMG lives at `public/downloads/modeboard/Modeboard-<version>-<build>.dmg`. For 1.0.0, the public URL is:
+The customer DMG lives at `public/downloads/modeboard/Modeboard-<version>-<build>.dmg`. For 1.0.1, the public URL is:
 
 ```text
-https://tideframelabs.com/downloads/modeboard/Modeboard-1.0.0-7.dmg
+https://tideframelabs.com/downloads/modeboard/Modeboard-1.0.1-8.dmg
 ```
 
 Copy only the canonical artifact from Modeboard's versioned `release/` directory, never an unverified same-named copy from Downloads. Update the release byte size and SHA-256, then run `npm run check`; the static-asset tests fail if the file and metadata do not match.
+
+Keep every previously published versioned DMG, Sparkle ZIP, and signed release-notes file in place. Their URLs use immutable caching and must continue returning the original bytes. Only `appcast.xml` is replaced for a new release; it is signed and served with `no-cache, no-store` so Sparkle can discover the newest build.
 
 ### Configure purchasing
 

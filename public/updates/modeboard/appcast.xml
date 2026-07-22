@@ -4,16 +4,16 @@ IMPORTANT: This file was signed by Sparkle. Any modifications to this file requi
     <channel>
         <title>Modeboard</title>
         <item>
-            <title>1.0.0</title>
-            <pubDate>Wed, 22 Jul 2026 12:13:28 -0400</pubDate>
-            <sparkle:version>7</sparkle:version>
-            <sparkle:shortVersionString>1.0.0</sparkle:shortVersionString>
+            <title>1.0.1</title>
+            <pubDate>Wed, 22 Jul 2026 16:35:24 -0400</pubDate>
+            <sparkle:version>8</sparkle:version>
+            <sparkle:shortVersionString>1.0.1</sparkle:shortVersionString>
             <sparkle:minimumSystemVersion>15.0</sparkle:minimumSystemVersion>
-            <sparkle:releaseNotesLink sparkle:edSignature="TIfr+WIxMnko6l7OoUaznhPthwm0M9jBEDZ+rcy1XzUm0b9CUnqqb3mnCmLL/k+uUwP2IYFQ8IhionhvryheAQ==" sparkle:length="293">https://tideframelabs.com/updates/modeboard/Modeboard-1.0.0-7.md</sparkle:releaseNotesLink>
-            <enclosure url="https://tideframelabs.com/updates/modeboard/Modeboard-1.0.0-7.zip" length="6268917" type="application/octet-stream" sparkle:edSignature="nPf1Q2huyFw1R3cUqcn0PrAHEhtlUANF3wKUx5lIQjxT2YuB5SsGc1mos9oMyN/9+WZvbyAkaEkBWFx9VTkeBQ=="></enclosure>
+            <sparkle:releaseNotesLink sparkle:edSignature="O9B0EHFo2/FK937/cc/xKz+SUqCake0b3Zikpi121DTibLvNMNCie+jMaS4uo3oha1WI806BneuKSehj6mVXBQ==" sparkle:length="293">https://tideframelabs.com/updates/modeboard/Modeboard-1.0.1-8.md</sparkle:releaseNotesLink>
+            <enclosure url="https://tideframelabs.com/updates/modeboard/Modeboard-1.0.1-8.zip" length="6289242" type="application/octet-stream" sparkle:edSignature="Qh0JTCiweXNfdplUwZkAZUStaUcKTgti9bY04Bu7rfL1Zc8nLlUeLQ7CmU/ENYgYzd+BYwjarMgk7ugbO9LLAA=="></enclosure>
         </item>
     </channel>
 </rss><!-- sparkle-signatures:
-edSignature: jsBjIdgpWCRW1GxlnHAGv88Sy90b3IxeNL3IXFMI+/jJ6C9PCGuvGCoeCB2IOEJlPMhy5nBPe7uWzrh1fUhEDA==
+edSignature: D+JoSzM4DwSE5wGzZqfXs+kSuEYBc4b8PfdodpIMjJJ/k7nN3xc0wBizPvK5Sru50kgv5XI7wZouJ7QE/UW3CQ==
 length: 1289
 -->

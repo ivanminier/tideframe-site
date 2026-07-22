@@ -85,7 +85,8 @@ Once the domain is live, check the following by visiting the real URLs in a brow
 - [ ] A test email to `support@tideframelabs.com` and `hello@tideframelabs.com` both arrive.
 - [ ] The header stays visible while scrolling (sticky), and the mobile menu opens and closes correctly on a phone-sized screen.
 - [ ] Response headers match `public/_headers`; there are no CSP violations during navigation, images, mail links, downloads, or the merchant sandbox redirect.
-- [ ] `https://tideframelabs.com/downloads/modeboard/Modeboard-1.0.0-7.dmg` downloads the exact 6,170,974-byte DMG and its SHA-256 is `9310287038060fe96413a6fc6ea43627f1d1c7fba64263ee2ef69a40856969e5`.
+- [ ] `https://tideframelabs.com/downloads/modeboard/Modeboard-1.0.1-8.dmg` downloads the exact 6,191,547-byte DMG and its SHA-256 is `1ee50ff375e1ebe7097fd1d407380394a5756566a3096258cd0706092cae20cd`.
+- [ ] The previous 1.0.0 DMG, ZIP, and release notes still return their original immutable bytes.
 - [ ] `https://tideframelabs.com/updates/modeboard/appcast.xml` returns HTTP 200 with an XML content type; its referenced ZIP and release-notes URLs also return HTTP 200.
 
 **Before publishing a new `downloadUrl` in `src/data/modeboard-product.json`:**

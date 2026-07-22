@@ -46,7 +46,7 @@ describe('release download integrity', () => {
     render(<DownloadButton product={products[0]} />)
     expect(screen.getByRole('link', { name: 'Download Modeboard' })).toHaveAttribute(
       'href',
-      'https://tideframelabs.com/downloads/modeboard/Modeboard-1.0.0-7.dmg',
+      'https://tideframelabs.com/downloads/modeboard/Modeboard-1.0.1-8.dmg',
     )
   })
 

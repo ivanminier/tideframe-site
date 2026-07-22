@@ -103,7 +103,7 @@ const FAQS = [
   },
   {
     q: 'Which macOS versions are supported?',
-    a: 'Modeboard 1.0.0 requires macOS 15 or later. The Universal download includes native code for Apple silicon and Intel Macs; Intel runtime has not been independently tested.',
+    a: 'Modeboard 1.0.1 requires macOS 15 or later. The Universal download includes native code for Apple silicon and Intel Macs; Intel runtime has not been independently tested.',
   },
   {
     q: 'What happens to an animated wallpaper when Modeboard quits?',
@@ -141,6 +141,7 @@ export function Modeboard() {
   const publicRelease = getPublicRelease(featuredProduct)
   const releaseReady = publicRelease !== null
   const commerceReady = getVerifiedCheckoutUrl(commerceConfig) !== null
+  const releaseVersion = publicRelease?.version ?? featuredProduct.release.version
 
   return (
     <>
@@ -176,7 +177,7 @@ export function Modeboard() {
             <DownloadButton
               product={featuredProduct}
               enabled={releaseReady}
-              label={releaseReady ? 'Download Modeboard 1.0.0' : 'Download Modeboard — Coming Soon'}
+              label={releaseReady ? `Download Modeboard ${releaseVersion}` : 'Download Modeboard — Coming Soon'}
             />
             <PurchaseButton
               enabled={releaseReady && commerceReady}
@@ -382,13 +383,13 @@ export function Modeboard() {
         <section className="section section-alt download-section" id="download" aria-labelledby="download-modeboard">
           <div className="container narrow">
             <p className="eyebrow">Download and install</p>
-            <h2 id="download-modeboard">Download Modeboard 1.0.0 for Mac.</h2>
+            <h2 id="download-modeboard">Download Modeboard {publicRelease.version} for Mac.</h2>
             <p className="lede">
               Modeboard requires macOS 15 or later. This Universal app includes native code for Apple silicon and
               Intel Macs; Intel runtime has not been independently tested.
             </p>
-            <DownloadButton product={featuredProduct} label="Download Modeboard 1.0.0" />
-            <p className="fine-print">Disk image (.dmg) · Version 1.0.0 · Build 7</p>
+            <DownloadButton product={featuredProduct} label={`Download Modeboard ${publicRelease.version}`} />
+            <p className="fine-print">Disk image (.dmg) · Version {publicRelease.version} · Build {publicRelease.buildNumber}</p>
 
             <div className="download-grid">
               <div>
@@ -410,6 +411,11 @@ export function Modeboard() {
                 <p><Link to="/support">Visit Modeboard support</Link> if installation or setup needs attention.</p>
               </div>
             </div>
+            <h3>What’s new in Modeboard 1.0.1</h3>
+            <p>
+              Fixed Software Updates incorrectly presenting an up-to-date result as a failed update check, and fixed
+              transition warning banner rendering and dismissal.
+            </p>
             <ReleaseDetails release={publicRelease} />
           </div>
         </section>
@@ -420,7 +426,7 @@ export function Modeboard() {
           <p className="eyebrow">System requirements</p>
           <h2 id="availability">Ready for macOS 15 and later.</h2>
           <p>
-            Modeboard 1.0.0 requires macOS {featuredProduct.release.minimumMacOSVersion} or later. It is distributed
+            Modeboard {publicRelease?.version ?? featuredProduct.release.version} requires macOS {featuredProduct.release.minimumMacOSVersion} or later. It is distributed
             as a Universal app containing both Apple silicon and Intel code. Intel runtime has not been independently tested.
           </p>
           <a className="button" href="#download">Go to download <span>→</span></a>

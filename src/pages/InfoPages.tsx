@@ -288,6 +288,15 @@ export function Changelog() {
   return (
     <Page eyebrow="Modeboard" title="Changelog" intro="Release notes for Modeboard from Tideframe Labs.">
       <article className="release">
+        <div><h2>1.0.1</h2><span>July 22, 2026</span></div>
+        <div>
+          <p>
+            Fixed Software Updates incorrectly presenting an up-to-date result as a failed update check, and fixed
+            transition warning banner rendering and dismissal.
+          </p>
+        </div>
+      </article>
+      <article className="release">
         <div><h2>1.0.0</h2><span>July 22, 2026</span></div>
         <div>
           <p>The first Modeboard release includes:</p>

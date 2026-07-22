@@ -15,10 +15,10 @@ test('navigation and public download action work', async ({ page }) => {
   await page.goto('/')
   await page.getByRole('navigation', { name: 'Primary navigation' }).getByRole('link', { name: 'Modeboard' }).click()
   await expect(page).toHaveURL(/\/modeboard$/)
-  const download = page.getByRole('link', { name: 'Download Modeboard 1.0.0' }).first()
-  await expect(download).toHaveAttribute('href', 'https://tideframelabs.com/downloads/modeboard/Modeboard-1.0.0-7.dmg')
+  const download = page.getByRole('link', { name: 'Download Modeboard 1.0.1' }).first()
+  await expect(download).toHaveAttribute('href', 'https://tideframelabs.com/downloads/modeboard/Modeboard-1.0.1-8.dmg')
   await expect(page.getByRole('button', { name: 'Purchase coming soon' })).toBeDisabled()
-  await expect(page.getByRole('heading', { name: 'Download Modeboard 1.0.0 for Mac.' })).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'Download Modeboard 1.0.1 for Mac.' })).toBeVisible()
 })
 
 test('mobile navigation opens, follows a link, and closes', async ({ page }) => {

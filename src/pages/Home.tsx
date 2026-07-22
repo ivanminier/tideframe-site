@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import { Meta } from '../components/Meta'
 import { ProductScreenshot } from '../components/ProductScreenshot'
+import { featuredProduct } from '../data/products'
 import { getRouteMeta } from '../data/routeMeta'
 import { webSiteSchema } from '../data/structuredData'
 import { useReveal } from '../hooks/useReveal'
@@ -96,7 +97,7 @@ export function Home() {
       <section className="cta section" ref={contact.ref}>
         <div className={`container centered${contact.visible ? ' reveal is-visible' : ' reveal'}`}>
           <p className="eyebrow">Available now</p>
-          <h2>Download Modeboard 1.0.0 for Mac.</h2>
+          <h2>Download Modeboard {featuredProduct.release.version} for Mac.</h2>
           <p>Try Modeboard for 14 days on macOS 15 or later.</p>
           <Link className="button" to="/modeboard#download">Download Modeboard <span>→</span></Link>
         </div>

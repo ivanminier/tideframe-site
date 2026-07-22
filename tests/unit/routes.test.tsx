@@ -65,15 +65,16 @@ describe('navigation', () => {
 
   it('publishes the download while keeping unconfigured checkout unavailable', () => {
     renderRoute('/modeboard')
-    const downloads = screen.getAllByRole('link', { name: /download modeboard 1\.0\.0/i })
+    const downloads = screen.getAllByRole('link', { name: /download modeboard 1\.0\.1/i })
     expect(downloads).toHaveLength(2)
     for (const download of downloads) {
-      expect(download).toHaveAttribute('href', 'https://tideframelabs.com/downloads/modeboard/Modeboard-1.0.0-7.dmg')
+      expect(download).toHaveAttribute('href', 'https://tideframelabs.com/downloads/modeboard/Modeboard-1.0.1-8.dmg')
     }
     expect(screen.getByRole('button', { name: /purchase coming soon/i })).toBeDisabled()
     expect(screen.queryByRole('link', { name: /buy for \$14\.99/i })).not.toBeInTheDocument()
-    expect(screen.getByRole('heading', { name: /download modeboard 1\.0\.0 for mac/i })).toBeVisible()
+    expect(screen.getByRole('heading', { name: /download modeboard 1\.0\.1 for mac/i })).toBeVisible()
     expect(screen.getByText(/notarized by apple and stapled for gatekeeper/i)).toBeVisible()
+    expect(screen.getByText(/up-to-date result as a failed update check/i)).toBeVisible()
   })
 })
 
@@ -124,8 +125,8 @@ describe('metadata', () => {
     expect(schema.author['@id']).toBe('https://tideframelabs.com/#organization')
     expect(schema.publisher['@id']).toBe('https://tideframelabs.com/#organization')
 
-    expect(schema.softwareVersion).toBe('1.0.0')
-    expect(schema.downloadUrl).toBe('https://tideframelabs.com/downloads/modeboard/Modeboard-1.0.0-7.dmg')
+    expect(schema.softwareVersion).toBe('1.0.1')
+    expect(schema.downloadUrl).toBe('https://tideframelabs.com/downloads/modeboard/Modeboard-1.0.1-8.dmg')
     for (const withheld of ['offers', 'aggregateRating', 'review']) {
       expect(schema, `${withheld} must stay absent without verified commerce`).not.toHaveProperty(withheld)
     }

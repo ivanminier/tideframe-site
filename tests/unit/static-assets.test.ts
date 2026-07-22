@@ -6,7 +6,8 @@ import worker from '../../worker/index.js'
 
 const APPCAST_PATH = '/updates/modeboard/appcast.xml'
 const UPDATE_PREFIX = '/updates/modeboard/'
-const DOWNLOAD_PATH = '/downloads/modeboard/Modeboard-1.0.0-7.dmg'
+const CURRENT_DOWNLOAD_PATH = '/downloads/modeboard/Modeboard-1.0.1-8.dmg'
+const PREVIOUS_DOWNLOAD_PATH = '/downloads/modeboard/Modeboard-1.0.0-7.dmg'
 
 /** A stand-in for the Workers static-assets binding, so fall-through is observable. */
 function assetsEnv(responseForRequest?: (request: Request) => Response) {
@@ -125,6 +126,12 @@ describe('static deployment files', () => {
     expect(appcast).not.toContain('.dmg')
     expect(enclosure).not.toBeNull()
     expect(notes).not.toBeNull()
+    expect(enclosure?.[1]).toBe('Modeboard-1.0.1-8.zip')
+    expect(notes?.[3]).toBe('Modeboard-1.0.1-8.md')
+    expect(appcast).toContain('<sparkle:version>8</sparkle:version>')
+    expect(appcast).toContain('<sparkle:shortVersionString>1.0.1</sparkle:shortVersionString>')
+    expect(appcast).toContain('<sparkle:minimumSystemVersion>15.0</sparkle:minimumSystemVersion>')
+    expect(8).toBeGreaterThan(7)
 
     const zipPath = `public/updates/modeboard/${enclosure?.[1]}`
     const notesPath = `public/updates/modeboard/${notes?.[3]}`
@@ -136,33 +143,60 @@ describe('static deployment files', () => {
     expect(Buffer.from(notes?.[1] ?? '', 'base64')).toHaveLength(64)
   })
 
+  it('preserves the published 1.0.0 release assets byte-for-byte', () => {
+    const expected = [
+      [
+        `public${PREVIOUS_DOWNLOAD_PATH}`,
+        6_170_974,
+        '9310287038060fe96413a6fc6ea43627f1d1c7fba64263ee2ef69a40856969e5',
+      ],
+      [
+        'public/updates/modeboard/Modeboard-1.0.0-7.zip',
+        6_268_917,
+        'e83b58d360f0078bbd475af60e7efb67f0277dcdb2ab71e2c82bb752b70058cf',
+      ],
+      [
+        'public/updates/modeboard/Modeboard-1.0.0-7.md',
+        293,
+        '45f1631e4537729a69ed8dda60b3b60ed314598ccde9a05ca565bf207ac7e5c0',
+      ],
+    ] as const
+
+    for (const [path, size, sha256] of expected) {
+      expect(statSync(path).size).toBe(size)
+      expect(createHash('sha256').update(readFileSync(path)).digest('hex')).toBe(sha256)
+    }
+  })
+
   it('ships the exact notarized Modeboard DMG declared by release metadata', () => {
     const product = JSON.parse(readFileSync('src/data/modeboard-product.json', 'utf8')) as {
       release: { downloadUrl: string; fileSizeBytes: number; sha256: string }
     }
-    const dmgPath = `public${DOWNLOAD_PATH}`
+    const dmgPath = `public${CURRENT_DOWNLOAD_PATH}`
     const digest = createHash('sha256').update(readFileSync(dmgPath)).digest('hex')
 
     expect(existsSync(dmgPath)).toBe(true)
-    expect(product.release.downloadUrl).toBe(`https://tideframelabs.com${DOWNLOAD_PATH}`)
+    expect(product.release.downloadUrl).toBe(`https://tideframelabs.com${CURRENT_DOWNLOAD_PATH}`)
     expect(statSync(dmgPath).size).toBe(product.release.fileSizeBytes)
     expect(digest).toBe(product.release.sha256)
   })
 })
 
 describe('download Worker route', () => {
-  it('serves the versioned DMG as an immutable attachment', async () => {
-    const { env, fetchAsset } = assetsEnv()
-    const response = await worker.fetch(get(DOWNLOAD_PATH), env)
+  it('serves current and previous versioned DMGs as immutable attachments', async () => {
+    for (const path of [PREVIOUS_DOWNLOAD_PATH, CURRENT_DOWNLOAD_PATH]) {
+      const { env, fetchAsset } = assetsEnv()
+      const response = await worker.fetch(get(path), env)
 
-    expect(response.status).toBe(200)
-    expect(response.headers.get('Content-Type')).toBe('application/x-apple-diskimage')
-    expect(response.headers.get('Content-Disposition')).toContain('Modeboard-1.0.0-7.dmg')
-    expect(response.headers.get('Cache-Control')).toContain('immutable')
-    expect(response.headers.get('X-Content-Type-Options')).toBe('nosniff')
-    expect(response.headers.get('X-Robots-Tag')).toBe('noindex')
-    expect(await response.text()).toBe(`asset:${DOWNLOAD_PATH}`)
-    expect(fetchAsset).toHaveBeenCalledTimes(1)
+      expect(response.status).toBe(200)
+      expect(response.headers.get('Content-Type')).toBe('application/x-apple-diskimage')
+      expect(response.headers.get('Content-Disposition')).toContain(path.split('/').at(-1))
+      expect(response.headers.get('Cache-Control')).toContain('immutable')
+      expect(response.headers.get('X-Content-Type-Options')).toBe('nosniff')
+      expect(response.headers.get('X-Robots-Tag')).toBe('noindex')
+      expect(await response.text()).toBe(`asset:${path}`)
+      expect(fetchAsset).toHaveBeenCalledTimes(1)
+    }
   })
 
   it('fails missing or malformed download paths closed instead of serving HTML', async () => {
@@ -182,7 +216,7 @@ describe('download Worker route', () => {
       status: 200,
       headers: { 'Content-Type': 'text/html; charset=utf-8' },
     }))
-    const missing = await worker.fetch(get(DOWNLOAD_PATH), env)
+    const missing = await worker.fetch(get(CURRENT_DOWNLOAD_PATH), env)
     expect(missing.status).toBe(503)
     expect(await missing.text()).toContain('download file is not available')
   })
@@ -211,20 +245,22 @@ describe('appcast Worker route', () => {
     expect(fetchAsset).toHaveBeenCalledTimes(1)
   })
 
-  it('serves versioned update files with immutable cache and download headers', async () => {
-    const zipPath = `${UPDATE_PREFIX}Modeboard-1.0.0-7.zip`
-    const notesPath = `${UPDATE_PREFIX}Modeboard-1.0.0-7.md`
+  it('serves current and previous versioned update files with immutable caching', async () => {
+    for (const release of ['Modeboard-1.0.0-7', 'Modeboard-1.0.1-8']) {
+      const zipPath = `${UPDATE_PREFIX}${release}.zip`
+      const notesPath = `${UPDATE_PREFIX}${release}.md`
 
-    const zip = await worker.fetch(get(zipPath), assetsEnv().env)
-    expect(zip.status).toBe(200)
-    expect(zip.headers.get('Content-Type')).toBe('application/zip')
-    expect(zip.headers.get('Content-Disposition')).toContain('Modeboard-1.0.0-7.zip')
-    expect(zip.headers.get('Cache-Control')).toContain('immutable')
+      const zip = await worker.fetch(get(zipPath), assetsEnv().env)
+      expect(zip.status).toBe(200)
+      expect(zip.headers.get('Content-Type')).toBe('application/zip')
+      expect(zip.headers.get('Content-Disposition')).toContain(`${release}.zip`)
+      expect(zip.headers.get('Cache-Control')).toContain('immutable')
 
-    const notes = await worker.fetch(get(notesPath), assetsEnv().env)
-    expect(notes.status).toBe(200)
-    expect(notes.headers.get('Content-Type')).toBe('text/markdown; charset=utf-8')
-    expect(notes.headers.get('Cache-Control')).toContain('immutable')
+      const notes = await worker.fetch(get(notesPath), assetsEnv().env)
+      expect(notes.status).toBe(200)
+      expect(notes.headers.get('Content-Type')).toBe('text/markdown; charset=utf-8')
+      expect(notes.headers.get('Cache-Control')).toContain('immutable')
+    }
   })
 
   it('fails closed if an allowlisted update file falls through to the SPA shell', async () => {
