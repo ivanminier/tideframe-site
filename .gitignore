@@ -54,3 +54,6 @@ tmp
 
 # Signed Sparkle archives are intentional public website assets.
 !public/updates/modeboard/*.zip
+
+# Local generated output
+output/
